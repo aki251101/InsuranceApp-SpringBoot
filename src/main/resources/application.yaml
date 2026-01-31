@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: InsuranceApp-SpringBoot
+
+server:
+  port: 8080
