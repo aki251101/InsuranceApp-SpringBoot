@@ -61,9 +61,9 @@
 
 設計書PDFは以下に配置します（Git管理対象に含める想定）。
 
-- `doc/design/pdf/sonpo_app_er_v1.pdf`
-- `doc/design/pdf/sonpo_app_mvp_definition_v1.1.pdf`
-- `doc/design/pdf/sonpo_app_detailed_spec_v1.pdf`
+- [ER図](doc/design/pdf/sonpo_app_er_v1.pdf)
+- [MVP定義書](doc/design/pdf/sonpo_app_mvp_definition_v1.1.pdf)
+- [詳細仕様](doc/design/pdf/sonpo_app_detailed_spec_v1.pdf)
 
 ---
 
