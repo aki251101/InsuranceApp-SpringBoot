@@ -8,7 +8,7 @@ import jp.yoshiaki.insuranceapp.training.day63.policy.repository.PolicyRepositor
 import jp.yoshiaki.insuranceapp.training.day63.policy.web.dto.PolicyCreateRequest;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("day63PolicyService")
 public class PolicyService {
 
     private final PolicyRepository repo;

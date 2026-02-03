@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 // Boot2: javax.validation.Valid
 import jakarta.validation.Valid;
 
-@RestController
+@RestController("day63PolicyController")
 @RequestMapping("/policies")
 public class PolicyController {
 

@@ -1,14 +1,14 @@
-package jp.yoshiaki.insuranceapp.training.day63.policy.repository;
+package jp.yoshiaki.insuranceapp.training.day64.policy.repository;
+
+import jp.yoshiaki.insuranceapp.training.day64.policy.domain.Policy;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.yoshiaki.insuranceapp.training.day63.policy.domain.Policy;
-import org.springframework.stereotype.Repository;
-
-@Repository("day63InMemoryPolicyRepository")
+@Repository("day64InMemoryPolicyRepository")
 public class InMemoryPolicyRepository implements PolicyRepository {
 
     private final Map<Long, Policy> store = new LinkedHashMap<>();
