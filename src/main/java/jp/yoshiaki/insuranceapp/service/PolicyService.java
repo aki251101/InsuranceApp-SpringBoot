@@ -29,9 +29,18 @@ public class PolicyService {
      * 単体取得：存在しないIDは NotFoundException（→404）にする
      */
     public Policy findById(Long id) {
-        validateId(id);
-        return policyRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("policy not found: id=" + id));
+        // テスト用：id が 0 以下なら ValidationException
+        if (id <= 0) {
+            throw new ValidationException("id must be positive: id=" + id);
+        }
+
+        Policy policy = policyRepository.findById(id).orElse(null);
+
+        if (policy == null) {
+            throw new NotFoundException("policy not found: id=" + id);
+        }
+
+        return policy;
     }
 
     /**
