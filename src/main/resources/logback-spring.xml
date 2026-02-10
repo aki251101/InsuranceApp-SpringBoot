@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  logback-spring.xml：ログの出力先・レベル・フォーマットを設定するファイル。
+  配置場所：src/main/resources/logback-spring.xml
+
+  ポイント：
+  - このファイルを変えるだけで、Javaコードを変更せずにログの振る舞いを変えられる
+  - Spring Bootでは「logback-spring.xml」という名前にすると自動で読み込まれる
+  - 「logback.xml」でも動くが、Spring Boot固有の機能（Profile切り替え等）が使えない
+-->
+<configuration>
+
+    <!--
+      ========================================
+      ① コンソール出力の設定（ConsoleAppender）
+      ========================================
+      Appender（アペンダー）= ログの出力先を定義するもの。
+      ここでは「コンソール（画面）に出す」設定をしている。
+    -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--
+              Pattern（パターン）= ログの出力フォーマット。
+              各プレースホルダの意味：
+                %d{yyyy-MM-dd HH:mm:ss.SSS} → 日時（ミリ秒まで）
+                %-5level                     → ログレベル（5文字に左詰め）
+                %logger{36}                  → クラス名（最大36文字に短縮）
+                %msg                         → ログメッセージ本文
+                %n                           → 改行
+            -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--
+      ========================================
+      ② ファイル出力の設定（RollingFileAppender）
+      ========================================
+      ログをファイルに書き出す設定。
+      RollingFileAppender = ファイルサイズや日付で自動的にファイルを分割（ローテーション）する。
+    -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 現在のログファイルパス -->
+        <file>logs/app.log</file>
+
+        <!--
+          ローテーションポリシー：
+          日付ごとにファイルを分割し、最大7日分を保持する。
+          例：logs/app.2026-02-10.log, logs/app.2026-02-11.log, ...
+        -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--
+      ========================================
+      ③ Day71パッケージのログレベル設定
+      ========================================
+      training.day71 パッケージ配下のクラスは DEBUGレベル以上を出力する。
+      → log.debug() の内容もコンソールとファイルに表示される。
+
+      レベルの階層（左が低い＝情報量が多い）：
+        DEBUG < INFO < WARN < ERROR
+
+      DEBUGに設定 → DEBUG以上（DEBUG, INFO, WARN, ERROR）が全て表示される
+      INFOに設定  → INFO以上（INFO, WARN, ERROR）のみ表示される
+      WARNに設定  → WARN以上（WARN, ERROR）のみ表示される
+    -->
+    <logger name="jp.yoshiaki.insuranceapp.training.day71" level="DEBUG" />
+
+    <!--
+      ========================================
+      ④ ルートロガーの設定（全体のデフォルト）
+      ========================================
+      上記で個別指定していないパッケージ（Spring Framework本体等）は
+      INFOレベル以上のみ表示する。
+    -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+
+</configuration>
