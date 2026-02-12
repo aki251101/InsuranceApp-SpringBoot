@@ -9,3 +9,8 @@ app:
   app-name: "タスク管理（開発版）"
   env: "development"
   max-tasks: 10
+
+server:
+  port: 8080
+  error:
+    include-message: always

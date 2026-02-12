@@ -30,6 +30,8 @@ spring:
 
 server:
   port: 8080
+  error:
+    include-message: always
 
 # ===== アプリ独自設定（Day70で追加） =====
 app:
