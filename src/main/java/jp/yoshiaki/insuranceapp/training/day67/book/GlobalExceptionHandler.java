@@ -2,6 +2,7 @@ package jp.yoshiaki.insuranceapp.training.day67.book;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,6 +23,7 @@ import java.util.Map;
  * - 「見つからない」は500ではなく404で返すべき（HTTP仕様に準拠）
  * - 統一されたエラーレスポンス形式を提供できる
  */
+@Component("day67GlobalExceptionHandler")
 @RestControllerAdvice(basePackages = "jp.yoshiaki.insuranceapp.training.day67.book")
 public class GlobalExceptionHandler {
 
