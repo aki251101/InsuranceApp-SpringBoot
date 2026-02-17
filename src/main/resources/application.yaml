@@ -39,3 +39,19 @@ app:
   version: "1.0.0"
   env: "default"
   max-tasks: 5
+
+---
+
+# === Day78: 天気API設定 ===
+# dev プロファイルの場合はFake実装が使われるため、この設定は不要
+# prod プロファイルの場合のみ必須
+
+spring:
+  profiles:
+    active: dev  # ← 開発中は dev（Fake実装が動く）
+
+# prod 用の設定（prod プロファイルでのみ使用）
+weather:
+  api:
+    base-url: https://api.openweathermap.org/data/2.5/weather
+    key: YOUR_API_KEY_HERE
