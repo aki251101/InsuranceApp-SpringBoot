@@ -22,8 +22,8 @@ import java.util.Map;
  * - FakeCalendarClient（Googleカレンダーの代わりに「登録しました」と返すだけ）
  * - FakeAiClient（Gemini AIの代わりに固定文を返すだけ）
  */
+@Profile("training")
 @Component("day75FakeWeatherClient")
-@Profile("dev")
 public class FakeWeatherClient implements WeatherClient {
 
     // ① 固定データ：都市名→天気情報のマッピング

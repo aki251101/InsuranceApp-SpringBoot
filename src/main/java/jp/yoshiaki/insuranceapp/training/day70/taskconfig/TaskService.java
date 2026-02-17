@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.training.day70.taskconfig;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  * AppConfig から最大登録数を取得し、上限チェックを行う。
  * 設定値をコードに直書きせず、外部設定（yml）経由で受け取るのがポイント。
  */
+@Profile("training")
 @Service("day70TaskService")  // Bean名を明示（他Dayとの衝突防止）
 public class TaskService {
 

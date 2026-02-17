@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
  *   ERROR = 想定外のシステムエラー（今回は使わないが、DB接続失敗等で使う）
  *   DEBUG = 開発中のデータ追跡（リスト件数、検索結果など）
  */
+@Profile("training")
 @Service("day71TaskService")
 public class TaskService {
 

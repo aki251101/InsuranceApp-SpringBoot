@@ -3,12 +3,14 @@ package jp.yoshiaki.insuranceapp.training.day64.policy.service;
 import jp.yoshiaki.insuranceapp.training.day64.policy.domain.Policy;
 import jp.yoshiaki.insuranceapp.training.day64.policy.repository.PolicyRepository;
 import jp.yoshiaki.insuranceapp.training.day64.policy.web.dto.PolicyCreateRequest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Profile("training")
 @Service("day64PolicyService")
 public class PolicyService {
 

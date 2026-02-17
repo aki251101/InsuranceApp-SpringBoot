@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.training.day68.order;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import java.util.Map;
  * 商品API。
  * 注文のテストデータ（商品）を登録・確認するためのコントローラ。
  */
+@Profile("training")
 @RestController("day68ProductController")
 @RequestMapping("/api/day68/products")
 public class ProductController {

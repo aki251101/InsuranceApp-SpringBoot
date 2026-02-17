@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.training.day68.order;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +17,7 @@ import java.util.Map;
  * 注文API。
  * OrderServiceの @Transactional の効果を確認するためのコントローラ。
  */
+@Profile("training")
 @RestController("day68OrderController")
 @RequestMapping("/api/day68/orders")
 public class OrderController {

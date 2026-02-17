@@ -3,6 +3,7 @@ package jp.yoshiaki.insuranceapp.training.day69.product.service;
 import jp.yoshiaki.insuranceapp.training.day69.product.domain.Product;
 import jp.yoshiaki.insuranceapp.training.day69.product.exception.ProductNotFoundException;
 import jp.yoshiaki.insuranceapp.training.day69.product.repository.ProductRepository;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * テスト時は @MockBean でこのクラスが「偽物」に差し替わる。
  * つまり、テストではこのクラスの中身は一切動かない。
  */
+@Profile("training")
 @Service("day69ProductService")
 public class ProductService {
 

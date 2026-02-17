@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.training.day73.deadline;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,6 +23,7 @@ import java.util.Map;
  * - GET    /api/day73/deadlines           → タスク一覧
  * - PATCH  /api/day73/deadlines/{id}/complete → タスク完了
  */
+@Profile("training")
 @RestController("day73DeadlineController")
 @RequestMapping("/api/day73/deadlines")
 public class DeadlineController {

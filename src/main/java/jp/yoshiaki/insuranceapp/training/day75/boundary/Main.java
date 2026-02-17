@@ -1,6 +1,7 @@
 package jp.yoshiaki.insuranceapp.training.day75.boundary;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
@@ -14,6 +15,7 @@ import java.util.Scanner;
  * - Web アプリでなくても Spring の DI を使いたいときに便利
  * - 今回は WeatherService を DI で受け取り、コンソールアプリとして動かす
  */
+@Profile("training")
 @Component("day75Main")
 public class Main implements CommandLineRunner {
 

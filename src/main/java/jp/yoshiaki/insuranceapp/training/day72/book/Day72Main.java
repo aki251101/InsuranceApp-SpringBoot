@@ -3,6 +3,7 @@ package jp.yoshiaki.insuranceapp.training.day72.book;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
  * Spring Boot 起動時にサンプルデータを自動登録し、動作ログを出力する。
  * メインの動作確認は Postman で行う。
  */
+@Profile("training")
 @Component("day72Main")
 public class Day72Main implements CommandLineRunner {
 
