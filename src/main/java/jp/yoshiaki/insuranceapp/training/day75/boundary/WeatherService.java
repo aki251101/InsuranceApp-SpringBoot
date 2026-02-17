@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.training.day75.boundary;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
  * - Interface（約束）にだけ依存する
  * - だから実装を差し替えても Service のコードは1行も変わらない
  */
+@Profile("training")
 @Service("day75WeatherService")
 public class WeatherService {
 

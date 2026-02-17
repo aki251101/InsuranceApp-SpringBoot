@@ -2,6 +2,7 @@ package jp.yoshiaki.insuranceapp.training.day62.notes.web;
 
 import jp.yoshiaki.insuranceapp.training.day62.notes.domain.Note;
 import jp.yoshiaki.insuranceapp.training.day62.notes.service.NoteService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -17,7 +18,7 @@ import jp.yoshiaki.insuranceapp.training.day62.notes.service.NoteNotFoundExcepti
  * - GETエンドポイントを作る
  * - ドメインをそのまま返さず、表示用DTO（Map）に変換して返す（学習用）
  */
-
+@Profile("training")
 @RestController
 @RequestMapping("/api/notes")
 public class NoteController {

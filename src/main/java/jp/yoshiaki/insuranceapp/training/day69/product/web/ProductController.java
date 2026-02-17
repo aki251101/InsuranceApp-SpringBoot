@@ -3,6 +3,7 @@ package jp.yoshiaki.insuranceapp.training.day69.product.web;
 import jp.yoshiaki.insuranceapp.training.day69.product.domain.Product;
 import jp.yoshiaki.insuranceapp.training.day69.product.exception.ProductNotFoundException;
 import jp.yoshiaki.insuranceapp.training.day69.product.service.ProductService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +23,7 @@ import java.util.Map;
  *
  * MockMvcテストでは、このクラスが「テスト対象」になる。
  */
+@Profile("training")
 @RestController("day69ProductController")
 @RequestMapping("/api/day69/products")
 public class ProductController {

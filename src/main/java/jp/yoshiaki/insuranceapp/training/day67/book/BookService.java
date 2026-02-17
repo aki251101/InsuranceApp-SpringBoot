@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.training.day67.book;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * - 「見つからない」場合はNotFoundExceptionを投げる
  * - Controllerに渡す前にデータを加工する（今回は素通しだが）
  */
+@Profile("training")
 @Service("day67BookService")
 @Transactional(readOnly = true)  // ① デフォルトは読み取り専用
 public class BookService {

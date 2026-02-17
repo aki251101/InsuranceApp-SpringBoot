@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.training.day70.taskconfig;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import java.util.Map;
  * 設定ファイル（application.yml + Profile）から読み込んだ値を
  * JSON形式で返す。「設定が正しく読み込まれているか」の確認用エンドポイント。
  */
+@Profile("training")
 @RestController("day70AppInfoController")  // Bean名を明示（他Dayとの衝突防止）
 @RequestMapping("/api/day70")
 public class AppInfoController {

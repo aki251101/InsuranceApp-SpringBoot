@@ -6,6 +6,7 @@ import jp.yoshiaki.insuranceapp.training.day63.policy.domain.Policy;
 import jp.yoshiaki.insuranceapp.training.day63.policy.service.PolicyService;
 import jp.yoshiaki.insuranceapp.training.day63.policy.web.dto.PolicyCreateRequest;
 import jp.yoshiaki.insuranceapp.training.day63.policy.web.dto.PolicyResponse;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 // Boot2: javax.validation.Valid
 import jakarta.validation.Valid;
 
+@Profile("training")
 @RestController("day63PolicyController")
 @RequestMapping("/policies")
 public class PolicyController {

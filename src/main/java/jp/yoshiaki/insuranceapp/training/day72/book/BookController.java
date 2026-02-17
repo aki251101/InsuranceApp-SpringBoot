@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.training.day72.book;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +24,7 @@ import java.util.Map;
  *   メソッド → 操作を表す: GET=取得, POST=作成, PUT=更新, DELETE=削除
  *   ステータス → 結果を伝える: 200=OK, 201=Created, 204=NoContent, 404=NotFound, 409=Conflict
  */
+@Profile("training")
 @RestController("day72BookController")
 @RequestMapping("/api/day72/books")  // ① ベースURL：リソース名は複数形名詞
 public class BookController {

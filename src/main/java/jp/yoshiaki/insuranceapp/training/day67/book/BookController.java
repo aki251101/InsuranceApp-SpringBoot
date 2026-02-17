@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.training.day67.book;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import java.util.List;
  * - GET  /api/day67/books/search   → タイトル検索
  * - POST /api/day67/books          → 新規登録
  */
+@Profile("training")
 @RestController("day67BookController")
 @RequestMapping("/api/day67/books")
 public class BookController {

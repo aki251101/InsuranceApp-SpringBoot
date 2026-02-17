@@ -2,6 +2,7 @@ package jp.yoshiaki.insuranceapp.training.day73.deadline;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * - Service   = 「実際にドアの施錠を確認する作業」
  * 警備員（Scheduler）は時間になったら作業（Service）を呼ぶだけ。
  */
+@Profile("training")
 @Component("day73DeadlineCheckScheduler")
 public class DeadlineCheckScheduler {
 

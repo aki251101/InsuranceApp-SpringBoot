@@ -3,6 +3,7 @@ package jp.yoshiaki.insuranceapp.training.day62.notes.service;
 import jp.yoshiaki.insuranceapp.training.day62.notes.domain.Note;
 import jp.yoshiaki.insuranceapp.training.day62.notes.domain.NoteStatus;
 import jp.yoshiaki.insuranceapp.training.day62.notes.repository.NoteRepository;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Service（業務操作）
  */
+@Profile("training")
 @Service
 public class NoteService {
     private final NoteRepository repository;

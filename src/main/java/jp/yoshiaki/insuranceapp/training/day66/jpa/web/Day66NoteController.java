@@ -2,11 +2,13 @@ package jp.yoshiaki.insuranceapp.training.day66.jpa.web;
 
 import jp.yoshiaki.insuranceapp.training.day66.jpa.domain.Day66Note;
 import jp.yoshiaki.insuranceapp.training.day66.jpa.service.Day66NoteService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Profile("training")
 @RestController("day66NoteController")
 @RequestMapping("/training/day66/notes")
 public class Day66NoteController {

@@ -1,6 +1,7 @@
 package jp.yoshiaki.insuranceapp.training.day70.taskconfig;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
  *   @Value を何個も書く代わりに、1クラスで設定をまとめて管理できる。
  *   フィールドが増えても、このクラスに追加するだけでOK（散らばらない）。
  */
+@Profile("training")
 @Component("day70AppConfig")  // ① Bean名を明示（他Dayとの衝突防止）
 @ConfigurationProperties(prefix = "app")  // ② yml の「app:」配下をバインド
 public class AppConfig {

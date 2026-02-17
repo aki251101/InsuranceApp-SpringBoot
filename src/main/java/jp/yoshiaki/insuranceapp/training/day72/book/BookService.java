@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.training.day72.book;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
  * 書籍の業務ロジック。
  * ISBN 重複チェック・存在確認を行い、ルール違反時は業務例外を throw する。
  */
+@Profile("training")
 @Service("day72BookService")
 public class BookService {
 

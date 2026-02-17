@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.training.day68.order;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * - 途中で例外が飛ぶと、両方とも自動でrollback（巻き戻し）される
  * - readOnly = true は「このメソッドは読み取りだけ」とDBに伝える最適化
  */
+@Profile("training")
 @Service("day68OrderService")
 public class OrderService {
 

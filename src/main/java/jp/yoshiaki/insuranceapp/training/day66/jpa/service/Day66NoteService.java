@@ -2,11 +2,13 @@ package jp.yoshiaki.insuranceapp.training.day66.jpa.service;
 
 import jp.yoshiaki.insuranceapp.training.day66.jpa.domain.Day66Note;
 import jp.yoshiaki.insuranceapp.training.day66.jpa.repository.Day66NoteRepository;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Profile("training")
 @Service("day66NoteService")
 public class Day66NoteService {
 

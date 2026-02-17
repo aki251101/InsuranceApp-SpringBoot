@@ -4,10 +4,12 @@ import jp.yoshiaki.insuranceapp.training.day64.policy.domain.Policy;
 import jp.yoshiaki.insuranceapp.training.day64.policy.service.PolicyService;
 import jp.yoshiaki.insuranceapp.training.day64.policy.web.dto.PolicyCreateRequest;
 import jp.yoshiaki.insuranceapp.training.day64.policy.web.dto.PolicyResponse;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Profile("training")
 @RestController("day64PolicyController")
 @RequestMapping("/training/day64/policies")
 public class PolicyController {

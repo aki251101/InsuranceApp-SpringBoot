@@ -6,6 +6,7 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
  *   - 操作失敗の表示 → WARN（ユーザーの入力ミスで起こり得る）
  *   - 予期しないエラー → ERROR（本来起きないはずの異常）
  */
+@Profile("training")
 @Component("day71Main")
 public class Main implements CommandLineRunner {
 

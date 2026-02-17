@@ -2,6 +2,7 @@ package jp.yoshiaki.insuranceapp.training.day73.deadline;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.util.List;
  * どちらからも呼ばれる「処理の中心」。
  * データの取得・判定・登録はすべてここを経由する。
  */
+@Profile("training")
 @Service("day73DeadlineService")
 public class DeadlineService {
 
