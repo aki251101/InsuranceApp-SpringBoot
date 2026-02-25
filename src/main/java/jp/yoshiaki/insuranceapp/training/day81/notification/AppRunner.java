@@ -1,6 +1,7 @@
 package jp.yoshiaki.insuranceapp.training.day81.notification;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
  *   help                            : コマンド一覧を表示
  *   exit                            : 終了
  */
+@Profile("training")
 @Component("day81AppRunner")
 public class AppRunner implements CommandLineRunner {
 

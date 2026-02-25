@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 全Controllerに共通の例外処理を適用するクラス
@@ -23,7 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice("insuranceGlobalExceptionHandler") // ① 全Controllerの例外をキャッチする「見張り番」
 @Slf4j              // ② Lombokが log 変数を自動生成（log.warn(), log.error() が使える）
 public class GlobalExceptionHandler {
-
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     /**
      * NotFoundException をキャッチ → HTTP 404 を返す
      *
