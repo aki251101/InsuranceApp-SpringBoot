@@ -1,0 +1,39 @@
+# ==========================================================
+# Day87 docker-compose.yml
+# docker run の長いオプションを1ファイルにまとめる。
+# 「docker compose up」だけで起動できるようになる。
+# ==========================================================
+
+version: '3.8'
+
+services:
+  # サービス名（自由に命名できる。ここでは taskboard）
+  taskboard:
+    # ① ビルド設定：カレントディレクトリの Dockerfile を使う
+    build: .
+
+    # ② ポートマッピング：ホスト側 8080 → コンテナ側 8080
+    #    ホスト側を変えたい場合は「8081:8080」のようにする
+    ports:
+      - "9090:9090"
+
+    # ③ 環境変数：アプリの設定を外から注入する
+    #    application.yml の ${変数名:デフォルト値} と対応している
+    environment:
+      - SERVER_PORT=9090
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:/data/taskboard
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=
+
+    # ④ ボリュームマウント：コンテナの /data を名前付きボリュームに接続
+    #    コンテナを削除しても、taskboard-data ボリュームにデータが残る
+    volumes:
+      - taskboard-data:/data
+
+    # ⑤ コンテナが異常終了したら自動で再起動する
+    restart: unless-stopped
+
+# ⑥ 名前付きボリュームの定義
+#    「docker volume ls」で確認できる
+volumes:
+  taskboard-data:

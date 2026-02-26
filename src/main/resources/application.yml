@@ -1,0 +1,37 @@
+# ==========================================================
+# Day87 用 application.yml
+# 環境変数で設定を上書きできるようにしている。
+# ${変数名:デフォルト値} の形式で、
+# 環境変数が設定されていればその値を、なければデフォルト値を使う。
+# ==========================================================
+
+server:
+  # ① ポート番号：環境変数 SERVER_PORT で上書き可能（デフォルト: 8080）
+  port: ${SERVER_PORT:8080}
+
+spring:
+  datasource:
+    # ② DB接続先：環境変数 SPRING_DATASOURCE_URL で上書き可能
+    #    デフォルトは H2 ファイルモード（/data/taskboard に保存）
+    #    Docker の -v で /data をボリュームマウントすればデータが永続化される
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:file:/data/taskboard}
+    driver-class-name: org.h2.Driver
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+
+  # ③ JPA / Hibernate の設定
+  jpa:
+    hibernate:
+      # update: テーブルがなければ作成、あれば既存を維持（開発向け）
+      ddl-auto: update
+    show-sql: true
+
+  # ④ H2 コンソール（ブラウザから DB を確認できる画面）
+  h2:
+    console:
+      enabled: true
+      # /h2-console でアクセスできる
+      path: /h2-console
+      settings:
+        # Docker 内から外部アクセスを許可する設定
+        web-allow-others: true
