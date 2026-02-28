@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * アプリ情報を返すRESTコントローラ。
  *
- * 設定ファイル（application.yml + Profile）から読み込んだ値を
+ * 設定ファイル（application.yaml + Profile）から読み込んだ値を
  * JSON形式で返す。「設定が正しく読み込まれているか」の確認用エンドポイント。
  */
 @Profile("training")

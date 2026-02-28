@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 本物の外部API呼び出しを行う天気クライアント。
  *
- * application.yml の設定値を @Value で読み込み、
+ * application.yaml の設定値を @Value で読み込み、
  * RestTemplate で外部APIにGETリクエストを送る。
  *
  * 起動時に @PostConstruct で必須設定値を検証し、
@@ -30,7 +30,7 @@ public class RealWeatherClient implements WeatherClient {
 
     private static final Logger log = LoggerFactory.getLogger(RealWeatherClient.class);
 
-    // ① @Value で application.yml の設定値をフィールドに注入する
+    // ① @Value で application.yaml の設定値をフィールドに注入する
     //    ${...} はプレースホルダ（yml のキーを指す）
     @Value("${weather.api.base-url}")
     private String baseUrl;
@@ -56,11 +56,11 @@ public class RealWeatherClient implements WeatherClient {
         // ③ null または空文字の場合は起動を止める
         if (baseUrl == null || baseUrl.isBlank()) {
             throw new IllegalStateException(
-                    "weather.api.base-url が未設定です。application.yml を確認してください。");
+                    "weather.api.base-url が未設定です。application.yaml を確認してください。");
         }
         if (apiKey == null || apiKey.isBlank()) {
             throw new IllegalStateException(
-                    "weather.api.key が未設定です。application.yml を確認してください。");
+                    "weather.api.key が未設定です。application.yaml を確認してください。");
         }
         log.info("天気API設定を検証OK: base-url={}", baseUrl);
     }

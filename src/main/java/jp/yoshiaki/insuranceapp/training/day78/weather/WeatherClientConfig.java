@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 /**
  * WeatherClient の実装を Profile で切り替える設定クラス。
  *
- * Springの @Profile を使うと、application.yml の
+ * Springの @Profile を使うと、application.yaml の
  * spring.profiles.active の値に応じて、
  * 「どの実装をBeanとして登録するか」を自動で切り替えられる。
  *

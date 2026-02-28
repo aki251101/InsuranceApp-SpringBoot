@@ -1,5 +1,5 @@
 # ==========================================================
-# Day87 用 application.yml
+# Day87 用 application.yaml
 # 環境変数で設定を上書きできるようにしている。
 # ${変数名:デフォルト値} の形式で、
 # 環境変数が設定されていればその値を、なければデフォルト値を使う。
@@ -9,7 +9,11 @@ server:
   # ① ポート番号：環境変数 SERVER_PORT で上書き可能（デフォルト: 8080）
   port: ${SERVER_PORT:8080}
 
-spring:
+# 実行構成 App(stub) で実行することで下記を行うこととする。
+#spring:
+#  profiles:
+#    active: stub
+
   datasource:
     # ② DB接続先：環境変数 SPRING_DATASOURCE_URL で上書き可能
     #    デフォルトは H2 ファイルモード（/data/taskboard に保存）

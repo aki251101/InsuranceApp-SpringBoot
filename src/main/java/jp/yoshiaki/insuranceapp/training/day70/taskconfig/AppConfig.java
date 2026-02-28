@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
- * application.yml の「app:」セクションをまるごとバインド（結び付け）するクラス。
+ * application.yaml の「app:」セクションをまるごとバインド（結び付け）するクラス。
  *
  * 仕組み：
  *   yml に書いた app.app-name → このクラスの appName フィールドに自動セット

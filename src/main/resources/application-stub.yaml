@@ -1,0 +1,30 @@
+# ============================================================
+# Stub プロファイル用設定
+# ============================================================
+# spring.profiles.active=stub のときに読み込まれる。
+# application.yaml の共通設定を継承しつつ、Stub固有の設定を上書きする。
+#
+# 【使い方】
+#   application.yaml に以下を追加:
+#     spring:
+#       profiles:
+#         active: stub
+#
+#   または起動時に引数で指定:
+#     --spring.profiles.active=stub
+# ============================================================
+
+# Stub固有のログ設定（Client層のStub応答をログで確認しやすくする）
+logging:
+  level:
+    jp.yoshiaki.insuranceapp.client.stub: DEBUG
+
+# 外部API関連の設定（Stub環境では使わないが、設定値が無いとBean生成で落ちる場合の安全弁）
+# ※ 本番用の application-prod.yml では実際のAPIキー・URLを設定する
+calendar:
+  api:
+    enabled: false
+
+ai:
+  api:
+    enabled: false

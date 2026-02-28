@@ -18,7 +18,7 @@ services:
       - "9090:9090"
 
     # ③ 環境変数：アプリの設定を外から注入する
-    #    application.yml の ${変数名:デフォルト値} と対応している
+    #    application.yaml の ${変数名:デフォルト値} と対応している
     environment:
       - SERVER_PORT=9090
       - SPRING_DATASOURCE_URL=jdbc:h2:file:/data/taskboard
