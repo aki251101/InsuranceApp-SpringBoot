@@ -1,0 +1,38 @@
+# ==========================================
+# Day90 学習版 - Actuator 設定
+# ==========================================
+# このファイルの配置先：
+#   src/main/resources/application.yml
+#
+# ※既存の application.yml がある場合は、
+#   management セクションだけを追記してください。
+# ==========================================
+
+server:
+  port: 8080
+
+# ── Actuator の設定 ──
+management:
+
+  # エンドポイントの公開設定
+  endpoints:
+    web:
+      exposure:
+        # ① 公開するエンドポイントを指定
+        #   - health : アプリの死活状態（UP/DOWN）
+        #   - info   : アプリ名・バージョン等の情報
+        #   - "*"にすると全エンドポイントが公開される（本番では非推奨）
+        include: health,info
+
+  # health エンドポイントの詳細設定
+  endpoint:
+    health:
+      # ② show-details: ヘルスチェックの詳細を表示するか
+      #   - never  : ステータスのみ（例：{"status":"UP"}）
+      #   - always : コンポーネントごとの詳細も表示
+      #   - when-authorized : 認証済みユーザーにのみ詳細を表示
+      show-details: always
+
+    info:
+      # ③ info エンドポイントを有効にする
+      enabled: true
