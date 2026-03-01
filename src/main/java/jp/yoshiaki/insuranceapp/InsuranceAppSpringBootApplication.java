@@ -29,9 +29,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.REGEX,
                 // ↓ day90のみを実行するときに使用した
-                pattern = "jp\\.yoshiaki\\.insuranceapp\\.training\\.(?!day90\\.).*"
+                // pattern = "jp\\.yoshiaki\\.insuranceapp\\.training\\.(?!day90\\.).*"
                 // ↓ * にしているのでtraining直下全てが対象外となる
-                // pattern = "jp\\.yoshiaki\\.insuranceapp\\.training\\..*"
+                pattern = "jp\\.yoshiaki\\.insuranceapp\\.training\\..*"
         )
 )
 
