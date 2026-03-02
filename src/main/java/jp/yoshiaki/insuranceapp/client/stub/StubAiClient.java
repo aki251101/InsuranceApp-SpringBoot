@@ -2,7 +2,7 @@ package jp.yoshiaki.insuranceapp.client.stub;
 
 import jp.yoshiaki.insuranceapp.client.AiClient;
 import jp.yoshiaki.insuranceapp.domain.Accident;
-import jp.yoshiaki.insuranceapp.domain.Policy;
+import jp.yoshiaki.insuranceapp.domain.policy.Policy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;

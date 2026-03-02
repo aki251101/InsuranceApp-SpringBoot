@@ -28,3 +28,7 @@ calendar:
 ai:
   api:
     enabled: false
+
+spring:
+  jpa:
+    open-in-view: false
