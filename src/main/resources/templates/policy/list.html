@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>契約一覧</title>
+</head>
+<body>
+<h1>契約一覧</h1>
+
+<!-- フラッシュメッセージ -->
+<div th:if="${successMessage}" style="color: green;">
+    <p th:text="${successMessage}"></p>
+</div>
+<div th:if="${errorMessage}" style="color: red;">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<p>
+    <a href="/" >トップページへ</a>
+</p>
+
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>契約番号</th>
+        <th>契約者名</th>
+        <th>開始日</th>
+        <th>満期日</th>
+        <th>状態</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${#lists.isEmpty(policies)}">
+        <td colspan="7">契約データがありません。</td>
+    </tr>
+    <tr th:each="p : ${policies}">
+        <td th:text="${p.id}"></td>
+        <td th:text="${p.policyNumber}"></td>
+        <td th:text="${p.customerName}"></td>
+        <td th:text="${p.startDate}"></td>
+        <td th:text="${p.endDate}"></td>
+        <td th:text="${p.effectiveStatus}"></td>
+        <td>
+            <a th:href="@{/policies/{id}(id=${p.id})}">詳細</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

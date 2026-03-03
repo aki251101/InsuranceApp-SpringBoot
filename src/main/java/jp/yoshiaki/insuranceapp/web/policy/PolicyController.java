@@ -1,137 +1,160 @@
-// 配置：src/main/java/jp/yoshiaki/insuranceapp/web/policy/PolicyController.java
 package jp.yoshiaki.insuranceapp.web.policy;
 
 import jp.yoshiaki.insuranceapp.domain.policy.Policy;
-import jp.yoshiaki.insuranceapp.dto.policy.PolicyCreateRequest;
-import jp.yoshiaki.insuranceapp.dto.policy.PolicyResponse;
+import jp.yoshiaki.insuranceapp.dto.policy.PolicyDetailResponse;
 import jp.yoshiaki.insuranceapp.service.policy.PolicyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
 /**
- * 契約 REST Controller。
+ * 契約Controller
  *
- * エンドポイント一覧（Day91 スコープ）：
- *   POST   /api/policies       → 契約を新規作成
- *   GET    /api/policies       → 契約一覧（検索キーワード任意）
- *   GET    /api/policies/{id}  → 契約詳細（1件取得）
- *
- * Day92 で追加予定：
- *   POST   /api/policies/{id}/renew     → 更新
- *   POST   /api/policies/{id}/cancel    → 解約
- *   POST   /api/policies/{id}/unrenew   → 更新取消
- *   POST   /api/policies/{id}/uncancel  → 解約取消
+ * 【Day92で追加】
+ * - POST /policies/{id}/renew     : 更新
+ * - POST /policies/{id}/unrenew   : 更新取消
+ * - POST /policies/{id}/cancel    : 解約
+ * - POST /policies/{id}/uncancel  : 解約取消
  */
-@RestController                            // ① JSON を返す Controller であることを宣言
-@RequestMapping("/api/policies")           // ② このクラスの全メソッドのURLは /api/policies で始まる
-@RequiredArgsConstructor                   // ③ final フィールドを引数に持つコンストラクタを自動生成（DI用）
-@Slf4j                                     // ④ ログ出力用の log 変数を自動生成
+@Controller
+@RequestMapping("/policies")
+@RequiredArgsConstructor
+@Slf4j
 public class PolicyController {
 
-    /** 契約の業務ロジックを持つ Service */
     private final PolicyService policyService;
 
-    // ── 作成 ──────────────────────────────
+    // ─── Day91で作成済みのエンドポイント（既存） ───
 
     /**
-     * 契約を新規作成する。
-     *
-     * リクエスト例（JSON）：
-     *   {
-     *     "customerName": "山田太郎",
-     *     "startDate": "2026-04-01"
-     *   }
-     *
-     * @param request 作成リクエスト DTO
-     * @return 作成された契約（201 Created）
-     */
-    @PostMapping
-    public ResponseEntity<PolicyResponse> create(
-            @RequestBody PolicyCreateRequest request) {
-
-        log.info("契約作成リクエスト: customerName={}, startDate={}",
-                request.getCustomerName(), request.getStartDate());
-
-        // DTO → Entity に変換（必要なフィールドだけ詰める）
-        Policy policy = Policy.builder()
-                .customerName(request.getCustomerName())
-                .startDate(request.getStartDate())
-                .build();
-
-        // Service に作成を委譲
-        Policy created = policyService.createPolicy(policy);
-
-        // Entity → DTO に変換してレスポンスを返す
-        PolicyResponse response = PolicyResponse.from(created);
-
-        // HTTP 201 Created で返す
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    // ── 一覧・検索 ──────────────────────────────
-
-    /**
-     * 契約一覧を取得する。
-     * クエリパラメータ q が指定されていれば部分一致検索、
-     * 指定されていなければ全件取得する。
-     *
-     * リクエスト例：
-     *   GET /api/policies         → 全件取得
-     *   GET /api/policies?q=山田  → 「山田」で部分一致検索
-     *
-     * @param q 検索キーワード（任意）
-     * @return 契約リスト（200 OK）
+     * 契約一覧画面
      */
     @GetMapping
-    public ResponseEntity<List<PolicyResponse>> list(
-            @RequestParam(name = "q", required = false) String q) {
-
-        log.debug("契約一覧リクエスト: q={}", q);
-
-        // 検索キーワードの有無で処理を分岐
-        List<Policy> policies;
-        if (q != null && !q.isBlank()) {
-            policies = policyService.searchPolicies(q);
-        } else {
-            policies = policyService.getAllPolicies();
-        }
-
-        // Entity リスト → DTO リスト に変換
-        List<PolicyResponse> responseList = policies.stream()
-                .map(PolicyResponse::from)
-                .toList();
-
-        return ResponseEntity.ok(responseList);
+    public String list(Model model) {
+        log.debug("契約一覧表示");
+        List<Policy> policies = policyService.getAllPolicies();
+        model.addAttribute("policies", policies);
+        return "policy/list";
     }
 
-    // ── 詳細 ──────────────────────────────
-
     /**
-     * 契約詳細を1件取得する。
-     * 見つからない場合は NotFoundException → GlobalExceptionHandler → 404。
+     * 契約詳細画面
      *
-     * リクエスト例：
-     *   GET /api/policies/1
-     *
-     * @param id 契約ID（パスパラメータ）
-     * @return 契約詳細（200 OK）
+     * 【Day92変更点】PolicyDetailResponse.from() で操作可否フラグを渡す
      */
     @GetMapping("/{id}")
-    public ResponseEntity<PolicyResponse> detail(@PathVariable Long id) {
+    public String detail(@PathVariable Long id, Model model) {
+        log.debug("契約詳細表示: id={}", id);
 
-        log.debug("契約詳細リクエスト: id={}", id);
+        Policy policy = policyService.getPolicyById(id)
+                .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません: id=" + id));
 
-        // Service から取得（見つからなければ NotFoundException）
-        Policy policy = policyService.getPolicyById(id);
+        // DTO変換（操作可否フラグを含む）
+        PolicyDetailResponse response = PolicyDetailResponse.from(policy);
+        model.addAttribute("policy", response);
 
-        // Entity → DTO に変換
-        PolicyResponse response = PolicyResponse.from(policy);
+        return "policy/detail";
+    }
 
-        return ResponseEntity.ok(response);
+    // ─── Day92で追加するエンドポイント ───
+
+    /**
+     * 契約更新（更新ボタン押下時）
+     *
+     * 成功/失敗をフラッシュメッセージで詳細画面にリダイレクト。
+     * フラッシュメッセージ（flash attribute）とは：
+     *   リダイレクト先の画面に1回だけ表示されるメッセージ。
+     *   画面をリロードすると消える。「操作結果の通知」に使う。
+     */
+    @PostMapping("/{id}/renew")
+    public String renew(@PathVariable Long id,
+                        RedirectAttributes redirectAttributes) {
+        log.info("契約更新: id={}", id);
+
+        try {
+            policyService.renewPolicy(id);
+            redirectAttributes.addFlashAttribute("successMessage", "契約を更新しました");
+        } catch (IllegalStateException e) {
+            // 業務ルール違反（更新可能期間外など）
+            log.warn("契約更新失敗: {}", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (Exception e) {
+            // 予期しないエラー
+            log.error("契約更新エラー", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "エラーが発生しました");
+        }
+
+        return "redirect:/policies/" + id;
+    }
+
+    /**
+     * 契約更新取消（当日限定）
+     */
+    @PostMapping("/{id}/unrenew")
+    public String unrenew(@PathVariable Long id,
+                          RedirectAttributes redirectAttributes) {
+        log.info("契約更新取消: id={}", id);
+
+        try {
+            policyService.unrenewPolicy(id);
+            redirectAttributes.addFlashAttribute("successMessage", "更新を取り消しました");
+        } catch (IllegalStateException e) {
+            log.warn("契約更新取消失敗: {}", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (Exception e) {
+            log.error("契約更新取消エラー", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "エラーが発生しました");
+        }
+
+        return "redirect:/policies/" + id;
+    }
+
+    /**
+     * 契約解約
+     */
+    @PostMapping("/{id}/cancel")
+    public String cancel(@PathVariable Long id,
+                         RedirectAttributes redirectAttributes) {
+        log.info("契約解約: id={}", id);
+
+        try {
+            policyService.cancelPolicy(id);
+            redirectAttributes.addFlashAttribute("successMessage", "契約を解約しました");
+        } catch (IllegalStateException e) {
+            log.warn("契約解約失敗: {}", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (Exception e) {
+            log.error("契約解約エラー", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "エラーが発生しました");
+        }
+
+        return "redirect:/policies/" + id;
+    }
+
+    /**
+     * 契約解約取消（当日限定）
+     */
+    @PostMapping("/{id}/uncancel")
+    public String uncancel(@PathVariable Long id,
+                           RedirectAttributes redirectAttributes) {
+        log.info("契約解約取消: id={}", id);
+
+        try {
+            policyService.uncancelPolicy(id);
+            redirectAttributes.addFlashAttribute("successMessage", "解約を取り消しました");
+        } catch (IllegalStateException e) {
+            log.warn("契約解約取消失敗: {}", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (Exception e) {
+            log.error("契約解約取消エラー", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "エラーが発生しました");
+        }
+
+        return "redirect:/policies/" + id;
     }
 }

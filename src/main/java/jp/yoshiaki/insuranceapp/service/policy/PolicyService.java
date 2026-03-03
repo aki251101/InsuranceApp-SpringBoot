@@ -1,30 +1,26 @@
-// 配置：src/main/java/jp/yoshiaki/insuranceapp/service/policy/PolicyService.java
 package jp.yoshiaki.insuranceapp.service.policy;
 
 import jp.yoshiaki.insuranceapp.domain.policy.Policy;
-import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.repository.policy.PolicyRepository;
-import jp.yoshiaki.insuranceapp.util.NormalizationUtil;
-import jp.yoshiaki.insuranceapp.util.PolicyNumberGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * 契約 Service。
- * 契約に関するビジネスロジックをこのクラスに集約する。
+ * 契約Service
+ * 契約に関するビジネスロジックを実装
  *
- * クラスレベルで @Transactional(readOnly = true) を付けている理由：
- *   → このクラスのメソッドは「読み取り専用」がデフォルト
- *   → 書き込み（INSERT/UPDATE）が必要なメソッドだけ @Transactional で上書きする
- *   → readOnly = true にすると、JPA が「変更検知」をスキップして少し速くなる
- *
- * Day91 スコープ：createPolicy / getAllPolicies / getPolicyById / searchPolicies
- * Day92 で追加予定：renewPolicy / cancelPolicy / unrenewPolicy / uncancelPolicy
+ * 【Day92で追加】
+ * - renewPolicy()     : 更新（満期日1年延長）
+ * - unrenewPolicy()   : 更新取消（当日限定）
+ * - cancelPolicy()    : 解約（effectiveStatusが契約中の場合のみ）
+ * - uncancelPolicy()  : 解約取消（当日限定）
  */
 @Service
 @Transactional(readOnly = true)
@@ -32,18 +28,12 @@ import java.util.List;
 @Slf4j
 public class PolicyService {
 
-    /** DB アクセス窓口 */
     private final PolicyRepository policyRepository;
 
-    /** 契約番号の自動附番ユーティリティ */
-    private final PolicyNumberGenerator policyNumberGenerator;
-
-    // ── 取得系（readOnly = true のまま） ──────────────────────
+    // ─── Day91で作成済みのメソッド（既存） ───
 
     /**
-     * すべての契約を取得する。
-     *
-     * @return 全契約リスト
+     * すべての契約を取得
      */
     public List<Policy> getAllPolicies() {
         log.debug("すべての契約を取得");
@@ -51,133 +41,197 @@ public class PolicyService {
     }
 
     /**
-     * ID を指定して契約を1件取得する。
-     * 見つからなければ NotFoundException をスローする。
-     *
-     * @param id 契約ID
-     * @return Policy エンティティ
-     * @throws NotFoundException 該当IDの契約が存在しない場合
+     * IDで契約を取得
      */
-    public Policy getPolicyById(Long id) {
+    public Optional<Policy> getPolicyById(Long id) {
         log.debug("契約を取得: id={}", id);
-        return policyRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(
-                        "契約が見つかりません: id=" + id));
+        return policyRepository.findById(id);
     }
 
     /**
-     * 契約番号 または 契約者名で部分一致検索する。
-     * キーワードが空の場合は全件取得にフォールバックする。
-     *
-     * @param query 検索キーワード
-     * @return 該当する契約リスト
-     */
-    public List<Policy> searchPolicies(String query) {
-        log.debug("契約を検索: query={}", query);
-
-        // キーワードが空なら全件返す
-        if (query == null || query.isBlank()) {
-            return getAllPolicies();
-        }
-
-        // 全角/半角の揺れを統一してから検索する
-        String normalized = NormalizationUtil.normalizeSearchKeyword(query);
-
-        return policyRepository
-                .findByPolicyNumberContainingOrCustomerNameContaining(
-                        normalized, normalized);
-    }
-
-    /**
-     * 更新可能な契約を取得する（ACTIVE かつ 満期日が今日〜2ヶ月後）。
-     *
-     * @return 更新可能な契約リスト
-     */
-    public List<Policy> getRenewablePolicies() {
-        log.debug("更新可能契約を取得");
-        LocalDate today = LocalDate.now();
-        LocalDate twoMonthsLater = today.plusMonths(2);
-        return policyRepository.findRenewablePolicies(today, twoMonthsLater);
-    }
-
-    /**
-     * ステータス指定で契約を取得する。
-     * ACTIVE の場合は失効済みを除外した「真の契約中」のみ返す。
-     *
-     * @param status ステータス（"ACTIVE" / "CANCELLED"）
-     * @return 契約リスト
-     */
-    public List<Policy> getPoliciesByStatus(String status) {
-        log.debug("契約を検索: status={}", status);
-        if ("ACTIVE".equals(status)) {
-            return policyRepository.findActivePolicies(LocalDate.now());
-        }
-        return policyRepository
-                .findByStatusOrderByEndDateAscPolicyNumberAsc(status);
-    }
-
-    /**
-     * 失効契約を取得する（満期日が過ぎていて、かつ解約でない）。
-     *
-     * @return 失効した契約リスト
-     */
-    public List<Policy> getLapsedPolicies() {
-        log.debug("失効契約を取得");
-        return policyRepository.findLapsedPolicies(LocalDate.now());
-    }
-
-    // ── 作成系（@Transactional で readOnly を上書き） ──────────
-
-    /**
-     * 契約を新規作成する。
-     *
-     * 処理の流れ：
-     *   ① 契約番号を自動附番する（例: P-2026-0001）
-     *   ② 満期日を自動計算する（開始日 + 1年）
-     *   ③ 契約者名を正規化する（全角/半角統一）
-     *   ④ DB に保存する（@PrePersist で created_at / updated_at が自動設定される）
-     *
-     * @param policy Policy エンティティ（customerName, startDate は必須）
-     * @return 保存済みの Policy エンティティ（id が採番された状態）
+     * 契約を新規作成
      */
     @Transactional
     public Policy createPolicy(Policy policy) {
-        // ① 契約番号を自動附番
-        String generatedNumber = policyNumberGenerator.generate(policy.getStartDate());
-        policy.setPolicyNumber(generatedNumber);
-        log.info("契約を作成: policyNumber={}", generatedNumber);
-
-        // ② 満期日を自動計算（開始日 + 1年）
-        LocalDate endDate = calculateEndDate(policy.getStartDate());
-        policy.setEndDate(endDate);
-        log.debug("満期日を自動計算: startDate={}, endDate={}",
-                policy.getStartDate(), endDate);
-
-        // ③ 契約者名を正規化
-        policy.setCustomerName(
-                NormalizationUtil.normalizeCustomerName(policy.getCustomerName()));
-
-        // ④ DB に保存（@PrePersist が created_at/updated_at/status/calendarRegistered を設定）
+        log.info("契約を作成: policyNumber={}", policy.getPolicyNumber());
         return policyRepository.save(policy);
     }
 
-    // ── private メソッド ──────────────────────
+    /**
+     * 契約を保存（汎用の更新メソッド）
+     */
+    @Transactional
+    public Policy updatePolicy(Policy policy) {
+        log.info("契約を更新: id={}", policy.getId());
+        return policyRepository.save(policy);
+    }
+
+    // ─── Day92で追加するメソッド ───
 
     /**
-     * 満期日を自動計算する。
+     * 契約を更新（満期日を1年延長）
      *
-     * ルール：
-     *   基本：開始日 + 1年（同じ月日）
-     *   例外：開始日が2月29日で翌年が平年の場合 → 2月28日
-     *   ※ Java の LocalDate.plusYears(1) が上記を自動で処理してくれる
+     * 【処理の流れ】
+     *   1. IDで契約を取得（なければ例外）
+     *   2. isRenewable() でガードチェック（期間外なら例外）
+     *   3. 更新前満期日を renewalDueEndDate に退避（取消に備える）
+     *   4. 満期日を1年延長
+     *   5. 更新日時(renewedAt)を記録（当日取消の判定に使用）
+     *   6. DBに保存
      *
-     * @param startDate 契約開始日
-     * @return 満期日
+     * @param id 契約ID
+     * @return 更新済みの契約
+     * @throws IllegalArgumentException 契約が見つからない場合
+     * @throws IllegalStateException 更新可能期間外の場合
      */
-    private LocalDate calculateEndDate(LocalDate startDate) {
-        if (startDate == null) {
-            throw new IllegalArgumentException("開始日が設定されていません");
+    @Transactional
+    public Policy renewPolicy(Long id) {
+        log.info("契約を更新（renew）: id={}", id);
+
+        // ① IDで契約を取得
+        Policy policy = policyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません"));
+
+        // ② 更新可能期間のガードチェック
+        if (!policy.isRenewable()) {
+            throw new IllegalStateException("更新可能期間外のため更新できません");
         }
-        return startDate.plusYears(1);
+
+        // ③ 更新前満期日を退避（取消用）
+        policy.setRenewalDueEndDate(policy.getEndDate());
+
+        // ④ 満期日を1年延長
+        policy.setEndDate(policy.getEndDate().plusYears(1));
+
+        // ⑤ 更新操作日時を記録
+        policy.setRenewedAt(LocalDateTime.now());
+
+        // ⑥ DBに保存して返す
+        return policyRepository.save(policy);
+    }
+
+    /**
+     * 契約更新を取り消し（当日限定）
+     *
+     * 【処理の流れ】
+     *   1. IDで契約を取得
+     *   2. renewedAt が null でないことを確認（更新済みかチェック）
+     *   3. renewedAt が今日であることを確認（当日限定）
+     *   4. renewalDueEndDate（旧満期日）が存在することを確認
+     *   5. 満期日を元に戻す
+     *   6. 退避データ（renewalDueEndDate / renewedAt）をクリア
+     *   7. DBに保存
+     *
+     * @param id 契約ID
+     * @return 取消済みの契約
+     * @throws IllegalArgumentException 契約が見つからない場合
+     * @throws IllegalStateException 当日以外、未更新、旧満期日がない場合
+     */
+    @Transactional
+    public Policy unrenewPolicy(Long id) {
+        log.info("契約更新を取り消し（unrenew）: id={}", id);
+
+        Policy policy = policyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません"));
+
+        // ガード①：そもそも更新されているか
+        if (policy.getRenewedAt() == null) {
+            throw new IllegalStateException("更新されていない契約です");
+        }
+
+        // ガード②：更新操作が今日か（当日限定）
+        LocalDate renewedDate = policy.getRenewedAt().toLocalDate();
+        if (!renewedDate.equals(LocalDate.now())) {
+            throw new IllegalStateException("更新取消は当日のみ可能です");
+        }
+
+        // ガード③：旧満期日が退避されているか
+        if (policy.getRenewalDueEndDate() == null) {
+            throw new IllegalStateException("更新前満期日が見つかりません");
+        }
+
+        // 満期日を元に戻す
+        policy.setEndDate(policy.getRenewalDueEndDate());
+
+        // 退避データをクリア
+        policy.setRenewalDueEndDate(null);
+        policy.setRenewedAt(null);
+
+        return policyRepository.save(policy);
+    }
+
+    /**
+     * 契約を解約
+     *
+     * 【ガード条件】
+     *   effectiveStatus が「契約中」でなければ解約不可。
+     *   → 「失効」（満期切れ）の契約は解約できない（すでに無効なので）
+     *   → 「解約」（解約済み）の契約も重複解約できない
+     *
+     * @param id 契約ID
+     * @return 解約済みの契約
+     * @throws IllegalArgumentException 契約が見つからない場合
+     * @throws IllegalStateException effectiveStatusが契約中でない場合
+     */
+    @Transactional
+    public Policy cancelPolicy(Long id) {
+        log.info("契約を解約（cancel）: id={}", id);
+
+        Policy policy = policyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません"));
+
+        // effectiveStatus が「契約中」でなければ解約不可
+        if (!"契約中".equals(policy.getEffectiveStatus())) {
+            throw new IllegalStateException("解約できない状態です");
+        }
+
+        // ステータスを CANCELLED に変更
+        policy.setStatus("CANCELLED");
+
+        // 解約操作日時を記録（当日取消の判定に使用）
+        policy.setCancelledAt(LocalDateTime.now());
+
+        return policyRepository.save(policy);
+    }
+
+    /**
+     * 契約解約を取り消し（当日限定）
+     *
+     * 【処理の流れ】
+     *   1. 解約日時（cancelledAt）が記録されていることを確認
+     *   2. 解約日が今日であることを確認（当日限定）
+     *   3. ステータスを ACTIVE に戻す
+     *   4. 解約日時をクリア
+     *
+     * @param id 契約ID
+     * @return 取消済みの契約
+     * @throws IllegalArgumentException 契約が見つからない場合
+     * @throws IllegalStateException 当日以外、未解約の場合
+     */
+    @Transactional
+    public Policy uncancelPolicy(Long id) {
+        log.info("契約解約を取り消し（uncancel）: id={}", id);
+
+        Policy policy = policyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません"));
+
+        // ガード①：解約済みか
+        if (policy.getCancelledAt() == null) {
+            throw new IllegalStateException("解約されていない契約です");
+        }
+
+        // ガード②：解約操作が今日か（当日限定）
+        LocalDate cancelledDate = policy.getCancelledAt().toLocalDate();
+        if (!cancelledDate.equals(LocalDate.now())) {
+            throw new IllegalStateException("解約取消は当日のみ可能です");
+        }
+
+        // ステータスを ACTIVE に戻す
+        policy.setStatus("ACTIVE");
+
+        // 解約日時をクリア
+        policy.setCancelledAt(null);
+
+        return policyRepository.save(policy);
     }
 }

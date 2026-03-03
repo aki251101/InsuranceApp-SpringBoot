@@ -31,4 +31,5 @@ ai:
 
 spring:
   jpa:
+    defer-datasource-initialization: true
     open-in-view: false

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>契約詳細</title>
+</head>
+<body>
+<h1>契約詳細</h1>
+
+<!-- フラッシュメッセージ -->
+<div th:if="${successMessage}" style="color: green;">
+    <p th:text="${successMessage}"></p>
+</div>
+<div th:if="${errorMessage}" style="color: red;">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<p>
+    <a th:href="@{/policies}">一覧へ戻る</a> /
+    <a href="/">トップページへ</a>
+</p>
+
+<div th:if="${policy}">
+    <table border="1" cellpadding="6" cellspacing="0">
+        <tr><th>ID</th><td th:text="${policy.id}"></td></tr>
+        <tr><th>契約番号</th><td th:text="${policy.policyNumber}"></td></tr>
+        <tr><th>契約者名</th><td th:text="${policy.customerName}"></td></tr>
+        <tr><th>開始日</th><td th:text="${policy.startDate}"></td></tr>
+        <tr><th>満期日</th><td th:text="${policy.endDate}"></td></tr>
+        <tr><th>状態（表示用）</th><td th:text="${policy.status}"></td></tr>
+        <tr>
+            <th>要注意</th>
+            <td>
+                <span th:if="${policy.attentionRequired}" style="color: orange;">要注意（満期20日前〜）</span>
+                <span th:unless="${policy.attentionRequired}">-</span>
+            </td>
+        </tr>
+        <tr>
+            <th>カレンダー登録</th>
+            <td>
+                <span th:if="${policy.calendarRegistered}">登録済み</span>
+                <span th:unless="${policy.calendarRegistered}">未登録</span>
+            </td>
+        </tr>
+    </table>
+
+    <h2>操作</h2>
+
+    <!-- 更新 -->
+    <form th:if="${policy.canRenew}" th:action="@{/policies/{id}/renew(id=${policy.id})}" method="post">
+        <button type="submit">更新</button>
+    </form>
+
+    <!-- 更新取消（当日限定） -->
+    <form th:if="${policy.canUnrenew}" th:action="@{/policies/{id}/unrenew(id=${policy.id})}" method="post">
+        <button type="submit">更新取消（当日限定）</button>
+    </form>
+
+    <!-- 解約 -->
+    <form th:if="${policy.canCancel}" th:action="@{/policies/{id}/cancel(id=${policy.id})}" method="post">
+        <button type="submit">解約</button>
+    </form>
+
+    <!-- 解約取消（当日限定） -->
+    <form th:if="${policy.canUncancel}" th:action="@{/policies/{id}/uncancel(id=${policy.id})}" method="post">
+        <button type="submit">解約取消（当日限定）</button>
+    </form>
+
+    <!-- どの操作も不可のとき -->
+    <p th:if="${!policy.canRenew and !policy.canUnrenew and !policy.canCancel and !policy.canUncancel}">
+        現在、操作可能なボタンはありません。
+    </p>
+</div>
+
+</body>
+</html>
