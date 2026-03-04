@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import jp.yoshiaki.insuranceapp.client.AiClient;
-import jp.yoshiaki.insuranceapp.domain.Accident;
+import jp.yoshiaki.insuranceapp.domain.accident.Accident;
 import jp.yoshiaki.insuranceapp.domain.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.domain.exception.ValidationException;
 import jp.yoshiaki.insuranceapp.repository.AccidentRepository;

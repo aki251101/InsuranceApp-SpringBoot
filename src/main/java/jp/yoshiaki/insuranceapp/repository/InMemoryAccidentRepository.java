@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import jp.yoshiaki.insuranceapp.domain.Accident;
+import jp.yoshiaki.insuranceapp.domain.accident.Accident;
 
 @Repository
 public class InMemoryAccidentRepository implements AccidentRepository {

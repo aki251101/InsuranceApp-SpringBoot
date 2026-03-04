@@ -1,6 +1,6 @@
 package jp.yoshiaki.insuranceapp.client;
 
-import jp.yoshiaki.insuranceapp.domain.Accident;
+import jp.yoshiaki.insuranceapp.domain.accident.Accident;
 import jp.yoshiaki.insuranceapp.domain.policy.Policy;
 
 /**

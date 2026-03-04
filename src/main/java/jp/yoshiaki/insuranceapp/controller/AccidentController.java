@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jp.yoshiaki.insuranceapp.domain.Accident;
+import jp.yoshiaki.insuranceapp.domain.accident.Accident;
 import jp.yoshiaki.insuranceapp.service.AccidentService;
 
 /**

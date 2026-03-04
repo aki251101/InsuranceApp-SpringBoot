@@ -1,4 +1,4 @@
-package jp.yoshiaki.insuranceapp.repository;
+package jp.yoshiaki.insuranceapp.repository.accident;
 
 import java.util.List;
 import java.util.Optional;
