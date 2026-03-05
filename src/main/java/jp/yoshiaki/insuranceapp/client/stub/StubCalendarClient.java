@@ -1,55 +1,72 @@
 package jp.yoshiaki.insuranceapp.client.stub;
 
-import jp.yoshiaki.insuranceapp.client.CalendarClient;
 import jp.yoshiaki.insuranceapp.entity.Policy;
+import jp.yoshiaki.insuranceapp.client.CalendarClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 /**
- * カレンダー連携のStub実装（開発・テスト用）
+ * CalendarClient の Stub（スタブ）実装
  *
- * 本物の Google Calendar API を呼ばず、固定のイベントIDを返す。
- * spring.profiles.active=stub のときだけ Bean として登録される。
+ * 開発環境（profile=stub）で有効。
+ * Google Calendar API を呼ばず、ログ出力だけ行う。
+ * 戻り値は "stub-event-" + UUID前8桁のダミーID。
  *
- * 目的:
- *   - APIキーが無くてもアプリ全体が起動する
- *   - 画面操作 → Service → CalendarClient の動線が通ることを確認できる
- *   - 本番実装（GoogleCalendarClient）と差し替えるだけで本物に繋がる
+ * 使い分け：
+ *   - Stub：何もしない／固定値を返す（＝今回のこれ）
+ *   - Fake：簡易的に動作する偽物（例：InMemory に保存して一覧が取れる）
+ *   - Mock：テスト用。呼ばれた回数や引数を検証できる（Mockitoなど）
  */
-// @Component
-@Profile("stub")  // ① "stub" プロファイルが有効なときだけ Bean 登録される
+@Component
+@Profile("stub")  // ① application.yml の spring.profiles.active=stub のときだけ有効
 @Slf4j
 public class StubCalendarClient implements CalendarClient {
 
     /**
-     * イベント作成のStub実装
+     * イベント作成（Stub版：ログ出力＋ダミーID返却）
      *
-     * 固定の文字列 "stub-event-{policyId}" を返す。
-     * 実際のカレンダーには何も登録されない。
-     *
-     * @param policy 対象の契約
-     * @return Stubが生成した固定のイベントID
+     * 本番では Google Calendar API にイベントが作られるが、
+     * Stubではログに記録するだけ。動作確認には十分。
      */
     @Override
     public String createEvent(Policy policy) {
-        // ② ログで「Stubが応答した」ことを明示する（デバッグ時に本番と区別できる）
-        String stubEventId = "stub-event-" + policy.getId();
-        log.info("[Stub] カレンダーイベント作成: policyId={}, stubEventId={}",
-                policy.getId(), stubEventId);
-        return stubEventId;
+        // ② ダミーのイベントIDを生成（UUID前8桁で十分に一意）
+        String dummyEventId = "stub-event-" + UUID.randomUUID().toString().substring(0, 8);
+
+        log.info("[STUB] カレンダーイベント作成: policyId={}, customerName={}, endDate={}, dummyEventId={}",
+                policy.getId(),
+                policy.getCustomerName(),
+                policy.getEndDate(),
+                dummyEventId);
+
+        return dummyEventId;
     }
 
     /**
-     * イベント削除のStub実装
-     *
-     * ログ出力のみ行い、実際には何も削除しない。
-     *
-     * @param eventId 削除対象のイベントID
+     * イベント削除（Stub版：ログ出力のみ）
      */
     @Override
     public void deleteEvent(String eventId) {
-        // ③ 削除もログだけ。eventId が null/空でも安全に動く
-        log.info("[Stub] カレンダーイベント削除: eventId={}", eventId);
+        if (eventId == null || eventId.isBlank()) {
+            log.warn("[STUB] イベントIDが空のため削除をスキップ");
+            return;
+        }
+
+        log.info("[STUB] カレンダーイベント削除: eventId={}", eventId);
+    }
+
+    /**
+     * イベント更新（Stub版：削除＋再作成のログ出力）
+     */
+    @Override
+    public String updateEvent(Policy policy, String eventId) {
+        log.info("[STUB] カレンダーイベント更新: policyId={}, oldEventId={}",
+                policy.getId(), eventId);
+
+        deleteEvent(eventId);
+        return createEvent(policy);
     }
 }

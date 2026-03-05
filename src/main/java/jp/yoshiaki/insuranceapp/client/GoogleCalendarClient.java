@@ -1,4 +1,4 @@
-package jp.yoshiaki.insuranceapp.service;
+package jp.yoshiaki.insuranceapp.client;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;

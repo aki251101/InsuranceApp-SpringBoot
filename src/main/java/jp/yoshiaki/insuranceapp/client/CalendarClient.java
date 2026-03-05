@@ -28,4 +28,13 @@ public interface CalendarClient {
      * @param eventId 削除対象のイベント ID
      */
     void deleteEvent(String eventId);
+
+    /**
+     * カレンダー上のイベントを更新する
+     *
+     * @param policy 対象の契約情報
+     * @param eventId 既存イベントID（更新対象）
+     * @return 更新後のイベントID（削除＋再作成方式の場合は新しいIDになる）
+     */
+    String updateEvent(Policy policy, String eventId);
 }
