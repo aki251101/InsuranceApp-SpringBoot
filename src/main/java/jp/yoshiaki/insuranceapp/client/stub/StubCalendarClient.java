@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  *   - 画面操作 → Service → CalendarClient の動線が通ることを確認できる
  *   - 本番実装（GoogleCalendarClient）と差し替えるだけで本物に繋がる
  */
-@Component
+// @Component
 @Profile("stub")  // ① "stub" プロファイルが有効なときだけ Bean 登録される
 @Slf4j
 public class StubCalendarClient implements CalendarClient {
