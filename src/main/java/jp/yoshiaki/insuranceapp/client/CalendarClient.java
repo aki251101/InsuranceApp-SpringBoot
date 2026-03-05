@@ -1,6 +1,6 @@
 package jp.yoshiaki.insuranceapp.client;
 
-import jp.yoshiaki.insuranceapp.domain.policy.Policy;
+import jp.yoshiaki.insuranceapp.entity.Policy;
 
 /**
  * カレンダー連携クライアント（境界 interface）

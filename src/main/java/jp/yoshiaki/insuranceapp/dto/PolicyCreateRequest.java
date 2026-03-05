@@ -1,5 +1,5 @@
 // 配置：src/main/java/jp/yoshiaki/insuranceapp/dto/policy/PolicyCreateRequest.java
-package jp.yoshiaki.insuranceapp.dto.policy;
+package jp.yoshiaki.insuranceapp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

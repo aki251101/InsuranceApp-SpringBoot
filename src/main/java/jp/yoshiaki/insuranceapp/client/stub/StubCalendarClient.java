@@ -1,7 +1,7 @@
 package jp.yoshiaki.insuranceapp.client.stub;
 
 import jp.yoshiaki.insuranceapp.client.CalendarClient;
-import jp.yoshiaki.insuranceapp.domain.policy.Policy;
+import jp.yoshiaki.insuranceapp.entity.Policy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;

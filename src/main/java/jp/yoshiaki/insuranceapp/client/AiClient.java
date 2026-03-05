@@ -1,7 +1,7 @@
 package jp.yoshiaki.insuranceapp.client;
 
-import jp.yoshiaki.insuranceapp.domain.Accident;
-import jp.yoshiaki.insuranceapp.domain.policy.Policy;
+import jp.yoshiaki.insuranceapp.entity.Accident;
+import jp.yoshiaki.insuranceapp.entity.Policy;
 
 /**
  * AI連携クライアント（境界 interface）

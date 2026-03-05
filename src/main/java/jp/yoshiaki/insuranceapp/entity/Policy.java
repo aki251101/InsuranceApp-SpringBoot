@@ -1,4 +1,4 @@
-package jp.yoshiaki.insuranceapp.domain.policy;
+package jp.yoshiaki.insuranceapp.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,6 @@ import java.time.LocalDateTime;
 /**
  * 契約エンティティ
  * policies テーブルに対応
- *
- * 【Day92で追加】
- * - renewalDueEndDate / renewedAt / cancelledAt フィールド
- * - getEffectiveStatus() / isRenewable() / isAttentionRequired() メソッド
  */
 @Entity
 @Table(name = "policies")
@@ -25,61 +21,87 @@ import java.time.LocalDateTime;
 @Builder
 public class Policy {
 
-    // ① 主キー（自動採番）
+    /**
+     * 契約ID（主キー）
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ② 契約番号（業務上の一意キー。例：P-2026-0001）
+    /**
+     * 契約番号（業務ユニーク）
+     */
     @Column(name = "policy_number", nullable = false, unique = true, length = 32)
     private String policyNumber;
 
-    // ③ 契約者名
+    /**
+     * 契約者名
+     */
     @Column(name = "customer_name", nullable = false, length = 100)
     private String customerName;
 
-    // ④ 契約開始日
+    /**
+     * 契約開始日
+     */
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
-    // ⑤ 契約終了日（満期日）
+    /**
+     * 契約終了日（満期日）
+     */
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    // ⑥ 契約状態（DB保存値：ACTIVE / CANCELLED の2値）
+    /**
+     * 契約状態: ACTIVE, CANCELLED
+     */
     @Column(name = "status", nullable = false, length = 16)
     private String status;
 
-    // ⑦ 更新前満期日（更新取消時に元の満期日に戻すための退避用）
+    /**
+     * 更新前満期日（集計用）
+     */
     @Column(name = "renewal_due_end_date")
     private LocalDate renewalDueEndDate;
 
-    // ⑧ 更新操作日時（当日取消の判定に使用）
+    /**
+     * 更新操作日時
+     */
     @Column(name = "renewed_at")
     private LocalDateTime renewedAt;
 
-    // ⑨ 解約操作日時（当日取消の判定に使用）
+    /**
+     * 解約操作日時
+     */
     @Column(name = "cancelled_at")
     private LocalDateTime cancelledAt;
 
-    // ⑩ Googleカレンダー連携用（Day93以降で使用予定）
+    /**
+     * Googleカレンダーイベント ID
+     */
     @Column(name = "calendar_event_id", length = 128)
     private String calendarEventId;
 
+    /**
+     * カレンダー登録状態
+     */
     @Column(name = "calendar_registered", nullable = false)
     private Boolean calendarRegistered = false;
 
-    // ⑪ 作成日時（レコード初回保存時に自動設定）
+    /**
+     * 作成日時
+     */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // ⑫ 更新日時（レコード更新のたびに自動設定）
+    /**
+     * 更新日時
+     */
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     /**
-     * エンティティ保存前に自動実行（JPA ライフサイクルコールバック）
-     * 新規作成時に createdAt / updatedAt を自動設定する
+     * エンティティ保存前に自動実行（作成日時設定）
      */
     @PrePersist
     protected void onCreate() {
@@ -94,8 +116,7 @@ public class Policy {
     }
 
     /**
-     * エンティティ更新前に自動実行
-     * 更新のたびに updatedAt を現在日時に上書きする
+     * エンティティ更新前に自動実行（更新日時設定）
      */
     @PreUpdate
     protected void onUpdate() {
@@ -103,41 +124,23 @@ public class Policy {
     }
 
     /**
-     * 【Day92追加】実効ステータスを計算（画面表示用）
+     * 実効ステータスを計算（画面表示用）
      *
-     * DBには ACTIVE / CANCELLED の2値しか保存しないが、
-     * 画面には「契約中」「解約」「失効」の3状態を表示したい。
-     * このギャップを埋めるのがこのメソッド。
-     *
-     * 判定ロジック：
-     *   1. status == "CANCELLED" → "解約"
-     *   2. endDate < 今日 → "失効"（DB上ACTIVEだが期限切れ）
-     *   3. それ以外 → "契約中"
-     *
-     * @return "契約中" / "解約" / "失効"
+     * @return 契約中 / 解約 / 失効
      */
     public String getEffectiveStatus() {
-        // まず解約チェック（DBの状態が最優先）
         if ("CANCELLED".equals(status)) {
             return "解約";
         }
-        // 次に失効チェック（ACTIVEだが満期日を過ぎている）
         if (endDate != null && endDate.isBefore(LocalDate.now())) {
             return "失効";
         }
-        // どちらでもなければ契約中
         return "契約中";
     }
 
     /**
-     * 【Day92追加】更新可能期間内かどうか判定
-     *
-     * 損保の実務では、満期日の2ヶ月前から更新手続きが可能。
-     * 満期日を過ぎると更新不可（失効扱い）。
-     *
-     * 判定条件：
-     *   - ステータスが ACTIVE であること
-     *   - 今日が「満期2ヶ月前 ≦ 今日 ≦ 満期日」の範囲内であること
+     * 更新可能期間内かどうか判定
+     * 満期2ヶ月前〜満期日
      *
      * @return true: 更新可能
      */
@@ -147,17 +150,14 @@ public class Policy {
         }
         LocalDate today = LocalDate.now();
         LocalDate renewableStart = endDate.minusMonths(2);
-        // renewableStart <= today <= endDate
         return !today.isBefore(renewableStart) && !today.isAfter(endDate);
     }
 
     /**
-     * 【Day92追加】要注意期間内かどうか判定
+     * 要注意期間内かどうか判定
+     * 満期20日前〜満期日
      *
-     * 満期日まで20日を切った契約を「要注意」として
-     * 画面上で色を変えるなどの表示に使用する。
-     *
-     * @return true: 要注意（満期20日前〜満期日）
+     * @return true: 要注意
      */
     public boolean isAttentionRequired() {
         if (endDate == null) {

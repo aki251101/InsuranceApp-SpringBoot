@@ -1,6 +1,6 @@
-package jp.yoshiaki.insuranceapp.dto.policy;
+package jp.yoshiaki.insuranceapp.dto;
 
-import jp.yoshiaki.insuranceapp.domain.policy.Policy;
+import jp.yoshiaki.insuranceapp.entity.Policy;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

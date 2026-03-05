@@ -1,7 +1,7 @@
 // 配置：src/main/java/jp/yoshiaki/insuranceapp/util/PolicyNumberGenerator.java
 package jp.yoshiaki.insuranceapp.util;
 
-import jp.yoshiaki.insuranceapp.repository.policy.PolicyRepository;
+import jp.yoshiaki.insuranceapp.repository.PolicyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

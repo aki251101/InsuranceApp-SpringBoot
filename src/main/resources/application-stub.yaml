@@ -29,6 +29,12 @@ ai:
   api:
     enabled: false
 
+gemini:
+  api:
+    key: dummy
+    base-url: http://localhost/dummy
+    model: dummy-model
+
 spring:
   jpa:
     defer-datasource-initialization: true

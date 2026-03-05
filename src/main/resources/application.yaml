@@ -11,6 +11,12 @@
 server:
   port: 8080
 
+spring:
+  profiles:
+    active: stub   # ← ここを "stub" / "production" で切り替える
+    # stub       : StubCalendarClient が有効（ログ出力のみ・外部通信なし）
+    # production : GoogleCalendarClient が有効（実際のGoogle Calendar API呼び出し）
+
 # ── Actuator の設定 ──
 management:
 
