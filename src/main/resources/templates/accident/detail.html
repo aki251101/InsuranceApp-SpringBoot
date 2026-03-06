@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>事故詳細</title>
+</head>
+<body>
+<h1>事故詳細</h1>
+
+<div th:if="${successMessage}" style="color: green;">
+    <p th:text="${successMessage}"></p>
+</div>
+<div th:if="${errorMessage}" style="color: red;">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<p>
+    <a th:href="@{/accidents}">一覧へ戻る</a> /
+    <a href="/">トップページへ</a>
+</p>
+
+<div th:if="${accident}">
+    <table border="1" cellpadding="6" cellspacing="0">
+        <tr><th>ID</th><td th:text="${accident.id}"></td></tr>
+        <tr><th>契約番号</th><td th:text="${accident.policyNumber}"></td></tr>
+        <tr><th>契約者名</th><td th:text="${accident.customerName}"></td></tr>
+        <tr><th>受付日</th><td th:text="${accident.occurredAt}"></td></tr>
+        <tr><th>事故場所</th><td th:text="${accident.place}"></td></tr>
+        <tr><th>事故概要</th><td th:text="${accident.description}"></td></tr>
+        <tr><th>状態</th><td th:text="${accident.status}"></td></tr>
+        <tr><th>最終対応日時</th><td th:text="${accident.lastContactedAt}"></td></tr>
+        <tr><th>メモ</th><td th:text="${accident.memo}"></td></tr>
+        <tr>
+            <th>滞留</th>
+            <td>
+                <span th:if="${accident.stagnant}" style="color:red;">滞留</span>
+                <span th:unless="${accident.stagnant}">-</span>
+            </td>
+        </tr>
+    </table>
+
+    <h2>AI提案</h2>
+    <form th:action="@{/accidents/{id}/ai-suggest(id=${accident.id})}" method="post">
+        <button type="submit">AI次アクション候補</button>
+    </form>
+
+    <div th:if="${aiSuggestion}" style="margin-top: 12px; white-space: pre-wrap; border: 1px solid #ccc; padding: 8px;">
+        <strong>AI提案（参考）</strong>
+        <p th:text="${aiSuggestion}"></p>
+    </div>
+</div>
+
+</body>
+</html>

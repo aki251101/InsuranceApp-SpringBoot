@@ -16,6 +16,8 @@ calendar:
 ai:
   api:
     enabled: false
+  client:
+    type: stub
 
 gemini:
   api:

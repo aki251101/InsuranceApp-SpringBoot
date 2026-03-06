@@ -4,6 +4,8 @@ import jp.yoshiaki.insuranceapp.dto.PolicyDetailResponse;
 import jp.yoshiaki.insuranceapp.dto.PolicyListResponse;
 import jp.yoshiaki.insuranceapp.dto.RenewalStatsDto;
 import jp.yoshiaki.insuranceapp.entity.Policy;
+import jp.yoshiaki.insuranceapp.exception.AiApiException;
+import jp.yoshiaki.insuranceapp.service.AiService;
 import jp.yoshiaki.insuranceapp.service.PolicyService;
 import jp.yoshiaki.insuranceapp.service.RenewalStatsService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class PolicyController {
 
     private final PolicyService policyService;
     private final RenewalStatsService renewalStatsService;
+    private final AiService aiService;
 
     @GetMapping
     public String list(
@@ -70,6 +73,28 @@ public class PolicyController {
         model.addAttribute("policy", response);
 
         return "policy/detail";
+    }
+
+    /**
+     * Day95: 契約のAI要約（保存しない）
+     */
+    @PostMapping("/{id}/ai-summarize")
+    public String aiSummarize(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        log.info("契約AI要約: id={}", id);
+
+        try {
+            Policy policy = policyService.getPolicyById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません: id=" + id));
+
+            String summary = aiService.summarizePolicy(policy);
+            redirectAttributes.addFlashAttribute("aiSummary", summary);
+            redirectAttributes.addFlashAttribute("successMessage", "AI要約を生成しました");
+        } catch (AiApiException e) {
+            log.warn("契約AI要約失敗: id={}, reason={}", id, e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "AI要約の取得に失敗しました");
+        }
+
+        return "redirect:/policies/" + id;
     }
 
     @PostMapping("/{id}/renew")

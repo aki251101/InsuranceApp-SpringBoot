@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>事故一覧</title>
+</head>
+<body>
+<h1>事故一覧</h1>
+
+<p>
+    <a href="/">トップページへ</a>
+</p>
+
+<p>
+    <a th:href="@{/accidents(tab='OPEN_INPROGRESS')}">対応中</a> |
+    <a th:href="@{/accidents(tab='RESOLVED')}">完了</a>
+</p>
+
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>受付日</th>
+        <th>契約番号</th>
+        <th>契約者名</th>
+        <th>状態</th>
+        <th>滞留</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${#lists.isEmpty(response.items)}">
+        <td colspan="7">事故データがありません。</td>
+    </tr>
+    <tr th:each="a : ${response.items}">
+        <td th:text="${a.id}"></td>
+        <td th:text="${a.occurredAt}"></td>
+        <td th:text="${a.policyNumber}"></td>
+        <td th:text="${a.customerName}"></td>
+        <td th:text="${a.status}"></td>
+        <td>
+            <span th:if="${a.stagnant}" style="color:red;">滞留</span>
+            <span th:unless="${a.stagnant}">-</span>
+        </td>
+        <td>
+            <a th:href="@{/accidents/{id}(id=${a.id})}">詳細</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

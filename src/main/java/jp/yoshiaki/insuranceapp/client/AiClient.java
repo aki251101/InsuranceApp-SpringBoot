@@ -1,8 +1,5 @@
 package jp.yoshiaki.insuranceapp.client;
 
-import jp.yoshiaki.insuranceapp.entity.Accident;
-import jp.yoshiaki.insuranceapp.entity.Policy;
-
 /**
  * AI連携クライアント（境界 interface）
  *
@@ -10,24 +7,16 @@ import jp.yoshiaki.insuranceapp.entity.Policy;
  * Service/Controller層はこの interface だけを参照し、裏が Stub か本番かを意識しない。
  *
  * 実装クラス:
- *   - StubAiClient  : 開発/テスト用（固定テンプレートを返す）
- *   - GeminiAiClient : 本番用（Day95 で実装予定）
+ *   - StubAiClient   : 開発/テスト用（固定文言を返す）
+ *   - GeminiAiClient : 本番用（Gemini APIを呼び出す）
  */
 public interface AiClient {
 
     /**
-     * 契約情報をAIで要約する
+     * AIにプロンプトを送り、応答テキストを受け取る。
      *
-     * @param policy 対象の契約
-     * @return AI が生成した要約テキスト
+     * @param prompt AIへの指示文
+     * @return AI応答テキスト
      */
-    String summarizePolicy(Policy policy);
-
-    /**
-     * 事故情報から次に取るべきアクション候補をAIで生成する
-     *
-     * @param accident 対象の事故
-     * @return AI が生成した次アクション候補テキスト
-     */
-    String suggestNextActions(Accident accident);
+    String ask(String prompt);
 }

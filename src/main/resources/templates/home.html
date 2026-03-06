@@ -7,5 +7,11 @@
 <body>
 <h1>損保業務支援アプリ</h1>
 <p>トップページです。アプリの骨組みが正常に動作しています。</p>
+
+<ul>
+    <li><a th:href="@{/policies}">契約一覧</a></li>
+    <li><a th:href="@{/accidents}">事故一覧</a></li>
+    <li><a th:href="@{/api/accidents}">事故一覧API（JSON）</a></li>
+</ul>
 </body>
 </html>

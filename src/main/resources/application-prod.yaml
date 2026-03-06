@@ -27,4 +27,8 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+ai:
+  client:
+    type: gemini
+
 # ※ファイル名を application-prod.yml にしたい場合の互換用コピーです。

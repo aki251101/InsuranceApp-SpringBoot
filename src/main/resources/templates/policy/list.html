@@ -7,7 +7,6 @@
 <body>
 <h1>契約一覧</h1>
 
-<!-- フラッシュメッセージ -->
 <div th:if="${successMessage}" style="color: green;">
     <p th:text="${successMessage}"></p>
 </div>
@@ -16,8 +15,27 @@
 </div>
 
 <p>
-    <a href="/" >トップページへ</a>
+    <a href="/">トップページへ</a>
 </p>
+
+<p>
+    <a th:href="@{/policies(tab='RENEWABLE')}">更新可能</a> |
+    <a th:href="@{/policies(tab='ACTIVE')}">契約中</a> |
+    <a th:href="@{/policies(tab='CANCELLED')}">解約</a> |
+    <a th:href="@{/policies(tab='LAPSED')}">失効</a> |
+    <a th:href="@{/policies(tab='ALL')}">全件</a>
+</p>
+
+<form th:action="@{/policies}" method="get">
+    <input type="hidden" name="tab" th:value="${currentTab}">
+    <input type="text" name="q" th:value="${searchQuery}" placeholder="契約番号/契約者名で検索">
+    <button type="submit">検索</button>
+</form>
+
+<div th:if="${response != null and response.stats != null}" style="margin: 12px 0;">
+    <p>当年度早期更改率: <span th:text="${response.stats.fiscalYearRate}">-</span></p>
+    <p>当月早期更改率: <span th:text="${response.stats.monthRate}">-</span></p>
+</div>
 
 <table border="1" cellpadding="6" cellspacing="0">
     <thead>
@@ -28,20 +46,30 @@
         <th>開始日</th>
         <th>満期日</th>
         <th>状態</th>
+        <th>要注意</th>
+        <th>カレンダー</th>
         <th>操作</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:if="${#lists.isEmpty(policies)}">
-        <td colspan="7">契約データがありません。</td>
+    <tr th:if="${response == null or #lists.isEmpty(response.items)}">
+        <td colspan="9">契約データがありません。</td>
     </tr>
-    <tr th:each="p : ${policies}">
+    <tr th:each="p : ${response.items}">
         <td th:text="${p.id}"></td>
         <td th:text="${p.policyNumber}"></td>
         <td th:text="${p.customerName}"></td>
         <td th:text="${p.startDate}"></td>
         <td th:text="${p.endDate}"></td>
-        <td th:text="${p.effectiveStatus}"></td>
+        <td th:text="${p.status}"></td>
+        <td>
+            <span th:if="${p.attentionRequired}" style="color: orange;">要注意</span>
+            <span th:unless="${p.attentionRequired}">-</span>
+        </td>
+        <td>
+            <span th:if="${p.calendarRegistered}">登録済み</span>
+            <span th:unless="${p.calendarRegistered}">未登録</span>
+        </td>
         <td>
             <a th:href="@{/policies/{id}(id=${p.id})}">詳細</a>
         </td>
@@ -51,3 +79,4 @@
 
 </body>
 </html>
+
