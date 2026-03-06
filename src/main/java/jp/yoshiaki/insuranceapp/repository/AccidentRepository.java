@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 事故Repository
@@ -29,34 +30,43 @@ public interface AccidentRepository extends JpaRepository<Accident, Long> {
     List<Accident> findByPolicyId(Long policyId);
 
     /**
+     * 事故IDで詳細を取得する（Policyを同時取得）
+     *
+     * open-in-view=false でも DTO 変換時に Policy 参照できるよう、
+     * Policy を JOIN FETCH で同時取得する。
+     */
+    @Query("SELECT a FROM Accident a JOIN FETCH a.policy p WHERE a.id = :id")
+    Optional<Accident> findByIdWithPolicy(@Param("id") Long id);
+
+    /**
      * ステータスで検索し、事故受付日の新しい順に並べる
      *
-     * メソッド名の分解:
-     *   findBy         → WHERE
-     *   Status         → status = ?
-     *   OrderBy        → ORDER BY
-     *   OccurredAtDesc → occurred_at DESC（新しい順）
+     * open-in-view=false でも DTO 変換時に Policy 参照できるよう、
+     * Policy を JOIN FETCH で同時取得する。
      *
      * @param status ステータス（例: "RESOLVED"）
      * @return 事故リスト（受付日が新しい順）
      */
-    List<Accident> findByStatusOrderByOccurredAtDesc(String status);
+    @Query("SELECT a FROM Accident a JOIN FETCH a.policy p " +
+            "WHERE a.status = :status " +
+            "ORDER BY a.occurredAt DESC")
+    List<Accident> findByStatusOrderByOccurredAtDesc(@Param("status") String status);
 
     /**
      * 複数ステータスで検索し、事故受付日の新しい順に並べる
      *
-     * メソッド名の分解:
-     *   findBy            → WHERE
-     *   StatusIn          → status IN (?, ?, ...)
-     *   OrderBy           → ORDER BY
-     *   OccurredAtDesc    → occurred_at DESC
+     * open-in-view=false でも DTO 変換時に Policy 参照できるよう、
+     * Policy を JOIN FETCH で同時取得する。
      *
      * 用途: 「対応中」タブで OPEN + IN_PROGRESS をまとめて取得する
      *
      * @param statuses ステータスのリスト（例: ["OPEN", "IN_PROGRESS"]）
      * @return 事故リスト（受付日が新しい順）
      */
-    List<Accident> findByStatusInOrderByOccurredAtDesc(List<String> statuses);
+    @Query("SELECT a FROM Accident a JOIN FETCH a.policy p " +
+            "WHERE a.status IN :statuses " +
+            "ORDER BY a.occurredAt DESC")
+    List<Accident> findByStatusInOrderByOccurredAtDesc(@Param("statuses") List<String> statuses);
 
     /**
      * すべての事故を事故受付日の新しい順で取得する

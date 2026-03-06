@@ -55,7 +55,7 @@ public class AccidentService {
      */
     public Optional<Accident> getAccidentById(Long id) {
         log.debug("事故を取得: id={}", id);
-        return accidentRepository.findById(id);
+        return accidentRepository.findByIdWithPolicy(id);
     }
 
     /**
@@ -146,7 +146,7 @@ public class AccidentService {
         log.info("事故ステータス変更: id={}, newStatus={}", id, newStatus);
 
         // ① 事故を取得（見つからなければ例外）
-        Accident accident = accidentRepository.findById(id)
+        Accident accident = accidentRepository.findByIdWithPolicy(id)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "事故が見つかりません: id=" + id));
 
@@ -198,7 +198,7 @@ public class AccidentService {
     public Accident updateLastContactedAt(Long id) {
         log.info("最終対応日を更新: id={}", id);
 
-        Accident accident = accidentRepository.findById(id)
+        Accident accident = accidentRepository.findByIdWithPolicy(id)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "事故が見つかりません: id=" + id));
 
@@ -223,7 +223,7 @@ public class AccidentService {
     public Accident updateMemo(Long id, String memo) {
         log.info("事故メモを更新: id={}", id);
 
-        Accident accident = accidentRepository.findById(id)
+        Accident accident = accidentRepository.findByIdWithPolicy(id)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "事故が見つかりません: id=" + id));
 
@@ -259,3 +259,4 @@ public class AccidentService {
         return changeStatus(id, "RESOLVED");
     }
 }
+

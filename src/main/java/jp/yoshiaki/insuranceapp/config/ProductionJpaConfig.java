@@ -1,6 +1,6 @@
 package jp.yoshiaki.insuranceapp.config;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -17,8 +17,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * - 本番用 Repository は jp.yoshiaki.insuranceapp.repository 配下
  */
 @Configuration
-@Profile("production")
+@Profile({"production", "stub"})
 @EntityScan(basePackages = "jp.yoshiaki.insuranceapp.entity")
 @EnableJpaRepositories(basePackages = "jp.yoshiaki.insuranceapp.repository")
 public class ProductionJpaConfig {
 }
+
+
