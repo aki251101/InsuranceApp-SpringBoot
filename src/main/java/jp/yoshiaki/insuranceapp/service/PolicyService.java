@@ -1,6 +1,7 @@
 package jp.yoshiaki.insuranceapp.service;
 
 import jp.yoshiaki.insuranceapp.entity.Policy;
+import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.repository.PolicyRepository;
 import jp.yoshiaki.insuranceapp.util.NormalizationUtil;
 import jp.yoshiaki.insuranceapp.util.PolicyNumberGenerator;
@@ -201,7 +202,7 @@ public class PolicyService {
         log.info("契約を更新: id={}", id);
 
         Policy policy = policyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません"));
+                .orElseThrow(() -> new NotFoundException("契約が見つかりません: id=" + id));
 
         // 更新可能かチェック
         if (!policy.isRenewable()) {
@@ -236,7 +237,7 @@ public class PolicyService {
         log.info("契約更新を取り消し: id={}", id);
 
         Policy policy = policyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません"));
+                .orElseThrow(() -> new NotFoundException("契約が見つかりません: id=" + id));
 
         // 更新日時が当日かチェック
         if (policy.getRenewedAt() == null) {
@@ -287,7 +288,7 @@ public class PolicyService {
         log.info("契約を解約: id={}", id);
 
         Policy policy = policyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません"));
+                .orElseThrow(() -> new NotFoundException("契約が見つかりません: id=" + id));
 
         // effectiveStatus が「契約中」でなければ解約不可
         if (!"契約中".equals(policy.getEffectiveStatus())) {
@@ -312,7 +313,7 @@ public class PolicyService {
         log.info("契約解約を取り消し: id={}", id);
 
         Policy policy = policyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません"));
+                .orElseThrow(() -> new NotFoundException("契約が見つかりません: id=" + id));
 
         // 解約日時が当日かチェック
         if (policy.getCancelledAt() == null) {
@@ -345,7 +346,7 @@ public class PolicyService {
         log.info("カレンダー登録トグル: id={}", id);
 
         Policy policy = policyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません"));
+                .orElseThrow(() -> new NotFoundException("契約が見つかりません: id=" + id));
 
         // effectiveStatus が「契約中」でなければ登録不可
         if (!"契約中".equals(policy.getEffectiveStatus())) {
@@ -369,3 +370,5 @@ public class PolicyService {
         return policyRepository.save(policy);
     }
 }
+
+

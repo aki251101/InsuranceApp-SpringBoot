@@ -4,7 +4,7 @@ import jp.yoshiaki.insuranceapp.dto.PolicyDetailResponse;
 import jp.yoshiaki.insuranceapp.dto.PolicyListResponse;
 import jp.yoshiaki.insuranceapp.dto.RenewalStatsDto;
 import jp.yoshiaki.insuranceapp.entity.Policy;
-import jp.yoshiaki.insuranceapp.exception.AiApiException;
+import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.service.AiService;
 import jp.yoshiaki.insuranceapp.service.PolicyService;
 import jp.yoshiaki.insuranceapp.service.RenewalStatsService;
@@ -67,7 +67,7 @@ public class PolicyController {
         log.debug("契約詳細表示: id={}", id);
 
         Policy policy = policyService.getPolicyById(id)
-                .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません: id=" + id));
+                .orElseThrow(() -> new NotFoundException("契約が見つかりません: id=" + id));
 
         PolicyDetailResponse response = PolicyDetailResponse.from(policy);
         model.addAttribute("policy", response);
@@ -82,17 +82,12 @@ public class PolicyController {
     public String aiSummarize(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         log.info("契約AI要約: id={}", id);
 
-        try {
-            Policy policy = policyService.getPolicyById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("契約が見つかりません: id=" + id));
+        Policy policy = policyService.getPolicyById(id)
+                .orElseThrow(() -> new NotFoundException("契約が見つかりません: id=" + id));
 
-            String summary = aiService.summarizePolicy(policy);
-            redirectAttributes.addFlashAttribute("aiSummary", summary);
-            redirectAttributes.addFlashAttribute("successMessage", "AI要約を生成しました");
-        } catch (AiApiException e) {
-            log.warn("契約AI要約失敗: id={}, reason={}", id, e.getMessage());
-            redirectAttributes.addFlashAttribute("errorMessage", "AI要約の取得に失敗しました");
-        }
+        String summary = aiService.summarizePolicy(policy);
+        redirectAttributes.addFlashAttribute("aiSummary", summary);
+        redirectAttributes.addFlashAttribute("successMessage", "AI要約を生成しました");
 
         return "redirect:/policies/" + id;
     }
@@ -101,16 +96,8 @@ public class PolicyController {
     public String renew(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         log.info("契約更新: id={}", id);
 
-        try {
-            policyService.renewPolicy(id);
-            redirectAttributes.addFlashAttribute("successMessage", "契約を更新しました");
-        } catch (IllegalStateException e) {
-            log.warn("契約更新失敗: {}", e.getMessage());
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        } catch (Exception e) {
-            log.error("契約更新エラー", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "エラーが発生しました");
-        }
+        policyService.renewPolicy(id);
+        redirectAttributes.addFlashAttribute("successMessage", "契約を更新しました");
 
         return "redirect:/policies/" + id;
     }
@@ -119,16 +106,8 @@ public class PolicyController {
     public String unrenew(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         log.info("契約更新取消: id={}", id);
 
-        try {
-            policyService.unrenewPolicy(id);
-            redirectAttributes.addFlashAttribute("successMessage", "更新を取り消しました");
-        } catch (IllegalStateException e) {
-            log.warn("契約更新取消失敗: {}", e.getMessage());
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        } catch (Exception e) {
-            log.error("契約更新取消エラー", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "エラーが発生しました");
-        }
+        policyService.unrenewPolicy(id);
+        redirectAttributes.addFlashAttribute("successMessage", "更新を取り消しました");
 
         return "redirect:/policies/" + id;
     }
@@ -137,16 +116,8 @@ public class PolicyController {
     public String cancel(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         log.info("契約解約: id={}", id);
 
-        try {
-            policyService.cancelPolicy(id);
-            redirectAttributes.addFlashAttribute("successMessage", "契約を解約しました");
-        } catch (IllegalStateException e) {
-            log.warn("契約解約失敗: {}", e.getMessage());
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        } catch (Exception e) {
-            log.error("契約解約エラー", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "エラーが発生しました");
-        }
+        policyService.cancelPolicy(id);
+        redirectAttributes.addFlashAttribute("successMessage", "契約を解約しました");
 
         return "redirect:/policies/" + id;
     }
@@ -155,16 +126,8 @@ public class PolicyController {
     public String uncancel(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         log.info("契約解約取消: id={}", id);
 
-        try {
-            policyService.uncancelPolicy(id);
-            redirectAttributes.addFlashAttribute("successMessage", "解約を取り消しました");
-        } catch (IllegalStateException e) {
-            log.warn("契約解約取消失敗: {}", e.getMessage());
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        } catch (Exception e) {
-            log.error("契約解約取消エラー", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "エラーが発生しました");
-        }
+        policyService.uncancelPolicy(id);
+        redirectAttributes.addFlashAttribute("successMessage", "解約を取り消しました");
 
         return "redirect:/policies/" + id;
     }
@@ -173,22 +136,18 @@ public class PolicyController {
     public String toggleCalendar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         log.info("カレンダー登録トグル: id={}", id);
 
-        try {
-            Policy policy = policyService.toggleCalendarRegistration(id);
+        Policy policy = policyService.toggleCalendarRegistration(id);
 
-            if (policy.getCalendarRegistered()) {
-                redirectAttributes.addFlashAttribute("successMessage",
-                        "カレンダーに登録しました（満期7日前に通知されます）");
-            } else {
-                redirectAttributes.addFlashAttribute("successMessage",
-                        "カレンダー登録を解除しました");
-            }
-        } catch (Exception e) {
-            log.error("カレンダー登録エラー", e);
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "カレンダー連携でエラーが発生しました");
+        if (policy.getCalendarRegistered()) {
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "カレンダーに登録しました（満期7日前に通知されます）");
+        } else {
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "カレンダー登録を解除しました");
         }
 
         return "redirect:/policies/" + id;
     }
 }
+
+

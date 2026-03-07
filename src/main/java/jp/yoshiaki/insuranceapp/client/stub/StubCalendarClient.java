@@ -36,9 +36,9 @@ public class StubCalendarClient implements CalendarClient {
         // ② ダミーのイベントIDを生成（UUID前8桁で十分に一意）
         String dummyEventId = "stub-event-" + UUID.randomUUID().toString().substring(0, 8);
 
-        log.info("[STUB] カレンダーイベント作成: policyId={}, customerName={}, endDate={}, dummyEventId={}",
+        log.info("[STUB] カレンダーイベント作成: policyId={}, policyNumber={}, endDate={}, dummyEventId={}",
                 policy.getId(),
-                policy.getCustomerName(),
+                policy.getPolicyNumber(),
                 policy.getEndDate(),
                 dummyEventId);
 

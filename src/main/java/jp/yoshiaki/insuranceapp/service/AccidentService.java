@@ -1,6 +1,7 @@
 package jp.yoshiaki.insuranceapp.service;
 
 import jp.yoshiaki.insuranceapp.entity.Accident;
+import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.repository.AccidentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -147,7 +148,7 @@ public class AccidentService {
 
         // ① 事故を取得（見つからなければ例外）
         Accident accident = accidentRepository.findByIdWithPolicy(id)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new NotFoundException(
                         "事故が見つかりません: id=" + id));
 
         String currentStatus = accident.getStatus();
@@ -199,7 +200,7 @@ public class AccidentService {
         log.info("最終対応日を更新: id={}", id);
 
         Accident accident = accidentRepository.findByIdWithPolicy(id)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new NotFoundException(
                         "事故が見つかりません: id=" + id));
 
         // RESOLVED は更新不可
@@ -224,7 +225,7 @@ public class AccidentService {
         log.info("事故メモを更新: id={}", id);
 
         Accident accident = accidentRepository.findByIdWithPolicy(id)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new NotFoundException(
                         "事故が見つかりません: id=" + id));
 
         // null 防止: null が来たら空文字にする

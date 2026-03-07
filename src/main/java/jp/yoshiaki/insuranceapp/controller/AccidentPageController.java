@@ -3,7 +3,7 @@ package jp.yoshiaki.insuranceapp.controller;
 import jp.yoshiaki.insuranceapp.dto.AccidentDetailResponse;
 import jp.yoshiaki.insuranceapp.dto.AccidentListResponse;
 import jp.yoshiaki.insuranceapp.entity.Accident;
-import jp.yoshiaki.insuranceapp.exception.AiApiException;
+import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.service.AccidentService;
 import jp.yoshiaki.insuranceapp.service.AiService;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,7 @@ public class AccidentPageController {
         log.debug("事故詳細画面表示: id={}", id);
 
         Accident accident = accidentService.getAccidentById(id)
-                .orElseThrow(() -> new IllegalArgumentException("事故が見つかりません: id=" + id));
+                .orElseThrow(() -> new NotFoundException("事故が見つかりません: id=" + id));
 
         model.addAttribute("accident", AccidentDetailResponse.from(accident));
         return "accident/detail";
@@ -65,18 +65,15 @@ public class AccidentPageController {
     public String aiSuggest(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         log.info("AI次アクション候補生成: accidentId={}", id);
 
-        try {
-            Accident accident = accidentService.getAccidentById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("事故が見つかりません: id=" + id));
+        Accident accident = accidentService.getAccidentById(id)
+                .orElseThrow(() -> new NotFoundException("事故が見つかりません: id=" + id));
 
-            String suggestion = aiService.suggestNextActions(accident);
-            redirectAttributes.addFlashAttribute("aiSuggestion", suggestion);
-            redirectAttributes.addFlashAttribute("successMessage", "AI提案を生成しました");
-        } catch (AiApiException e) {
-            log.warn("AI提案生成失敗: accidentId={}, reason={}", id, e.getMessage());
-            redirectAttributes.addFlashAttribute("errorMessage", "AI提案の生成に失敗しました");
-        }
+        String suggestion = aiService.suggestNextActions(accident);
+        redirectAttributes.addFlashAttribute("aiSuggestion", suggestion);
+        redirectAttributes.addFlashAttribute("successMessage", "AI提案を生成しました");
 
         return "redirect:/accidents/" + id;
     }
 }
+
+

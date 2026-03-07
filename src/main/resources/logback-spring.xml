@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  logback-spring.xml：ログの出力先・レベル・フォーマットを設定するファイル。
-  配置場所：src/main/resources/logback-spring.xml
-
+  logback-spring.xml（ログ設定ファイル）
   ポイント：
   - このファイルを変えるだけで、Javaコードを変更せずにログの振る舞いを変えられる
   - Spring Bootでは「logback-spring.xml」という名前にすると自動で読み込まれる
   - 「logback.xml」でも動くが、Spring Boot固有の機能（Profile切り替え等）が使えない
+  
+  【役割】
+    Spring Boot アプリのログ出力フォーマットを定義する。
+    TraceIdFilter が MDC に設定した traceId を、全ログに自動出力する。
+
+  【配置場所】
+    src/main/resources/logback-spring.xml
+    ※ Spring Boot はこのファイル名を自動検知する（application.yml に設定不要）
+
+  【フォーマット要素の意味】
+    %d{yyyy-MM-dd HH:mm:ss}  → 日時（年-月-日 時:分:秒）
+    [%X{traceId}]             → MDC の traceId（リクエスト追跡用）
+    %-5level                  → ログレベル（5文字で左詰め。例：INFO, WARN, ERROR）
+    %logger{36}               → ロガー名（最大36文字に省略）
+    %msg                      → ログメッセージ本体
+    %n                        → 改行
+
+  【出力例】
+    2026-03-07 10:30:15 [a1b2c3d4] INFO  j.y.i.filter.TraceIdFilter - リクエスト開始: GET /policies
+    2026-03-07 10:30:15 [a1b2c3d4] DEBUG j.y.i.service.PolicyService - 更新可能契約を取得
+    2026-03-07 10:30:15 [a1b2c3d4] INFO  j.y.i.filter.TraceIdFilter - リクエスト終了: GET /policies
 -->
 <configuration>
 
@@ -22,13 +41,14 @@
             <!--
               Pattern（パターン）= ログの出力フォーマット。
               各プレースホルダの意味：
-                %d{yyyy-MM-dd HH:mm:ss.SSS} → 日時（ミリ秒まで）
+                %d{yyyy-MM-dd HH:mm:ss}		 → 日時（秒まで）
+                %X{traceId}					 → TraceId
                 %-5level                     → ログレベル（5文字に左詰め）
                 %logger{36}                  → クラス名（最大36文字に短縮）
                 %msg                         → ログメッセージ本文
-                %n                           → 改行
+                 %n                           → 改行
             -->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{traceId}] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -40,29 +60,30 @@
       RollingFileAppender = ファイルサイズや日付で自動的にファイルを分割（ローテーション）する。
     -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- 現在のログファイルパス -->
-        <file>logs/app.log</file>
-
-        <!--
+    	<!-- 現在のログファイルパス -->
+        <file>logs/insurance-app.log</file>
+        
+         <!--
           ローテーションポリシー：
-          日付ごとにファイルを分割し、最大7日分を保持する。
+          日付ごとにファイルを分割し、最大30日分を保持する。
           例：logs/app.2026-02-10.log, logs/app.2026-02-11.log, ...
         -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>7</maxHistory>
+            <!-- 日次ローテーション（1日ごとにファイルを切り替え） -->
+            <fileNamePattern>logs/insurance-app.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 最大30日分保持 -->
+            <maxHistory>30</maxHistory>
         </rollingPolicy>
-
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{traceId}] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
     <!--
       ========================================
-      ③ Day71パッケージのログレベル設定
+      ③ ログレベル設定
       ========================================
-      training.day71 パッケージ配下のクラスは DEBUGレベル以上を出力する。
+      DEBUGレベル以上を出力する。
       → log.debug() の内容もコンソールとファイルに表示される。
 
       レベルの階層（左が低い＝情報量が多い）：
@@ -72,7 +93,7 @@
       INFOに設定  → INFO以上（INFO, WARN, ERROR）のみ表示される
       WARNに設定  → WARN以上（WARN, ERROR）のみ表示される
     -->
-    <logger name="jp.yoshiaki.insuranceapp.training.day71" level="DEBUG" />
+    <logger name="jp.yoshiaki.insuranceapp" level="DEBUG" />
 
     <!--
       ========================================
@@ -81,9 +102,13 @@
       上記で個別指定していないパッケージ（Spring Framework本体等）は
       INFOレベル以上のみ表示する。
     -->
+    <logger name="org.springframework" level="INFO" />
+
+    <!-- ルートロガー（デフォルト） -->
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
+        <!-- 本番環境ではFILEも有効化する -->
+        <!-- <appender-ref ref="FILE" /> -->
     </root>
 
 </configuration>

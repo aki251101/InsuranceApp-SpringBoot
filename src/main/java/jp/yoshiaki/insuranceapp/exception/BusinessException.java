@@ -1,34 +1,48 @@
 package jp.yoshiaki.insuranceapp.exception;
 
 /**
- * 業務ルール違反時にthrowする例外
+ * 業務例外（BusinessException）
  *
- * 使い方：
- *   契約更新ができない状態で更新しようとした場合、
- *   解約済みの契約を操作しようとした場合 など
+ * 業務ルール違反を表すカスタム例外。
+ * 例外発生時にエラーコード（errorCode）を持たせることで、
+ * GlobalExceptionHandler 側で「どの種類の業務エラーか」を判別できる。
  *
- * errorCode：エラーの種類を識別するコード（例："POLICY_NOT_RENEWABLE"）
- *   → ログや画面で「何のエラーか」を機械的に判別するために使う
+ * RuntimeException を継承しているため、呼び出し側で try-catch を強制しない（非チェック例外）。
+ * → Service 層で throw し、Controller 層は @ControllerAdvice が自動でキャッチする設計。
  */
 public class BusinessException extends RuntimeException {
 
-    // ① エラーコード（例外の種類を識別するための文字列）
+    // ① エラーコード（例："POLICY_NOT_RENEWABLE", "ACCIDENT_ALREADY_RESOLVED"）
     private final String errorCode;
 
-    // ② コンストラクタ（エラーコード＋メッセージ）
+    /**
+     * コンストラクタ（エラーコード＋メッセージ）
+     *
+     * @param errorCode エラーコード（例："POLICY_NOT_RENEWABLE"）
+     * @param message   エラーメッセージ（例："更新可能期間外のため更新できません"）
+     */
     public BusinessException(String errorCode, String message) {
-        super(message);           // 親クラス（RuntimeException）にメッセージを渡す
+        super(message); // ② RuntimeException の message フィールドにセット
         this.errorCode = errorCode;
     }
 
-    // ③ コンストラクタ（エラーコード＋メッセージ＋原因例外）
-    //    別の例外が原因で業務エラーになった場合に、原因を保持する
+    /**
+     * コンストラクタ（エラーコード＋メッセージ＋原因例外）
+     *
+     * @param errorCode エラーコード
+     * @param message   エラーメッセージ
+     * @param cause     原因例外（例外チェーンで元の原因を保持）
+     */
     public BusinessException(String errorCode, String message, Throwable cause) {
-        super(message, cause);    // 原因例外（cause）もセットで渡す
+        super(message, cause); // ③ 原因例外もセット（スタックトレースで追跡可能にする）
         this.errorCode = errorCode;
     }
 
-    // ④ エラーコードの取得
+    /**
+     * エラーコードを取得
+     *
+     * @return エラーコード
+     */
     public String getErrorCode() {
         return errorCode;
     }

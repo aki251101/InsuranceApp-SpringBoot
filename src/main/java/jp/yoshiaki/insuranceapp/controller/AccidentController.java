@@ -3,6 +3,7 @@ package jp.yoshiaki.insuranceapp.controller;
 import jp.yoshiaki.insuranceapp.dto.AccidentDetailResponse;
 import jp.yoshiaki.insuranceapp.dto.AccidentListResponse;
 import jp.yoshiaki.insuranceapp.entity.Accident;
+import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.service.AccidentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +74,7 @@ public class AccidentController {
         log.debug("事故詳細取得: id={}", id);
 
         Accident accident = accidentService.getAccidentById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new NotFoundException(
                         "事故が見つかりません: id=" + id));
 
         AccidentDetailResponse response = AccidentDetailResponse.from(accident);
@@ -112,24 +113,12 @@ public class AccidentController {
      * @return 更新された事故の詳細DTO
      */
     @PostMapping("/{id}/start-progress")
-    public ResponseEntity<?> startProgress(@PathVariable Long id) {
+    public ResponseEntity<AccidentDetailResponse> startProgress(@PathVariable Long id) {
         log.info("事故対応開始: id={}", id);
 
-        try {
-            Accident updated = accidentService.startProgress(id);
-            AccidentDetailResponse response = AccidentDetailResponse.from(updated);
-            return ResponseEntity.ok(response);
-        } catch (IllegalStateException e) {
-            // 不正な遷移の場合
-            log.warn("対応開始失敗: id={}, reason={}", id, e.getMessage());
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", e.getMessage()));
-        } catch (IllegalArgumentException e) {
-            // 事故が見つからない場合
-            log.warn("事故が見つかりません: id={}", id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
-        }
+        Accident updated = accidentService.startProgress(id);
+        AccidentDetailResponse response = AccidentDetailResponse.from(updated);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -139,22 +128,12 @@ public class AccidentController {
      * @return 更新された事故の詳細DTO
      */
     @PostMapping("/{id}/resolve")
-    public ResponseEntity<?> resolve(@PathVariable Long id) {
+    public ResponseEntity<AccidentDetailResponse> resolve(@PathVariable Long id) {
         log.info("事故完了: id={}", id);
 
-        try {
-            Accident updated = accidentService.resolve(id);
-            AccidentDetailResponse response = AccidentDetailResponse.from(updated);
-            return ResponseEntity.ok(response);
-        } catch (IllegalStateException e) {
-            log.warn("完了失敗: id={}, reason={}", id, e.getMessage());
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", e.getMessage()));
-        } catch (IllegalArgumentException e) {
-            log.warn("事故が見つかりません: id={}", id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
-        }
+        Accident updated = accidentService.resolve(id);
+        AccidentDetailResponse response = AccidentDetailResponse.from(updated);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -164,22 +143,12 @@ public class AccidentController {
      * @return 更新された事故の詳細DTO
      */
     @PostMapping("/{id}/contacted")
-    public ResponseEntity<?> contacted(@PathVariable Long id) {
+    public ResponseEntity<AccidentDetailResponse> contacted(@PathVariable Long id) {
         log.info("最終対応日更新: id={}", id);
 
-        try {
-            Accident updated = accidentService.updateLastContactedAt(id);
-            AccidentDetailResponse response = AccidentDetailResponse.from(updated);
-            return ResponseEntity.ok(response);
-        } catch (IllegalStateException e) {
-            log.warn("対応日更新失敗: id={}, reason={}", id, e.getMessage());
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", e.getMessage()));
-        } catch (IllegalArgumentException e) {
-            log.warn("事故が見つかりません: id={}", id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
-        }
+        Accident updated = accidentService.updateLastContactedAt(id);
+        AccidentDetailResponse response = AccidentDetailResponse.from(updated);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -195,7 +164,7 @@ public class AccidentController {
      * @return 更新された事故の詳細DTO
      */
     @PutMapping("/{id}/memo")
-    public ResponseEntity<?> updateMemo(
+    public ResponseEntity<AccidentDetailResponse> updateMemo(
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {
 
@@ -203,14 +172,9 @@ public class AccidentController {
 
         String memo = body.getOrDefault("memo", "");
 
-        try {
-            Accident updated = accidentService.updateMemo(id, memo);
-            AccidentDetailResponse response = AccidentDetailResponse.from(updated);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            log.warn("事故が見つかりません: id={}", id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
-        }
+        Accident updated = accidentService.updateMemo(id, memo);
+        AccidentDetailResponse response = AccidentDetailResponse.from(updated);
+        return ResponseEntity.ok(response);
     }
 }
+
