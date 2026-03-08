@@ -1,33 +1,44 @@
-# ==========================================================
-# Day87 Dockerfile
-# Spring Boot アプリを Docker コンテナ化する。
-# Day86 の復習 + 環境変数・ボリュームの対応を追加。
-# ==========================================================
+# ==============================================================
+# 損保業務支援アプリ - Dockerfile
+# マルチステージビルド：ビルド用(JDK) → 実行用(JRE)
+# ==============================================================
 
-# ① ベースイメージ：Java 21 が入った軽量 Linux（Eclipse Temurin）
-FROM eclipse-temurin:21-jre-alpine
+# ─── ステージ1：ビルド（JDK入りの大きいイメージ）───
+FROM eclipse-temurin:21-jdk-alpine AS build
 
-# ② 作業ディレクトリを /app に設定（この中にアプリを置く）
+# 作業ディレクトリを /app に設定
 WORKDIR /app
 
-# ③ ビルド済みの jar ファイルをコンテナ内にコピー
-#    Maven の場合: target/*.jar
-#    ※ビルドは事前に mvn package で行っておく
-COPY target/insuranceapp-0.0.1-SNAPSHOT.jar app.jar
+# ① Maven Wrapper と pom.xml を先にコピー（依存DLのキャッシュ活用）
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
 
-# ④ データ永続化用のディレクトリを作成
-#    H2 ファイル DB の保存先として /data を使う
-#    docker run -v で外部にマウントすればデータが残る
-RUN mkdir -p /data
+# ② 依存ライブラリだけ先にダウンロード
+#    → ソースコードを変えても、ここまでのレイヤーはキャッシュされる
+RUN chmod +x mvnw && ./mvnw dependency:go-offline
 
-# ⑤ VOLUME 宣言：/data が永続化対象であることを示す
-#    （docker run 時に -v を指定しなくても、匿名ボリュームが自動で作られる）
-VOLUME /data
+# ③ ソースコードをコピー
+COPY src ./src
 
-# ⑥ コンテナがリッスンするポート（ドキュメント的な意味合い）
-#    実際のポートは SERVER_PORT 環境変数で変更可能
+# ④ アプリをビルド（テストはスキップ：CIで別途実行する想定）
+RUN ./mvnw clean package -DskipTests
+
+# ─── ステージ2：実行（JREのみの軽量イメージ）───
+FROM eclipse-temurin:21-jre-alpine
+
+WORKDIR /app
+
+# ⑤ ビルドステージから jar だけをコピー（ビルドツールは持ち込まない）
+COPY --from=build /app/target/*.jar app.jar
+
+# ⑥ タイムゾーンを日本に設定（ログの時刻がJSTになる）
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime && \
+    echo "Asia/Tokyo" > /etc/timezone && \
+    apk del tzdata
+
+# ⑦ Spring Boot のデフォルトポートを公開（ドキュメント目的）
 EXPOSE 8080
 
-# ⑦ コンテナ起動時に実行するコマンド
-#    java -jar で Spring Boot アプリを起動する
+# ⑧ コンテナ起動時に jar を実行
 ENTRYPOINT ["java", "-jar", "app.jar"]

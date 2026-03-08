@@ -1,3 +1,4 @@
+# production 用。現プロジェクトでは profile 名を production に統一
 spring:
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/insuranceapp?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Tokyo}
@@ -6,18 +7,32 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
-    open-in-view: false
     hibernate:
       ddl-auto: validate
+    open-in-view: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
+
+  thymeleaf:
+    cache: true
 
   flyway:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+logging:
+  level:
+    root: INFO
+    jp.yoshiaki.insuranceapp: INFO
+
 ai:
   client:
     type: gemini
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY:}
+    base-url: ${GEMINI_API_BASE_URL:https://generativelanguage.googleapis.com/v1beta}
+    model: ${GEMINI_API_MODEL:gemini-1.5-flash}
