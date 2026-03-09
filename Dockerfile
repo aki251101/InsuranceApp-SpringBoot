@@ -15,7 +15,7 @@ COPY mvnw pom.xml ./
 
 # ② 依存ライブラリだけ先にダウンロード
 #    → ソースコードを変えても、ここまでのレイヤーはキャッシュされる
-RUN chmod +x mvnw && ./mvnw dependency:go-offline
+RUN chmod +x mvnw && ./mvnw dependency:resolve
 
 # ③ ソースコードをコピー
 COPY src ./src
