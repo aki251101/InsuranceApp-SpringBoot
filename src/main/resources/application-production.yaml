@@ -6,6 +6,24 @@ spring:
     password: ${DB_PASSWORD:}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+              - https://www.googleapis.com/auth/calendar
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -35,4 +53,4 @@ gemini:
   api:
     key: ${GEMINI_API_KEY:}
     base-url: ${GEMINI_API_BASE_URL:https://generativelanguage.googleapis.com/v1beta}
-    model: ${GEMINI_API_MODEL:gemini-1.5-flash}
+    model: ${GEMINI_API_MODEL:gemini-2.5-flash}
