@@ -1,0 +1,61 @@
+# ============================================================
+# 損保アプリ 本番用 Docker Compose
+# ============================================================
+# 使い方:
+#   cd deploy/
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# 開発用（docker/docker-compose.yml）との違い:
+#   - restart: always（サーバー再起動時に自動復旧）
+#   - ヘルスチェック追加（コンテナ異常時に自動再起動）
+#   - ログサイズ制限（ディスク溢れ防止）
+#   - MySQLポートを外部非公開（セキュリティ強化）
+# ============================================================
+services:
+  # --- MySQL データベース ---
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: Asia/Tokyo
+    # ① 本番ではMySQLポートを外部に公開しない（appコンテナからのみアクセス）
+    # ports:
+    #   - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    # ② ヘルスチェック: MySQLが応答可能か定期確認
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # --- Spring Boot アプリケーション ---
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      DB_URL: ${SPRING_DATASOURCE_URL}
+      DB_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      DB_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+    depends_on:
+      mysql:
+        # ④ MySQLのヘルスチェックが通ってからappを起動する
+        condition: service_healthy
+
+volumes:
+  mysql_data:

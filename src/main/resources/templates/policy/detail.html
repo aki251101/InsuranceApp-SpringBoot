@@ -56,6 +56,11 @@
         <p th:text="${aiSummary}"></p>
     </div>
 
+    <!-- カレンダー登録トグル -->
+    <form th:action="@{/policies/{id}/calendar-toggle(id=${policy.id})}" method="post">
+        <button type="submit" th:text="${policy.calendarRegistered} ? 'カレンダー登録解除' : 'カレンダー登録'">カレンダー登録</button>
+    </form>
+
     <!-- 更新 -->
     <form th:if="${policy.canRenew}" th:action="@{/policies/{id}/renew(id=${policy.id})}" method="post">
         <button type="submit">更新</button>
@@ -84,3 +89,4 @@
 
 </body>
 </html>
+

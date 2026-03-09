@@ -1,5 +1,6 @@
 package jp.yoshiaki.insuranceapp.client;
 
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
@@ -16,9 +17,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.Date;
 
 /**
  * CalendarClient の本番実装（Google Calendar API）
@@ -30,39 +29,23 @@ import java.util.Date;
  * 主な違い：CalendarClient interface を implements している点のみ。
  */
 @Component
-@Profile("production")  // ① 本番環境（profile=production）でのみ有効
+@Profile("production")
 @RequiredArgsConstructor
 @Slf4j
 public class GoogleCalendarClient implements CalendarClient {
 
     private final GoogleCalendarConfig googleCalendarConfig;
 
-    // ② "primary" = ログイン中ユーザーのメインカレンダー
     private static final String CALENDAR_ID = "primary";
 
-    /**
-     * Googleカレンダーにイベントを作成する
-     *
-     * イベント内容：
-     *   - タイトル：「【満期】○○ 様」
-     *   - 説明：契約番号、契約者名、満期日
-     *   - 日付：満期日（終日イベント）
-     *   - リマインダー：7日前の9:00にポップアップ通知
-     *
-     * @param policy 契約エンティティ
-     * @return GoogleカレンダーのイベントID
-     * @throws CalendarApiException API呼び出し失敗時
-     */
     @Override
     public String createEvent(Policy policy) {
         log.info("カレンダーイベント作成: policyId={}, endDate={}",
                 policy.getId(), policy.getEndDate());
 
         try {
-            // ③ OAuth認証済みのCalendarサービスオブジェクトを取得
             Calendar service = googleCalendarConfig.getCalendarService();
 
-            // ④ イベントオブジェクトを組み立て
             Event event = new Event()
                     .setSummary("【満期】" + policy.getCustomerName() + " 様")
                     .setDescription(
@@ -72,35 +55,41 @@ public class GoogleCalendarClient implements CalendarClient {
                             "※ 早めの更新手続きをお願いします。"
                     );
 
-            // ⑤ 終日イベントとして設定（setDate を使う。setDateTime ではない）
+            // 終日イベントは date-only（yyyy-MM-dd）で送る
             LocalDate endDate = policy.getEndDate();
             EventDateTime start = new EventDateTime()
-                    .setDate(new DateTime(Date.from(
-                            endDate.atStartOfDay(ZoneId.systemDefault()).toInstant())));
+                    .setDate(new DateTime(endDate.toString()));
             event.setStart(start);
 
-            // ⑥ 終日イベントの「終了」は翌日を指定（Googleカレンダーの仕様）
+            // Google仕様: 終日は終了日に翌日を指定
             EventDateTime end = new EventDateTime()
-                    .setDate(new DateTime(Date.from(
-                            endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant())));
+                    .setDate(new DateTime(endDate.plusDays(1).toString()));
             event.setEnd(end);
 
-            // ⑦ リマインダー：7日前 = 7 × 24 × 60 = 10080分前にポップアップ通知
             EventReminder[] reminders = new EventReminder[]{
                     new EventReminder()
                             .setMethod("popup")
-                            .setMinutes(7 * 24 * 60)  // 10080分 = 7日前
+                            .setMinutes(7 * 24 * 60)
             };
             Event.Reminders eventReminders = new Event.Reminders()
-                    .setUseDefault(false)         // デフォルト通知を無効化
-                    .setOverrides(Arrays.asList(reminders));  // カスタム通知を設定
+                    .setUseDefault(false)
+                    .setOverrides(Arrays.asList(reminders));
             event.setReminders(eventReminders);
 
-            // ⑧ Google Calendar API にイベントを登録
             event = service.events().insert(CALENDAR_ID, event).execute();
 
             log.info("カレンダーイベント作成成功: eventId={}", event.getId());
             return event.getId();
+
+        } catch (GoogleJsonResponseException e) {
+            String details;
+            try {
+                details = e.getDetails() != null ? e.getDetails().toPrettyString() : e.getMessage();
+            } catch (IOException ioEx) {
+                details = e.getMessage();
+            }
+            log.error("カレンダーイベント作成失敗（Google API）: policyId={}, details={}", policy.getId(), details, e);
+            throw new CalendarApiException("カレンダーイベントの作成に失敗しました: " + details, e);
 
         } catch (IOException | GeneralSecurityException e) {
             log.error("カレンダーイベント作成失敗: policyId={}", policy.getId(), e);
@@ -108,12 +97,6 @@ public class GoogleCalendarClient implements CalendarClient {
         }
     }
 
-    /**
-     * Googleカレンダーからイベントを削除する
-     *
-     * @param eventId 削除対象のイベントID
-     * @throws CalendarApiException API呼び出し失敗時
-     */
     @Override
     public void deleteEvent(String eventId) {
         log.info("カレンダーイベント削除: eventId={}", eventId);
@@ -134,17 +117,6 @@ public class GoogleCalendarClient implements CalendarClient {
         }
     }
 
-    /**
-     * Googleカレンダーのイベントを更新する（削除＋再作成）
-     *
-     * Google Calendar APIのupdate()ではなく、delete+createで実装。
-     * 理由：終日イベントの日付変更は部分更新が複雑になるため、
-     *       削除＋再作成のほうがシンプルで確実。
-     *
-     * @param policy 契約エンティティ（更新後の情報）
-     * @param eventId 既存のイベントID
-     * @return 新しいイベントID
-     */
     @Override
     public String updateEvent(Policy policy, String eventId) {
         log.info("カレンダーイベント更新: policyId={}, eventId={}",
@@ -154,3 +126,4 @@ public class GoogleCalendarClient implements CalendarClient {
         return createEvent(policy);
     }
 }
+

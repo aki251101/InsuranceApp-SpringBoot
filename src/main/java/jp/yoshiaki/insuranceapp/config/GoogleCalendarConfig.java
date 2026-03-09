@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -68,15 +69,20 @@ public class GoogleCalendarConfig {
         NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
         // ⑥ ログイン中ユーザーのOAuth2アクセストークンを取得
-        String accessToken = getAccessToken();
+        OAuth2AccessToken accessToken = getAccessToken();
 
         if (accessToken == null) {
             throw new IllegalStateException("Googleアカウントでログインしてください");
         }
 
         // ⑦ アクセストークンから GoogleCredentials（認証情報）を作成
+        // 以前は有効期限に現在時刻を入れていたため即期限切れ扱いになっていた。
+        Date expiresAt = accessToken.getExpiresAt() != null
+                ? Date.from(accessToken.getExpiresAt())
+                : new Date(System.currentTimeMillis() + 55L * 60L * 1000L);
+
         GoogleCredentials credentials = GoogleCredentials.create(
-                new AccessToken(accessToken, new Date()));
+                new AccessToken(accessToken.getTokenValue(), expiresAt));
 
         // ⑧ Calendar サービスオブジェクトを構築して返す
         return new Calendar.Builder(httpTransport, JSON_FACTORY,
@@ -88,9 +94,9 @@ public class GoogleCalendarConfig {
     /**
      * SecurityContext から OAuth2 アクセストークンを取得する
      *
-     * @return アクセストークン文字列（未認証の場合はnull）
+     * @return アクセストークン（未認証の場合はnull）
      */
-    private String getAccessToken() {
+    private OAuth2AccessToken getAccessToken() {
         // ⑨ 現在のリクエストの認証情報を取得
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -112,7 +118,7 @@ public class GoogleCalendarConfig {
             return null;
         }
 
-        // ⑫ アクセストークンの文字列を返す
-        return client.getAccessToken().getTokenValue();
+        // ⑫ アクセストークンを返す
+        return client.getAccessToken();
     }
 }

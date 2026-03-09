@@ -18,6 +18,13 @@ import java.util.Optional;
  */
 @Repository
 public interface AccidentRepository extends JpaRepository<Accident, Long> {
+    /**
+     * 契約IDに紐づく事故件数を取得する
+     *
+     * @param policyId 契約ID
+     * @return 事故件数
+     */
+    long countByPolicyId(Long policyId);
 
     /**
      * 契約IDで事故を検索する
@@ -95,3 +102,4 @@ public interface AccidentRepository extends JpaRepository<Accident, Long> {
             "ORDER BY a.occurredAt DESC")
     List<Accident> findByPolicyNumber(@Param("policyNumber") String policyNumber);
 }
+

@@ -34,8 +34,8 @@ public class StubAiClient implements AiClient {
     }
 
     private String buildPolicySummaryStub() {
-        return "[Stub応答] この契約は現在有効な自動車保険契約です。"
-                + "満期日が近づいているため、早めの更新手続きをお勧めします。";
+        return "現状: 契約中。満期まで30日、更新可、事故履歴1件。\n"
+                + "注意点: 満期が近いため更新意向と手続き状況を優先確認。";
     }
 
     private String buildAccidentSuggestStub() {
