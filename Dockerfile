@@ -15,13 +15,14 @@ COPY mvnw pom.xml ./
 
 # ② 依存ライブラリだけ先にダウンロード
 #    → ソースコードを変えても、ここまでのレイヤーはキャッシュされる
-RUN chmod +x mvnw && ./mvnw dependency:resolve
+RUN chmod +x mvnw && \
+    ./mvnw -B -ntp -Dmaven.wagon.http.retryHandler.count=5 dependency:resolve
 
 # ③ ソースコードをコピー
 COPY src ./src
 
 # ④ アプリをビルド（テストはスキップ：CIで別途実行する想定）
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw -B -ntp -Dmaven.wagon.http.retryHandler.count=5 clean package -DskipTests
 
 # ─── ステージ2：実行（JREのみの軽量イメージ）───
 FROM eclipse-temurin:21-jre-alpine
