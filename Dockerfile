@@ -41,4 +41,5 @@ RUN apk add --no-cache tzdata && \
 EXPOSE 8080
 
 # ⑧ コンテナ起動時に jar を実行
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xms64m", "-Xmx256m", "-jar", "app.jar"]
+
