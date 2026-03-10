@@ -47,7 +47,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-production}
       DB_URL: ${DB_URL}
@@ -63,3 +63,4 @@ services:
 
 volumes:
   mysql_data:
+

@@ -6,13 +6,19 @@ import jp.yoshiaki.insuranceapp.dto.RenewalStatsDto;
 import jp.yoshiaki.insuranceapp.entity.Policy;
 import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.service.AiService;
+import jp.yoshiaki.insuranceapp.service.AiUsageLimitService;
 import jp.yoshiaki.insuranceapp.service.PolicyService;
 import jp.yoshiaki.insuranceapp.service.RenewalStatsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -29,6 +35,7 @@ public class PolicyController {
     private final PolicyService policyService;
     private final RenewalStatsService renewalStatsService;
     private final AiService aiService;
+    private final AiUsageLimitService aiUsageLimitService;
 
     @GetMapping
     public String list(
@@ -79,8 +86,11 @@ public class PolicyController {
      * Day95: 契約のAI要約（保存しない）
      */
     @PostMapping("/{id}/ai-summarize")
-    public String aiSummarize(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String aiSummarize(@PathVariable Long id, Authentication authentication,
+                              RedirectAttributes redirectAttributes) {
         log.info("契約AI要約: id={}", id);
+
+        aiUsageLimitService.consume(authentication != null ? authentication.getName() : null);
 
         Policy policy = policyService.getPolicyById(id)
                 .orElseThrow(() -> new NotFoundException("契約が見つかりません: id=" + id));
@@ -149,5 +159,3 @@ public class PolicyController {
         return "redirect:/policies/" + id;
     }
 }
-
-

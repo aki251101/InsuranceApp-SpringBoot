@@ -6,8 +6,10 @@ import jp.yoshiaki.insuranceapp.entity.Accident;
 import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.service.AccidentService;
 import jp.yoshiaki.insuranceapp.service.AiService;
+import jp.yoshiaki.insuranceapp.service.AiUsageLimitService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,7 @@ public class AccidentPageController {
 
     private final AccidentService accidentService;
     private final AiService aiService;
+    private final AiUsageLimitService aiUsageLimitService;
 
     @GetMapping
     public String list(
@@ -62,8 +65,11 @@ public class AccidentPageController {
     }
 
     @PostMapping("/{id}/ai-suggest")
-    public String aiSuggest(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String aiSuggest(@PathVariable Long id, Authentication authentication,
+                            RedirectAttributes redirectAttributes) {
         log.info("AI次アクション候補生成: accidentId={}", id);
+
+        aiUsageLimitService.consume(authentication != null ? authentication.getName() : null);
 
         Accident accident = accidentService.getAccidentById(id)
                 .orElseThrow(() -> new NotFoundException("事故が見つかりません: id=" + id));
@@ -75,5 +81,3 @@ public class AccidentPageController {
         return "redirect:/accidents/" + id;
     }
 }
-
-

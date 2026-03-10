@@ -1,3 +1,6 @@
+server:
+  forward-headers-strategy: framework
+
 # production 用。現プロジェクトでは profile 名を production に統一
 spring:
   datasource:
@@ -46,6 +49,8 @@ logging:
     jp.yoshiaki.insuranceapp: INFO
 
 ai:
+  usage-limit:
+    daily-per-user: ${AI_DAILY_USAGE_LIMIT:20}
   client:
     type: gemini
 
