@@ -3,51 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <title>事故一覧</title>
+    <link rel="stylesheet" th:href="@{/css/list.css}">
 </head>
 <body>
-<h1>事故一覧</h1>
+<main class="page">
+    <section class="hero">
+        <p class="eyebrow">Accident Management</p>
+        <h1>事故一覧</h1>
+        <p class="lead">対応状況と滞留案件を確認できます。</p>
+    </section>
 
-<p>
-    <a href="/">トップページへ</a>
-</p>
+    <section class="panel">
+        <p class="back-link"><a href="/">トップページへ</a></p>
 
-<p>
-    <a th:href="@{/accidents(tab='OPEN_INPROGRESS')}">対応中</a> |
-    <a th:href="@{/accidents(tab='RESOLVED')}">完了</a>
-</p>
+        <nav class="tabs">
+            <a th:href="@{/accidents(tab='OPEN_INPROGRESS')}" th:classappend="${currentTab == 'OPEN_INPROGRESS'} ? 'active' : ''">対応中</a>
+            <a th:href="@{/accidents(tab='RESOLVED')}" th:classappend="${currentTab == 'RESOLVED'} ? 'active' : ''">完了</a>
+        </nav>
+    </section>
 
-<table border="1" cellpadding="6" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>受付日</th>
-        <th>契約番号</th>
-        <th>契約者名</th>
-        <th>状態</th>
-        <th>滞留</th>
-        <th>操作</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:if="${#lists.isEmpty(response.items)}">
-        <td colspan="7">事故データがありません。</td>
-    </tr>
-    <tr th:each="a : ${response.items}">
-        <td th:text="${a.id}"></td>
-        <td th:text="${a.occurredAt}"></td>
-        <td th:text="${a.policyNumber}"></td>
-        <td th:text="${a.customerName}"></td>
-        <td th:text="${a.status}"></td>
-        <td>
-            <span th:if="${a.stagnant}" style="color:red;">滞留</span>
-            <span th:unless="${a.stagnant}">-</span>
-        </td>
-        <td>
-            <a th:href="@{/accidents/{id}(id=${a.id})}">詳細</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <section class="panel table-panel">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>受付日</th>
+                    <th>契約番号</th>
+                    <th>契約者名</th>
+                    <th>状態</th>
+                    <th>滞留</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(response.items)}">
+                    <td colspan="7" class="empty">事故データがありません。</td>
+                </tr>
+                <tr th:each="a : ${response.items}">
+                    <td th:text="${a.id}"></td>
+                    <td th:text="${a.occurredAt}"></td>
+                    <td th:text="${a.policyNumber}"></td>
+                    <td th:text="${a.customerName}"></td>
+                    <td><span class="badge" th:text="${a.status}"></span></td>
+                    <td>
+                        <span th:if="${a.stagnant}" class="badge danger">滞留</span>
+                        <span th:unless="${a.stagnant}" class="muted">-</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/accidents/{id}(id=${a.id})}">詳細</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
 
 </body>
 </html>

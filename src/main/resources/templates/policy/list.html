@@ -3,80 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <title>契約一覧</title>
+    <link rel="stylesheet" th:href="@{/css/list.css}">
 </head>
 <body>
-<h1>契約一覧</h1>
+<main class="page">
+    <section class="hero">
+        <p class="eyebrow">Policy Management</p>
+        <h1>契約一覧</h1>
+        <p class="lead">契約状況と更新対象を一覧で確認できます。</p>
+    </section>
 
-<div th:if="${successMessage}" style="color: green;">
-    <p th:text="${successMessage}"></p>
-</div>
-<div th:if="${errorMessage}" style="color: red;">
-    <p th:text="${errorMessage}"></p>
-</div>
+    <div th:if="${successMessage}" class="alert success">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="alert error">
+        <p th:text="${errorMessage}"></p>
+    </div>
 
-<p>
-    <a href="/">トップページへ</a>
-</p>
+    <section class="panel">
+        <p class="back-link"><a href="/">トップページへ</a></p>
 
-<p>
-    <a th:href="@{/policies(tab='RENEWABLE')}">更新可能</a> |
-    <a th:href="@{/policies(tab='ACTIVE')}">契約中</a> |
-    <a th:href="@{/policies(tab='CANCELLED')}">解約</a> |
-    <a th:href="@{/policies(tab='LAPSED')}">失効</a> |
-    <a th:href="@{/policies(tab='ALL')}">全件</a>
-</p>
+        <nav class="tabs">
+            <a th:href="@{/policies(tab='RENEWABLE')}" th:classappend="${currentTab == 'RENEWABLE'} ? 'active' : ''">更新可能</a>
+            <a th:href="@{/policies(tab='ACTIVE')}" th:classappend="${currentTab == 'ACTIVE'} ? 'active' : ''">契約中</a>
+            <a th:href="@{/policies(tab='CANCELLED')}" th:classappend="${currentTab == 'CANCELLED'} ? 'active' : ''">解約</a>
+            <a th:href="@{/policies(tab='LAPSED')}" th:classappend="${currentTab == 'LAPSED'} ? 'active' : ''">失効</a>
+            <a th:href="@{/policies(tab='ALL')}" th:classappend="${currentTab == 'ALL'} ? 'active' : ''">全件</a>
+        </nav>
 
-<form th:action="@{/policies}" method="get">
-    <input type="hidden" name="tab" th:value="${currentTab}">
-    <input type="text" name="q" th:value="${searchQuery}" placeholder="契約番号/契約者名で検索">
-    <button type="submit">検索</button>
-</form>
+        <form class="search-form" th:action="@{/policies}" method="get">
+            <input type="hidden" name="tab" th:value="${currentTab}">
+            <input type="text" name="q" th:value="${searchQuery}" placeholder="契約番号/契約者名で検索">
+            <button type="submit">検索</button>
+        </form>
 
-<div th:if="${response != null and response.stats != null}" style="margin: 12px 0;">
-    <p>当年度早期更改率: <span th:text="${response.stats.fiscalYearRate}">-</span></p>
-    <p>当月早期更改率: <span th:text="${response.stats.monthRate}">-</span></p>
-</div>
+        <div class="stats" th:if="${response != null and response.stats != null}">
+            <p>当年度早期更改率: <strong th:text="${response.stats.fiscalYearRate}">-</strong></p>
+            <p>当月早期更改率: <strong th:text="${response.stats.monthRate}">-</strong></p>
+        </div>
+    </section>
 
-<table border="1" cellpadding="6" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>契約番号</th>
-        <th>契約者名</th>
-        <th>開始日</th>
-        <th>満期日</th>
-        <th>状態</th>
-        <th>要注意</th>
-        <th>カレンダー</th>
-        <th>操作</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:if="${response == null or #lists.isEmpty(response.items)}">
-        <td colspan="9">契約データがありません。</td>
-    </tr>
-    <tr th:each="p : ${response.items}">
-        <td th:text="${p.id}"></td>
-        <td th:text="${p.policyNumber}"></td>
-        <td th:text="${p.customerName}"></td>
-        <td th:text="${p.startDate}"></td>
-        <td th:text="${p.endDate}"></td>
-        <td th:text="${p.status}"></td>
-        <td>
-            <span th:if="${p.attentionRequired}" style="color: orange;">要注意</span>
-            <span th:unless="${p.attentionRequired}">-</span>
-        </td>
-        <td>
-            <span th:if="${p.calendarRegistered}">登録済み</span>
-            <span th:unless="${p.calendarRegistered}">未登録</span>
-        </td>
-        <td>
-            <a th:href="@{/policies/{id}(id=${p.id})}">詳細</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
+    <section class="panel table-panel">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>契約番号</th>
+                    <th>契約者名</th>
+                    <th>開始日</th>
+                    <th>満期日</th>
+                    <th>状態</th>
+                    <th>要注意</th>
+                    <th>カレンダー</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${response == null or #lists.isEmpty(response.items)}">
+                    <td colspan="9" class="empty">契約データがありません。</td>
+                </tr>
+                <tr th:each="p : ${response.items}">
+                    <td th:text="${p.id}"></td>
+                    <td th:text="${p.policyNumber}"></td>
+                    <td th:text="${p.customerName}"></td>
+                    <td th:text="${p.startDate}"></td>
+                    <td th:text="${p.endDate}"></td>
+                    <td><span class="badge" th:text="${p.status}"></span></td>
+                    <td>
+                        <span th:if="${p.attentionRequired}" class="badge warn">要注意</span>
+                        <span th:unless="${p.attentionRequired}" class="muted">-</span>
+                    </td>
+                    <td>
+                        <span th:if="${p.calendarRegistered}" class="badge ok">登録済み</span>
+                        <span th:unless="${p.calendarRegistered}" class="muted">未登録</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/policies/{id}(id=${p.id})}">詳細</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
 </body>
 </html>
 
