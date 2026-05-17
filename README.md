@@ -122,3 +122,33 @@ READMEには「実装時に効くポイント」だけを抜粋します。
 ## ライセンス
 
 学習・ポートフォリオ用途（必要に応じて追記）。
+
+---
+
+## データ運用（本番運用とデモ運用の使い分け）
+
+このプロジェクトでは、データ投入を次の2パターンで使い分けます。
+
+### 1. 通常運用（本番寄り）
+- `src/main/resources/data.sql` は最小構成（サンプル自動投入なし）
+- アプリ起動時にデモデータで上書きされないため、運用データを維持できます
+
+### 2. デモ運用（毎回同じ状態に戻す）
+- `src/main/resources/reset-demo.sql` を手動実行して、契約/事故データを初期状態へ戻します
+- デモ動画撮影や操作確認を繰り返すときに使います
+
+### デモ前リセット手順（Lightsail）
+```bash
+cd ~/insurance-app
+docker compose -f docker-compose.prod.yaml exec -T mysql sh -lc 'mysql -u root -p"$MYSQL_ROOT_PASSWORD" -D insuranceapp' < src/main/resources/reset-demo.sql
+```
+
+### 件数確認（任意）
+```bash
+docker compose -f docker-compose.prod.yaml exec mysql sh -lc 'mysql -u root -p"$MYSQL_ROOT_PASSWORD" -D insuranceapp -e "SELECT COUNT(*) AS policy_count FROM policies; SELECT COUNT(*) AS accident_count FROM accidents;"'
+```
+
+### 使い分けの目安
+- 普段の利用: そのまま起動（リセットしない）
+- デモ直前: `reset-demo.sql` を実行してから画面確認
+
