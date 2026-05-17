@@ -1,16 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>損保業務支援アプリ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>損保業務支援アプリ | ダッシュボード</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
-<h1>損保業務支援アプリ</h1>
-<p>トップページです。アプリの骨組みが正常に動作しています。</p>
+<main class="page">
+    <section class="hero">
+        <p class="eyebrow">Insurance Operations Dashboard</p>
+        <h1>損保業務支援アプリ</h1>
+        <p class="lead">契約・事故対応の進捗を一元管理し、更新漏れと対応遅延を防ぐための業務ダッシュボードです。</p>
+    </section>
 
-<ul>
-    <li><a th:href="@{/policies}">契約一覧</a></li>
-    <li><a th:href="@{/accidents}">事故一覧</a></li>
-</ul>
+    <section class="kpi-grid" aria-label="主要指標">
+        <article class="kpi-card">
+            <p class="kpi-label">契約管理</p>
+            <p class="kpi-value">Policy</p>
+            <p class="kpi-note">契約状態・満期日・更新状況を確認</p>
+        </article>
+        <article class="kpi-card">
+            <p class="kpi-label">事故対応</p>
+            <p class="kpi-value">Accident</p>
+            <p class="kpi-note">受付・対応中・完了を見える化</p>
+        </article>
+        <article class="kpi-card">
+            <p class="kpi-label">優先確認</p>
+            <p class="kpi-value">要注意</p>
+            <p class="kpi-note">期限接近案件を早期把握</p>
+        </article>
+    </section>
+
+    <section class="action-panel" aria-label="メニュー">
+        <a class="action-card" th:href="@{/policies}">
+            <h2>契約一覧</h2>
+            <p>契約中・失効・解約の確認、更新状況の把握、AI要約・カレンダー連携に進みます。</p>
+            <span>開く</span>
+        </a>
+        <a class="action-card" th:href="@{/accidents}">
+            <h2>事故一覧</h2>
+            <p>事故受付後の対応進捗、滞留リスク、次アクション候補の確認に進みます。</p>
+            <span>開く</span>
+        </a>
+    </section>
+</main>
 </body>
 </html>
