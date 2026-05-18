@@ -54,34 +54,7 @@
 
     <!--
       ========================================
-      ② ファイル出力の設定（RollingFileAppender）
-      ========================================
-      ログをファイルに書き出す設定。
-      RollingFileAppender = ファイルサイズや日付で自動的にファイルを分割（ローテーション）する。
-    -->
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    	<!-- 現在のログファイルパス -->
-        <file>logs/insurance-app.log</file>
-        
-         <!--
-          ローテーションポリシー：
-          日付ごとにファイルを分割し、最大30日分を保持する。
-          例：logs/app.2026-02-10.log, logs/app.2026-02-11.log, ...
-        -->
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 日次ローテーション（1日ごとにファイルを切り替え） -->
-            <fileNamePattern>logs/insurance-app.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- 最大30日分保持 -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{traceId}] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
-
-    <!--
-      ========================================
-      ③ ログレベル設定
+      ② ログレベル設定
       ========================================
       DEBUGレベル以上を出力する。
       → log.debug() の内容もコンソールとファイルに表示される。
@@ -97,7 +70,7 @@
 
     <!--
       ========================================
-      ④ ルートロガーの設定（全体のデフォルト）
+      ③ ルートロガーの設定（全体のデフォルト）
       ========================================
       上記で個別指定していないパッケージ（Spring Framework本体等）は
       INFOレベル以上のみ表示する。
@@ -107,8 +80,6 @@
     <!-- ルートロガー（デフォルト） -->
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
-        <!-- 本番環境ではFILEも有効化する -->
-        <!-- <appender-ref ref="FILE" /> -->
     </root>
 
 </configuration>
