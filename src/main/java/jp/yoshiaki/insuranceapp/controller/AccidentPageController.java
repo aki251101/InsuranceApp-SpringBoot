@@ -64,6 +64,37 @@ public class AccidentPageController {
         return "accident/detail";
     }
 
+    @PostMapping("/{id}/start-progress")
+    public String startProgress(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        accidentService.startProgress(id);
+        redirectAttributes.addFlashAttribute("successMessage", "事故対応を開始しました");
+        return "redirect:/accidents/" + id;
+    }
+
+    @PostMapping("/{id}/resolve")
+    public String resolve(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        accidentService.resolve(id);
+        redirectAttributes.addFlashAttribute("successMessage", "事故対応を完了しました");
+        return "redirect:/accidents/" + id;
+    }
+
+    @PostMapping("/{id}/contacted")
+    public String contacted(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        accidentService.updateLastContactedAt(id);
+        redirectAttributes.addFlashAttribute("successMessage", "最終対応日時を更新しました");
+        return "redirect:/accidents/" + id;
+    }
+
+    @PostMapping("/{id}/memo")
+    public String updateMemo(
+            @PathVariable Long id,
+            @RequestParam(name = "memo", defaultValue = "") String memo,
+            RedirectAttributes redirectAttributes) {
+        accidentService.updateMemo(id, memo);
+        redirectAttributes.addFlashAttribute("successMessage", "メモを更新しました");
+        return "redirect:/accidents/" + id;
+    }
+
     @PostMapping("/{id}/ai-suggest")
     public String aiSuggest(@PathVariable Long id, Authentication authentication,
                             RedirectAttributes redirectAttributes) {

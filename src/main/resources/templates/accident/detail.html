@@ -39,6 +39,33 @@
         </tr>
     </table>
 
+    <h2>操作</h2>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+        <form th:if="${accident.canStartProgress}"
+              th:action="@{/accidents/{id}/start-progress(id=${accident.id})}" method="post">
+            <button type="submit">対応開始</button>
+        </form>
+
+        <form th:if="${accident.canContact}"
+              th:action="@{/accidents/{id}/contacted(id=${accident.id})}" method="post">
+            <button type="submit">対応した</button>
+        </form>
+
+        <form th:if="${accident.canResolve}"
+              th:action="@{/accidents/{id}/resolve(id=${accident.id})}" method="post">
+            <button type="submit">完了</button>
+        </form>
+    </div>
+
+    <h2>メモ更新</h2>
+    <form th:action="@{/accidents/{id}/memo(id=${accident.id})}" method="post">
+        <textarea name="memo" rows="4" cols="60" maxlength="2000"
+                  th:text="${accident.memo}"></textarea>
+        <div>
+            <button type="submit">メモを更新</button>
+        </div>
+    </form>
+
     <h2>AI提案</h2>
     <form th:action="@{/accidents/{id}/ai-suggest(id=${accident.id})}" method="post">
         <button type="submit">AI次アクション候補</button>
