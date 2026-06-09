@@ -61,6 +61,8 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     environment:
+      TZ: Asia/Tokyo
+      JAVA_TOOL_OPTIONS: -Duser.timezone=Asia/Tokyo
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-production}
       DB_URL: ${DB_URL}
       DB_USERNAME: ${DB_USERNAME}
