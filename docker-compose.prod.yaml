@@ -16,6 +16,8 @@ services:
   mysql:
     image: mysql:8.0
     restart: always
+    mem_limit: 320m
+    mem_reservation: 192m
     env_file:
       - .env
     environment:
@@ -29,7 +31,15 @@ services:
     #   - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --innodb-buffer-pool-size=96M
+      - --performance-schema=OFF
+      - --max-connections=20
+      - --table-open-cache=200
+      - --tmp-table-size=16M
+      - --max-heap-table-size=16M
     # ② ヘルスチェック: MySQLが応答可能か定期確認
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
@@ -44,6 +54,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
+    mem_limit: 384m
+    mem_reservation: 256m
     env_file:
       - .env
     ports:
