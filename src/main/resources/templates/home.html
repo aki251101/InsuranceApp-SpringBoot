@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+    <script defer th:src="@{/js/home-carousel.js}"></script>
 </head>
 <body>
 <main class="page">
@@ -17,22 +18,46 @@
         <p class="lead">契約・事故対応の進捗を一元管理し、更新漏れと対応遅延を防ぐための業務ダッシュボードです。</p>
     </section>
 
-    <section class="kpi-grid" aria-label="主要指標">
-        <article class="kpi-card">
-            <p class="kpi-label">契約管理</p>
-            <p class="kpi-value">Policy</p>
-            <p class="kpi-note">契約状態・満期日・更新状況を確認</p>
-        </article>
-        <article class="kpi-card">
-            <p class="kpi-label">事故対応</p>
-            <p class="kpi-value">Accident</p>
-            <p class="kpi-note">受付・対応中・完了を見える化</p>
-        </article>
-        <article class="kpi-card">
-            <p class="kpi-label">優先確認</p>
-            <p class="kpi-value">要注意</p>
-            <p class="kpi-note">期限接近案件を早期把握</p>
-        </article>
+    <section class="banner-carousel" aria-label="アプリの主要機能">
+        <div class="carousel-viewport">
+            <div class="carousel-track">
+                <article class="carousel-slide">
+                    <img th:src="@{/images/home-banners/01-early-renewal-rate.svg}"
+                         src="/images/home-banners/01-early-renewal-rate.svg"
+                         alt="早期更改率を見える化し、余裕ある更新対応を支援">
+                </article>
+                <article class="carousel-slide">
+                    <img th:src="@{/images/home-banners/02-renewal-deadline-alert.svg}"
+                         src="/images/home-banners/02-renewal-deadline-alert.svg"
+                         alt="更新期限を過ぎた契約を要注意として通知">
+                </article>
+                <article class="carousel-slide">
+                    <img th:src="@{/images/home-banners/03-accident-stagnation-alert.svg}"
+                         src="/images/home-banners/03-accident-stagnation-alert.svg"
+                         alt="最終対応から7日経過した事故案件を滞留として通知">
+                </article>
+                <article class="carousel-slide">
+                    <img th:src="@{/images/home-banners/04-calendar-reminder.svg}"
+                         src="/images/home-banners/04-calendar-reminder.svg"
+                         alt="更新予定をカレンダーに登録し、リマインダーで更新漏れを防止">
+                </article>
+                <article class="carousel-slide">
+                    <img th:src="@{/images/home-banners/05-ai-action-suggestion.svg}"
+                         src="/images/home-banners/05-ai-action-suggestion.svg"
+                         alt="AIが案件ごとの次の行動と注意点を整理">
+                </article>
+            </div>
+        </div>
+
+        <button class="carousel-control carousel-control-prev" type="button" aria-label="前のバナーを表示">
+            <span aria-hidden="true">‹</span>
+        </button>
+        <button class="carousel-control carousel-control-next" type="button" aria-label="次のバナーを表示">
+            <span aria-hidden="true">›</span>
+        </button>
+
+        <div class="carousel-indicators" aria-label="バナーを選択"></div>
+        <p class="carousel-status" aria-live="polite" aria-atomic="true"></p>
     </section>
 
     <section class="action-panel" aria-label="メニュー">

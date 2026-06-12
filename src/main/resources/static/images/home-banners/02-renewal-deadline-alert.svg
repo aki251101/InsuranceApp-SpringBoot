@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="600" viewBox="0 0 1800 600" role="img" aria-labelledby="title desc">
+  <title id="title">更新期限を見逃さない</title>
+  <desc id="desc">期限を過ぎた契約を要注意バッジで知らせる契約一覧のバナー</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.58" stop-color="#f8fbff"/>
+      <stop offset="1" stop-color="#e6f2ff"/>
+    </linearGradient>
+    <linearGradient id="wave" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#edf6ff"/>
+      <stop offset="1" stop-color="#d6eaff"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4aa3ff"/>
+      <stop offset="1" stop-color="#1268df"/>
+    </linearGradient>
+    <linearGradient id="warning" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff9ed"/>
+      <stop offset="1" stop-color="#fffdf7"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#16467d" flood-opacity="0.13"/>
+    </filter>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#16467d" flood-opacity="0.16"/>
+    </filter>
+    <style>
+      text { font-family: "Noto Sans JP", "Yu Gothic", "Meiryo", sans-serif; }
+      .navy { fill: #082e6b; }
+      .muted { fill: #3970b4; }
+      .heading { font-weight: 800; letter-spacing: .01em; }
+      .body { font-weight: 700; }
+      .small { font-size: 17px; font-weight: 700; }
+      .rowText { font-size: 19px; font-weight: 700; fill: #082e6b; }
+    </style>
+  </defs>
+
+  <rect x="2" y="2" width="1796" height="596" rx="34" fill="url(#bg)" stroke="#bfd5ee" stroke-width="4"/>
+  <path d="M0 406 C250 548 487 452 711 510 C1010 588 1255 623 1800 458 L1800 600 L0 600 Z" fill="url(#wave)" opacity=".9"/>
+  <path d="M0 520 C312 447 478 523 699 570 C920 617 1267 632 1800 493" fill="none" stroke="#ffffff" stroke-width="3" opacity=".9"/>
+
+  <g fill="#d7e9fc">
+    <circle cx="52" cy="45" r="4"/><circle cx="76" cy="45" r="4"/><circle cx="100" cy="45" r="4"/><circle cx="124" cy="45" r="4"/>
+    <circle cx="52" cy="69" r="4"/><circle cx="76" cy="69" r="4"/><circle cx="100" cy="69" r="4"/><circle cx="124" cy="69" r="4"/>
+    <circle cx="52" cy="93" r="4"/><circle cx="76" cy="93" r="4"/><circle cx="100" cy="93" r="4"/><circle cx="124" cy="93" r="4"/>
+  </g>
+
+  <g transform="translate(72 218)">
+    <text class="navy heading" font-size="70">更新期限を見逃さない</text>
+    <text class="navy body" y="82" font-size="34">期限を過ぎた契約を「要注意」でお知らせ</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="930" y="86" width="790" height="438" rx="24" fill="#ffffff" stroke="#d8e7f6" stroke-width="2"/>
+  </g>
+  <text x="968" y="140" class="navy heading" font-size="29">契約一覧</text>
+  <line x1="950" y1="164" x2="1698" y2="164" stroke="#dce9f7" stroke-width="2"/>
+  <text x="1019" y="199" class="muted small">契約番号</text>
+  <text x="1241" y="199" class="muted small">契約者名</text>
+  <text x="1430" y="199" class="muted small">更新期限</text>
+  <text x="1607" y="199" class="muted small">ステータス</text>
+
+  <g>
+    <rect x="952" y="220" width="746" height="82" rx="17" fill="#ffffff" stroke="#dce9f7" stroke-width="2"/>
+    <g transform="translate(978 239)">
+      <rect width="42" height="46" rx="9" fill="#eef5fd"/>
+      <path d="M13 9h12l7 7v22H13z" fill="url(#blue)" opacity=".7"/>
+      <path d="M25 9v8h8" fill="none" stroke="#fff" stroke-width="2"/>
+      <path d="M18 24h10M18 29h10M18 34h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    <text x="1040" y="270" class="rowText">A-2024-00123</text>
+    <text x="1241" y="270" class="rowText">山田 太郎 様</text>
+    <text x="1430" y="270" class="rowText">2025/06/30</text>
+    <circle cx="1648" cy="261" r="22" fill="url(#blue)"/>
+    <path d="M1637 261l8 8 15-17" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="930" y="314" width="790" height="92" rx="19" fill="url(#warning)" stroke="#f6b431" stroke-width="2"/>
+  </g>
+  <g transform="translate(958 334)">
+    <circle cx="25" cy="25" r="25" fill="#ffffff" stroke="#e3eef9"/>
+    <rect x="11" y="12" width="27" height="25" rx="4" fill="#e9f4ff" stroke="#4a93ed" stroke-width="2"/>
+    <path d="M11 19h27M18 8v8M31 8v8" stroke="#257ce5" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="34" cy="35" r="9" fill="#fff" stroke="#244a82" stroke-width="3"/>
+    <path d="M34 30v6l4 2" fill="none" stroke="#244a82" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="1040" y="369" class="rowText">A-2024-00124</text>
+  <text x="1241" y="369" class="rowText">鈴木 花子 様</text>
+  <text x="1430" y="369" font-family="Noto Sans JP, Yu Gothic, sans-serif" font-size="19" font-weight="800" fill="#e67600">2025/05/15</text>
+  <rect x="1590" y="337" width="105" height="47" rx="24" fill="#fff3c9" stroke="#f4a000" stroke-width="2"/>
+  <text x="1642" y="369" text-anchor="middle" font-size="21" font-weight="800" fill="#dc7200">要注意</text>
+
+  <g>
+    <rect x="952" y="418" width="746" height="82" rx="17" fill="#ffffff" stroke="#dce9f7" stroke-width="2"/>
+    <g transform="translate(978 437)">
+      <rect width="42" height="46" rx="9" fill="#eef5fd"/>
+      <path d="M13 9h12l7 7v22H13z" fill="url(#blue)" opacity=".7"/>
+      <path d="M25 9v8h8" fill="none" stroke="#fff" stroke-width="2"/>
+      <path d="M18 24h10M18 29h10M18 34h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    <text x="1040" y="468" class="rowText">A-2024-00125</text>
+    <text x="1241" y="468" class="rowText">田中 一郎 様</text>
+    <text x="1430" y="468" class="rowText">2025/07/31</text>
+    <circle cx="1648" cy="459" r="22" fill="url(#blue)"/>
+    <path d="M1637 459l8 8 15-17" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g transform="translate(1606 38)" filter="url(#softShadow)">
+    <circle cx="62" cy="62" r="62" fill="#ffffff" stroke="#e0edf9" stroke-width="2"/>
+    <rect x="30" y="34" width="55" height="49" rx="7" fill="#edf6ff" stroke="#7ab4f4" stroke-width="2"/>
+    <rect x="30" y="34" width="55" height="13" rx="7" fill="url(#blue)"/>
+    <path d="M43 27v15M72 27v15" stroke="#2b7fe9" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="85" cy="82" r="22" fill="#fff" stroke="#294b80" stroke-width="5"/>
+    <path d="M85 70v13l9 5" fill="none" stroke="#294b80" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

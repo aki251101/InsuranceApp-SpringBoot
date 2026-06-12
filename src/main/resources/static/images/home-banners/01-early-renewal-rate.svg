@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="600" viewBox="0 0 1800 600" role="img" aria-labelledby="title desc">
+  <title id="title">早期更改率を見える化</title>
+  <desc id="desc">早期更改率72パーセントをメーターで表示し、余裕ある更新対応を促すバナー</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".62" stop-color="#f9fcff"/>
+      <stop offset="1" stop-color="#e6f2ff"/>
+    </linearGradient>
+    <linearGradient id="wave" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#edf6ff"/>
+      <stop offset="1" stop-color="#d8ebff"/>
+    </linearGradient>
+    <linearGradient id="gauge" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#55d8ec"/>
+      <stop offset=".48" stop-color="#268df3"/>
+      <stop offset="1" stop-color="#0969e6"/>
+    </linearGradient>
+    <linearGradient id="navyGauge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1765c5"/>
+      <stop offset="1" stop-color="#062f70"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#45a0ff"/>
+      <stop offset="1" stop-color="#0867e8"/>
+    </linearGradient>
+    <linearGradient id="needle" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#062f70"/>
+      <stop offset="1" stop-color="#287fe0"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="170%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#16467d" flood-opacity=".14"/>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#16467d" flood-opacity=".17"/>
+    </filter>
+    <style>
+      text{font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif}.navy{fill:#082e6b}.heading{font-weight:800}.body{font-weight:700}
+    </style>
+  </defs>
+
+  <rect x="2" y="2" width="1796" height="596" rx="34" fill="url(#bg)" stroke="#bfd5ee" stroke-width="4"/>
+  <path d="M0 398C220 537 468 468 665 521c254 69 462 115 730 32 150-47 264-71 405-124v171H0z" fill="url(#wave)"/>
+  <path d="M0 478c282 54 436 129 671 120 254-10 424-88 663-69 191 16 315-20 466-74" fill="none" stroke="#fff" stroke-width="3"/>
+
+  <g fill="#d5e8fb">
+    <circle cx="1630" cy="167" r="4"/><circle cx="1656" cy="167" r="4"/><circle cx="1682" cy="167" r="4"/><circle cx="1708" cy="167" r="4"/>
+    <circle cx="1630" cy="193" r="4"/><circle cx="1656" cy="193" r="4"/><circle cx="1682" cy="193" r="4"/><circle cx="1708" cy="193" r="4"/>
+    <circle cx="1630" cy="219" r="4"/><circle cx="1656" cy="219" r="4"/><circle cx="1682" cy="219" r="4"/><circle cx="1708" cy="219" r="4"/>
+  </g>
+
+  <text x="76" y="275" class="navy heading" font-size="73">早期更改率を見える化</text>
+  <text x="78" y="360" class="navy body" font-size="35">目標を意識し、余裕ある更新対応へ</text>
+
+  <g filter="url(#shadow)">
+    <rect x="996" y="322" width="503" height="167" rx="30" fill="#ffffff"/>
+  </g>
+
+  <path d="M1024 331A260 260 0 0 1 1544 331" fill="none" stroke="#e4effa" stroke-width="63"/>
+  <path d="M1024 331A260 260 0 0 1 1411 105" fill="none" stroke="url(#gauge)" stroke-width="63"/>
+  <path d="M1419 110A260 260 0 0 1 1544 331" fill="none" stroke="url(#navyGauge)" stroke-width="63"/>
+  <path d="M1406 117l-32 52" stroke="#fff" stroke-width="8"/>
+
+  <g transform="translate(1360 310) rotate(43)">
+    <path d="M0 0L-18-8 0-161 18-8z" fill="url(#needle)"/>
+  </g>
+  <circle cx="1360" cy="310" r="19" fill="url(#navyGauge)" filter="url(#soft)"/>
+
+  <text x="1232" y="421" class="navy heading" font-size="116">72</text>
+  <text x="1398" y="421" class="navy heading" font-size="65">%</text>
+
+  <g transform="translate(1455 78)" filter="url(#soft)">
+    <circle cx="54" cy="54" r="54" fill="#fff" stroke="#e0edf9" stroke-width="2"/>
+    <path d="M27 72l22-23 17 16 31-36" fill="none" stroke="url(#blue)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M83 29l16-2-3 16" fill="none" stroke="#1673e6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g transform="translate(1470 334)" filter="url(#shadow)">
+    <rect width="310" height="160" rx="24" fill="#fff" stroke="#e1edf8"/>
+    <g transform="translate(28 32)">
+      <rect width="106" height="89" rx="15" fill="#f7fbff" stroke="#d6e7f7"/>
+      <rect x="13" y="16" width="80" height="23" rx="7" fill="url(#blue)"/>
+      <path d="M31 7v19M74 7v19" stroke="#2279e7" stroke-width="7" stroke-linecap="round"/>
+      <g fill="#d3e1ef">
+        <rect x="25" y="53" width="14" height="13" rx="3"/><rect x="47" y="53" width="14" height="13" rx="3"/><rect x="69" y="53" width="14" height="13" rx="3"/>
+        <rect x="25" y="74" width="14" height="13" rx="3"/><rect x="47" y="74" width="14" height="13" rx="3"/>
+      </g>
+      <circle cx="88" cy="87" r="23" fill="url(#blue)"/>
+      <path d="M77 87l8 8 15-18" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g transform="translate(164 45)">
+      <rect width="112" height="13" rx="7" fill="#2f8dec"/>
+      <rect y="35" width="112" height="13" rx="7" fill="#e4ebf3"/>
+      <circle cx="7" cy="71" r="6" fill="#58a9f3"/>
+      <rect x="22" y="65" width="90" height="12" rx="6" fill="#e1e8f1"/>
+      <rect x="22" y="94" width="55" height="11" rx="6" fill="#e1e8f1"/>
+    </g>
+  </g>
+</svg>

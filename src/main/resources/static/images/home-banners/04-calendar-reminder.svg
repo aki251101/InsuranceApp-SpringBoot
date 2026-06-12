@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="600" viewBox="0 0 1800 600" role="img" aria-labelledby="title desc">
+  <title id="title">更新予定をカレンダーへ</title>
+  <desc id="desc">契約更新予定をカレンダーに登録し、リマインダーで更新漏れを防ぐバナー</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset=".62" stop-color="#f9fcff"/><stop offset="1" stop-color="#e6f2ff"/>
+    </linearGradient>
+    <linearGradient id="wave" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#edf6ff"/><stop offset="1" stop-color="#d8ebff"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#45a0ff"/><stop offset="1" stop-color="#0867e8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="11" stdDeviation="14" flood-color="#16467d" flood-opacity=".14"/>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#16467d" flood-opacity=".15"/>
+    </filter>
+    <style>
+      text{font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif}.navy{fill:#082e6b}.muted{fill:#3970b4}
+      .heading{font-weight:800}.body{font-weight:700}.small{font-size:14px;font-weight:700}.row{font-size:16px;font-weight:700;fill:#082e6b}
+    </style>
+  </defs>
+  <rect x="2" y="2" width="1796" height="596" rx="34" fill="url(#bg)" stroke="#bfd5ee" stroke-width="4"/>
+  <path d="M0 425C220 405 330 550 565 536c242-14 358-109 604-38 206 60 355 93 631-29v131H0z" fill="url(#wave)"/>
+  <path d="M0 518c265-40 429 56 654 66 303 14 497-93 746-71 150 13 265 7 400-31" fill="none" stroke="#fff" stroke-width="3"/>
+  <g fill="#d5e8fb">
+    <circle cx="61" cy="43" r="4"/><circle cx="87" cy="43" r="4"/><circle cx="113" cy="43" r="4"/><circle cx="139" cy="43" r="4"/>
+    <circle cx="61" cy="69" r="4"/><circle cx="87" cy="69" r="4"/><circle cx="113" cy="69" r="4"/><circle cx="139" cy="69" r="4"/>
+    <circle cx="61" cy="95" r="4"/><circle cx="87" cy="95" r="4"/><circle cx="113" cy="95" r="4"/><circle cx="139" cy="95" r="4"/>
+  </g>
+
+  <text x="62" y="255" class="navy heading" font-size="67">更新予定をカレンダーへ</text>
+  <text x="64" y="333" class="navy body" font-size="31">リマインダーを活用して、更新漏れを防止</text>
+
+  <g filter="url(#shadow)">
+    <rect x="795" y="135" width="468" height="342" rx="24" fill="#fff" stroke="#d9e8f7" stroke-width="2"/>
+  </g>
+  <g transform="translate(817 153)">
+    <rect width="42" height="42" rx="11" fill="url(#blue)"/>
+    <rect x="11" y="13" width="20" height="20" rx="3" fill="#fff"/>
+    <path d="M11 19h20M16 9v8M26 9v8" stroke="#83b9f5" stroke-width="2"/>
+    <path d="M17 25l4 4 7-8" fill="none" stroke="#2d83e9" stroke-width="2.5"/>
+  </g>
+  <text x="874" y="184" class="navy heading" font-size="23">契約更新予定</text>
+  <line x1="817" y1="204" x2="1240" y2="204" stroke="#dce9f7" stroke-width="2"/>
+  <text x="831" y="230" class="muted small">契約番号</text><text x="968" y="230" class="muted small">契約者名</text>
+  <text x="1080" y="230" class="muted small">更新予定日</text><text x="1191" y="230" class="muted small">状態</text>
+
+  <g>
+    <rect x="815" y="245" width="426" height="62" rx="14" fill="#fff" stroke="#dce9f7" stroke-width="2"/>
+    <rect x="830" y="258" width="34" height="36" rx="8" fill="#eef5fd"/><path d="M842 265h10l6 6v17h-16z" fill="#5b9fec"/><path d="M851 265v7h7" fill="none" stroke="#fff" stroke-width="2"/>
+    <text x="875" y="282" class="row">A-2024-00123</text><text x="985" y="282" class="row">山田 太郎 様</text><text x="1095" y="282" class="row">2025/06/30</text>
+    <circle cx="1214" cy="276" r="17" fill="url(#blue)"/><path d="M1206 276l6 6 11-13" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g>
+    <rect x="815" y="317" width="426" height="62" rx="14" fill="#fff" stroke="#dce9f7" stroke-width="2"/>
+    <rect x="830" y="330" width="34" height="36" rx="8" fill="#eef5fd"/><path d="M842 337h10l6 6v17h-16z" fill="#5b9fec"/><path d="M851 337v7h7" fill="none" stroke="#fff" stroke-width="2"/>
+    <text x="875" y="354" class="row">A-2024-00124</text><text x="985" y="354" class="row">鈴木 花子 様</text><text x="1095" y="354" class="row">2025/07/15</text>
+    <circle cx="1214" cy="348" r="17" fill="url(#blue)"/><path d="M1206 348l6 6 11-13" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g>
+    <rect x="815" y="389" width="426" height="62" rx="14" fill="#fff" stroke="#dce9f7" stroke-width="2"/>
+    <rect x="830" y="402" width="34" height="36" rx="8" fill="#eef5fd"/><path d="M842 409h10l6 6v17h-16z" fill="#5b9fec"/><path d="M851 409v7h7" fill="none" stroke="#fff" stroke-width="2"/>
+    <text x="875" y="426" class="row">A-2024-00125</text><text x="985" y="426" class="row">田中 一郎 様</text><text x="1095" y="426" class="row">2025/07/31</text>
+    <circle cx="1214" cy="420" r="17" fill="url(#blue)"/><path d="M1206 420l6 6 11-13" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <path d="M1277 306h68" stroke="#2d82ec" stroke-width="13" stroke-linecap="round"/>
+  <path d="M1334 286l23 20-23 20" fill="none" stroke="#2d82ec" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g filter="url(#shadow)">
+    <rect x="1380" y="158" width="358" height="350" rx="24" fill="#fff" stroke="#d9e8f7" stroke-width="2"/>
+  </g>
+  <g transform="translate(1404 180)">
+    <rect width="42" height="42" rx="7" fill="#fff" stroke="#d5e5f5"/>
+    <path d="M4 5h34v10H4z" fill="#4285f4"/><path d="M4 15h10v23H4z" fill="#0f9d58"/><path d="M14 28h24v10H14z" fill="#34a853"/><path d="M30 15h8v13h-8z" fill="#fbbc04"/><path d="M30 28h8v10h-8z" fill="#ea4335"/>
+    <text x="21" y="31" text-anchor="middle" font-size="17" font-weight="800" fill="#4285f4">31</text>
+  </g>
+  <text x="1460" y="209" class="navy heading" font-size="21">Google カレンダー</text>
+  <g filter="url(#soft)">
+    <rect x="1403" y="235" width="312" height="190" rx="15" fill="#fff" stroke="#dce9f7" stroke-width="2"/>
+  </g>
+  <line x1="1422" y1="255" x2="1422" y2="365" stroke="#277ee8" stroke-width="5"/>
+  <text x="1440" y="276" class="navy heading" font-size="21">保険契約の更新予定</text>
+  <g transform="translate(1440 298)" fill="none" stroke="#3474bc" stroke-width="2.5">
+    <rect width="18" height="17" rx="3"/><path d="M0 6h18M5-3v6M13-3v6"/>
+  </g>
+  <text x="1470" y="314" class="navy body" font-size="17">2025年7月15日（火）</text>
+  <circle cx="1449" cy="344" r="9" fill="none" stroke="#3474bc" stroke-width="2.5"/><path d="M1449 338v7l5 3" fill="none" stroke="#3474bc" stroke-width="2"/>
+  <text x="1470" y="350" class="navy body" font-size="17">9:00 - 9:30</text>
+  <line x1="1424" y1="375" x2="1692" y2="375" stroke="#dce9f7" stroke-width="2"/>
+  <path d="M1442 394c0-7 4-11 9-13v-3a4 4 0 018 0v3c5 2 9 6 9 13z" fill="#4b83c8"/><circle cx="1455" cy="397" r="3" fill="#4b83c8"/>
+  <text x="1480" y="400" class="navy body" font-size="16">リマインダー：1週間前</text>
+  <rect x="1403" y="443" width="312" height="48" rx="12" fill="url(#blue)"/>
+  <circle cx="1440" cy="467" r="16" fill="#fff"/><path d="M1433 467l6 6 11-13" fill="none" stroke="#2580e9" stroke-width="4"/>
+  <text x="1470" y="475" font-size="22" font-weight="800" fill="#fff">カレンダー登録済み</text>
+
+  <path d="M1458 147c22-54 72-65 119-44 53 24 64 10 94 47" fill="none" stroke="#68a5ec" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 14"/>
+  <g transform="translate(1432 69)" filter="url(#soft)">
+    <circle cx="42" cy="42" r="42" fill="#fff" stroke="#dfecf8"/>
+    <rect x="23" y="22" width="38" height="38" rx="5" fill="#4285f4"/><path d="M23 22h38v10H23z" fill="#246fdf"/><path d="M23 48h12v12H23z" fill="#0f9d58"/><path d="M49 32h12v16H49z" fill="#fbbc04"/><path d="M49 48h12v12H49z" fill="#ea4335"/>
+    <text x="42" y="50" text-anchor="middle" font-size="17" font-weight="800" fill="#fff">31</text>
+  </g>
+  <g transform="translate(1638 73)" filter="url(#soft)">
+    <circle cx="42" cy="42" r="42" fill="#fff" stroke="#dfecf8"/>
+    <path d="M42 22c-12 0-18 9-18 22v9l-7 9h50l-7-9v-9c0-13-6-22-18-22z" fill="url(#blue)"/><circle cx="42" cy="66" r="6" fill="#2177e6"/>
+  </g>
+</svg>
