@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>事故詳細</title>
@@ -21,17 +21,26 @@
 
 <div th:if="${accident}">
     <table border="1" cellpadding="6" cellspacing="0">
-        <tr><th>ID</th><td th:text="${accident.id}"></td></tr>
-        <tr><th>契約番号</th><td th:text="${accident.policyNumber}"></td></tr>
-        <tr><th>契約者名</th><td th:text="${accident.customerName}"></td></tr>
-        <tr><th>受付日</th><td th:text="${accident.occurredAt}"></td></tr>
-        <tr><th>事故場所</th><td th:text="${accident.place}"></td></tr>
-        <tr><th>事故概要</th><td th:text="${accident.description}"></td></tr>
-        <tr><th>状態</th><td th:text="${accident.status}"></td></tr>
-        <tr><th>最終対応日時</th><td th:text="${accident.lastContactedAt}"></td></tr>
-        <tr><th>メモ</th><td th:text="${accident.memo}"></td></tr>
+        <tr><th scope="row">ID</th><td th:text="${accident.id}"></td></tr>
         <tr>
-            <th>滞留</th>
+            <th scope="row">契約番号</th>
+            <td>
+                <a th:if="${accident.policyId != null}"
+                   th:href="@{/policies/{id}(id=${accident.policyId})}"
+                   th:text="${accident.policyNumber}"></a>
+                <span th:unless="${accident.policyId != null}"
+                      th:text="${accident.policyNumber}"></span>
+            </td>
+        </tr>
+        <tr><th scope="row">契約者名</th><td th:text="${accident.customerName}"></td></tr>
+        <tr><th scope="row">受付日</th><td th:text="${accident.occurredAt}"></td></tr>
+        <tr><th scope="row">事故場所</th><td th:text="${accident.place}"></td></tr>
+        <tr><th scope="row">事故概要</th><td th:text="${accident.description}"></td></tr>
+        <tr><th scope="row">状態</th><td th:text="${accident.status}"></td></tr>
+        <tr><th scope="row">最終対応日時</th><td th:text="${accident.lastContactedAt}"></td></tr>
+        <tr><th scope="row">対応履歴メモ</th><td style="white-space: pre-wrap;" th:text="${accident.memo}"></td></tr>
+        <tr>
+            <th scope="row">滞留</th>
             <td>
                 <span th:if="${accident.stagnant}" style="color:red;">滞留</span>
                 <span th:unless="${accident.stagnant}">-</span>
@@ -57,12 +66,18 @@
         </form>
     </div>
 
-    <h2>メモ更新</h2>
+    <h2>対応履歴メモ</h2>
+    <p style="font-size: 0.9em; color: #555;">
+        ※対応履歴メモの保存だけでは、最終対応日時は更新されません。お客さまへの連絡などを行った場合は、「対応した」ボタンも押してください。
+    </p>
     <form th:action="@{/accidents/{id}/memo(id=${accident.id})}" method="post">
-        <textarea name="memo" rows="4" cols="60" maxlength="2000"
-                  th:text="${accident.memo}"></textarea>
+        <label for="memo">対応履歴メモの内容</label>
         <div>
-            <button type="submit">メモを更新</button>
+            <textarea id="memo" name="memo" rows="4" cols="60" maxlength="2000"
+                  th:text="${accident.memo}"></textarea>
+        </div>
+        <div>
+            <button type="submit">対応履歴メモを保存</button>
         </div>
     </form>
 

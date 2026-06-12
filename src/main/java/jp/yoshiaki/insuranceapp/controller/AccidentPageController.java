@@ -7,6 +7,7 @@ import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.service.AccidentService;
 import jp.yoshiaki.insuranceapp.service.AiService;
 import jp.yoshiaki.insuranceapp.service.AiUsageLimitService;
+import jp.yoshiaki.insuranceapp.service.ListSortService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -35,21 +36,30 @@ public class AccidentPageController {
     private final AccidentService accidentService;
     private final AiService aiService;
     private final AiUsageLimitService aiUsageLimitService;
+    private final ListSortService listSortService;
 
     @GetMapping
     public String list(
             @RequestParam(name = "tab", defaultValue = "OPEN_INPROGRESS") String tab,
+            @RequestParam(name = "sort", defaultValue = "occurredAt") String sort,
+            @RequestParam(name = "direction", defaultValue = "asc") String direction,
             Model model) {
 
-        log.debug("事故一覧画面表示: tab={}", tab);
+        log.debug("事故一覧画面表示: tab={}, sort={}, direction={}", tab, sort, direction);
 
         List<Accident> accidents = switch (tab) {
             case "RESOLVED" -> accidentService.getResolvedAccidents();
             default -> accidentService.getOpenAndInProgressAccidents();
         };
 
+        String currentSort = listSortService.normalizeAccidentSort(sort);
+        String currentDirection = listSortService.normalizeDirection(direction);
+        accidents = listSortService.sortAccidents(accidents, currentSort, currentDirection);
+
         model.addAttribute("response", AccidentListResponse.from(accidents));
         model.addAttribute("currentTab", tab);
+        model.addAttribute("currentSort", currentSort);
+        model.addAttribute("currentDirection", currentDirection);
         return "accident/list";
     }
 
@@ -91,7 +101,7 @@ public class AccidentPageController {
             @RequestParam(name = "memo", defaultValue = "") String memo,
             RedirectAttributes redirectAttributes) {
         accidentService.updateMemo(id, memo);
-        redirectAttributes.addFlashAttribute("successMessage", "メモを更新しました");
+        redirectAttributes.addFlashAttribute("successMessage", "対応履歴メモを保存しました");
         return "redirect:/accidents/" + id;
     }
 

@@ -34,12 +34,12 @@ INSERT INTO policies (
   created_at,
   updated_at
 ) VALUES
-  ('P-2026-0001', '山田 太郎', '2025-04-01', '2026-04-01', 'ACTIVE',
-   NULL, NULL, NULL,
+  ('P-2026-0001', '山田 太郎', '2025-04-01', '2027-04-01', 'ACTIVE',
+   '2026-04-01', '2026-03-15 10:00:00', NULL,
    NULL, FALSE,
    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-  ('P-2026-0002', '佐藤 花子', '2025-05-15', '2026-05-15', 'ACTIVE',
+  ('P-2026-0002', '佐藤 花子', '2025-07-15', '2026-07-15', 'ACTIVE',
    NULL, NULL, NULL,
    NULL, FALSE,
    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -49,18 +49,18 @@ INSERT INTO policies (
    NULL, FALSE,
    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-  ('P-2026-0101', '青木 翔太', '2025-06-20', '2026-06-20', 'ACTIVE',
+  ('P-2026-0101', '青木 翔太', '2025-06-20', '2027-06-20', 'ACTIVE',
+   '2026-06-20', '2026-05-20 10:00:00', NULL,
+   NULL, FALSE,
+   CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+  ('P-2026-0102', '石田 美咲', '2025-06-30', '2026-06-30', 'ACTIVE',
    NULL, NULL, NULL,
    NULL, FALSE,
    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-  ('P-2026-0102', '石田 美咲', '2025-07-10', '2026-07-10', 'ACTIVE',
-   NULL, NULL, NULL,
-   NULL, FALSE,
-   CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-
-  ('P-2026-0103', '上田 恒一', '2025-05-30', '2026-05-30', 'ACTIVE',
-   NULL, NULL, NULL,
+  ('P-2026-0103', '上田 恒一', '2025-05-30', '2027-05-30', 'ACTIVE',
+   '2026-05-30', '2026-05-05 15:00:00', NULL,
    NULL, FALSE,
    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
@@ -69,22 +69,22 @@ INSERT INTO policies (
    NULL, FALSE,
    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-  ('P-2026-0105', '小川 健太', '2026-05-22', '2027-05-22', 'ACTIVE',
+  ('P-2026-0105', '小川 健太', '2025-05-22', '2027-05-22', 'ACTIVE',
    '2026-05-22', '2026-04-27 10:00:00', NULL,
-   NULL, TRUE,
+   NULL, FALSE,
    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-  ('P-2026-0106', '加藤 優子', '2025-06-05', '2026-06-05', 'ACTIVE',
+  ('P-2026-0106', '加藤 優子', '2025-05-30', '2026-05-30', 'ACTIVE',
    NULL, NULL, NULL,
    NULL, FALSE,
    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-  ('P-2026-0107', '木村 大輔', '2025-05-18', '2026-05-18', 'ACTIVE',
-   NULL, NULL, NULL,
+  ('P-2026-0107', '木村 大輔', '2024-06-22', '2026-06-22', 'ACTIVE',
+   '2025-06-22', '2025-06-15 13:00:00', NULL,
    NULL, FALSE,
    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-  ('P-2026-0108', '斎藤 直樹', '2025-06-12', '2026-06-12', 'ACTIVE',
+  ('P-2026-0108', '斎藤 直樹', '2025-08-12', '2026-08-12', 'ACTIVE',
    NULL, NULL, NULL,
    NULL, FALSE,
    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -103,33 +103,55 @@ INSERT INTO accidents (
   created_at,
   updated_at
 )
-SELECT p.id, '2026-03-10', '大阪市北区梅田1丁目', '追突事故', 'IN_PROGRESS', '2026-03-12 10:00:00', '初回連絡完了。保険会社へ報告済み。', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+SELECT p.id, '2026-06-03', '大阪市北区梅田1丁目', '追突事故', 'IN_PROGRESS',
+       '2026-06-03 13:00:00',
+       CONCAT('26.06.03 13:00 相手方へ連絡し、今後の補償の流れを説明。',
+                CHAR(10),
+                '26.06.03 17:00 修理工場へ車を渡し、見積依頼。'),
+       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM policies p WHERE p.policy_number = 'P-2026-0001';
 
 INSERT INTO accidents (policy_id, occurred_at, place, description, status, last_contacted_at, memo, created_at, updated_at)
-SELECT p.id, '2026-03-05', '京都市中京区', '自損事故', 'IN_PROGRESS', '2026-03-09 09:00:00', '修理工場と連絡調整中。', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+SELECT p.id, '2026-05-15', '京都市中京区', '自損事故', 'IN_PROGRESS',
+       '2026-06-11 09:00:00',
+       CONCAT('26.05.15 16:00 修理工場へ車を渡し、見積依頼。',
+              CHAR(10),
+              '2026-06-11 09:00:00 修理工場に修理状況確認連絡。来週納車予定。'),
+       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM policies p WHERE p.policy_number = 'P-2026-0002';
 
 INSERT INTO accidents (policy_id, occurred_at, place, description, status, last_contacted_at, memo, created_at, updated_at)
-SELECT p.id, '2026-02-18', '神戸市中央区三宮町', '接触事故', 'OPEN', NULL, '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
-FROM policies p WHERE p.policy_number = 'P-2026-0002';
-
-INSERT INTO accidents (policy_id, occurred_at, place, description, status, last_contacted_at, memo, created_at, updated_at)
-SELECT p.id, '2026-01-20', '大阪市天王寺区', '車両破損', 'RESOLVED', '2026-01-25 13:00:00', '示談成立。保険金支払い完了。', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+SELECT p.id, '2026-01-20', '大阪市天王寺区', '車両破損', 'RESOLVED',
+       '2026-02-25 13:00:00', '26.02.25 13:00 示談成立。保険金支払い完了。',
+       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM policies p WHERE p.policy_number = 'P-2026-0003';
 
 INSERT INTO accidents (policy_id, occurred_at, place, description, status, last_contacted_at, memo, created_at, updated_at)
-SELECT p.id, '2026-04-15', '福岡市博多区', '追突事故', 'IN_PROGRESS', '2026-04-25 09:00:00', '相手方保険会社へ連絡済み。', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+SELECT p.id, '2026-06-11', '福岡市博多区', '追突事故', 'IN_PROGRESS',
+       '2026-06-12 10:00:00', '26.06.12 10:00 相手方保険会社へ連絡済み。',
+       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM policies p WHERE p.policy_number = 'P-2026-0101';
 
 INSERT INTO accidents (policy_id, occurred_at, place, description, status, last_contacted_at, memo, created_at, updated_at)
-SELECT p.id, '2026-05-14', '熊本市中央区', '物損事故', 'OPEN', NULL, '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+SELECT p.id, '2026-06-12', '熊本市中央区', '物損事故', 'OPEN',
+       NULL, '',
+       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM policies p WHERE p.policy_number = 'P-2026-0102';
 
 INSERT INTO accidents (policy_id, occurred_at, place, description, status, last_contacted_at, memo, created_at, updated_at)
-SELECT p.id, '2026-04-17', '千葉市中央区', '車庫内接触', 'IN_PROGRESS', '2026-05-03 12:00:00', '修理見積もり待ち。', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+SELECT p.id, '2026-05-17', '千葉市中央区', '車庫内接触', 'IN_PROGRESS',
+       '2026-06-01 13:00:00',
+       CONCAT('26.05.16 10:00 修理工場へ車を渡し、見積依頼。',
+              CHAR(10),
+              '26.06.01 13:00 修理見積もり待ち。送付依頼再度連絡済'),
+       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM policies p WHERE p.policy_number = 'P-2026-0104';
 
 INSERT INTO accidents (policy_id, occurred_at, place, description, status, last_contacted_at, memo, created_at, updated_at)
-SELECT p.id, '2026-04-01', '札幌市中央区', '人身事故', 'RESOLVED', '2026-04-06 14:00:00', '保険金支払い完了。', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+SELECT p.id, '2026-04-01', '札幌市中央区', '人身事故', 'RESOLVED',
+       '2026-06-06 14:00:00',
+       CONCAT('26.04.01 11:00 相手方と病院へ連絡し、今後の補償の流れを説明。',
+              CHAR(10),
+              '26.06.06 14:00 保険金支払い完了。'),
+       CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM policies p WHERE p.policy_number = 'P-2026-0107';

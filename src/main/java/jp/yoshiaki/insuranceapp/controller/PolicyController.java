@@ -7,6 +7,7 @@ import jp.yoshiaki.insuranceapp.entity.Policy;
 import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.service.AiService;
 import jp.yoshiaki.insuranceapp.service.AiUsageLimitService;
+import jp.yoshiaki.insuranceapp.service.ListSortService;
 import jp.yoshiaki.insuranceapp.service.PolicyService;
 import jp.yoshiaki.insuranceapp.service.RenewalStatsService;
 import lombok.RequiredArgsConstructor;
@@ -36,14 +37,18 @@ public class PolicyController {
     private final RenewalStatsService renewalStatsService;
     private final AiService aiService;
     private final AiUsageLimitService aiUsageLimitService;
+    private final ListSortService listSortService;
 
     @GetMapping
     public String list(
             @RequestParam(name = "tab", defaultValue = "RENEWABLE") String tab,
             @RequestParam(name = "q", required = false) String q,
+            @RequestParam(name = "sort", defaultValue = "endDate") String sort,
+            @RequestParam(name = "direction", defaultValue = "asc") String direction,
             Model model) {
 
-        log.debug("契約一覧表示: tab={}, q={}", tab, q);
+        log.debug("契約一覧表示: tab={}, q={}, sort={}, direction={}",
+                tab, q, sort, direction);
 
         List<Policy> policies;
 
@@ -59,12 +64,18 @@ public class PolicyController {
             };
         }
 
+        String currentSort = listSortService.normalizePolicySort(sort);
+        String currentDirection = listSortService.normalizeDirection(direction);
+        policies = listSortService.sortPolicies(policies, currentSort, currentDirection);
+
         RenewalStatsDto stats = renewalStatsService.getStats();
         PolicyListResponse response = PolicyListResponse.from(policies, stats);
 
         model.addAttribute("response", response);
         model.addAttribute("currentTab", tab);
         model.addAttribute("searchQuery", q != null ? q : "");
+        model.addAttribute("currentSort", currentSort);
+        model.addAttribute("currentDirection", currentDirection);
 
         return "policy/list";
     }

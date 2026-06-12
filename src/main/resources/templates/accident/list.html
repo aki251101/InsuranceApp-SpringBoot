@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>事故一覧</title>
@@ -17,8 +17,8 @@
         <p class="back-link"><a href="/">トップページへ</a></p>
 
         <nav class="tabs">
-            <a th:href="@{/accidents(tab='OPEN_INPROGRESS')}" th:classappend="${currentTab == 'OPEN_INPROGRESS'} ? 'active' : ''">対応中</a>
-            <a th:href="@{/accidents(tab='RESOLVED')}" th:classappend="${currentTab == 'RESOLVED'} ? 'active' : ''">完了</a>
+            <a th:href="@{/accidents(tab='OPEN_INPROGRESS',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'OPEN_INPROGRESS'} ? 'active' : ''">対応中</a>
+            <a th:href="@{/accidents(tab='RESOLVED',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'RESOLVED'} ? 'active' : ''">完了</a>
         </nav>
     </section>
 
@@ -27,13 +27,43 @@
             <table>
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>受付日</th>
-                    <th>契約番号</th>
-                    <th>契約者名</th>
-                    <th>状態</th>
-                    <th>滞留</th>
-                    <th>操作</th>
+                    <th scope="col">
+                        <a class="sort-link"
+                           th:href="@{/accidents(tab=${currentTab},sort='id',direction=${currentSort == 'id' and currentDirection == 'asc' ? 'desc' : 'asc'})}">
+                            ID <span th:if="${currentSort == 'id'}" th:text="${currentDirection == 'asc' ? '▲' : '▼'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a class="sort-link"
+                           th:href="@{/accidents(tab=${currentTab},sort='occurredAt',direction=${currentSort == 'occurredAt' and currentDirection == 'asc' ? 'desc' : 'asc'})}">
+                            受付日 <span th:if="${currentSort == 'occurredAt'}" th:text="${currentDirection == 'asc' ? '▲' : '▼'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a class="sort-link"
+                           th:href="@{/accidents(tab=${currentTab},sort='policyNumber',direction=${currentSort == 'policyNumber' and currentDirection == 'asc' ? 'desc' : 'asc'})}">
+                            契約番号 <span th:if="${currentSort == 'policyNumber'}" th:text="${currentDirection == 'asc' ? '▲' : '▼'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a class="sort-link"
+                           th:href="@{/accidents(tab=${currentTab},sort='customerName',direction=${currentSort == 'customerName' and currentDirection == 'asc' ? 'desc' : 'asc'})}">
+                            契約者名 <span th:if="${currentSort == 'customerName'}" th:text="${currentDirection == 'asc' ? '▲' : '▼'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a class="sort-link"
+                           th:href="@{/accidents(tab=${currentTab},sort='status',direction=${currentSort == 'status' and currentDirection == 'asc' ? 'desc' : 'asc'})}">
+                            状態 <span th:if="${currentSort == 'status'}" th:text="${currentDirection == 'asc' ? '▲' : '▼'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a class="sort-link"
+                           th:href="@{/accidents(tab=${currentTab},sort='stagnant',direction=${currentSort == 'stagnant' and currentDirection == 'asc' ? 'desc' : 'asc'})}">
+                            滞留 <span th:if="${currentSort == 'stagnant'}" th:text="${currentDirection == 'asc' ? '▲' : '▼'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">操作</th>
                 </tr>
                 </thead>
                 <tbody>
