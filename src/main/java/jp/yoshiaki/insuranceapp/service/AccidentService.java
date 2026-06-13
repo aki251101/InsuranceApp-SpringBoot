@@ -1,7 +1,9 @@
 package jp.yoshiaki.insuranceapp.service;
 
 import jp.yoshiaki.insuranceapp.entity.Accident;
+import jp.yoshiaki.insuranceapp.entity.AccidentMemo;
 import jp.yoshiaki.insuranceapp.exception.NotFoundException;
+import jp.yoshiaki.insuranceapp.repository.AccidentMemoRepository;
 import jp.yoshiaki.insuranceapp.repository.AccidentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +40,7 @@ public class AccidentService {
     // コンストラクタ注入（@RequiredArgsConstructor が final フィールドの
     // コンストラクタを自動生成する）
     private final AccidentRepository accidentRepository;
+    private final AccidentMemoRepository accidentMemoRepository;
 
     /**
      * すべての事故を取得する（事故受付日が新しい順）
@@ -231,6 +235,114 @@ public class AccidentService {
         // null 防止: null が来たら空文字にする
         accident.setMemo(memo != null ? memo : "");
         return accidentRepository.save(accident);
+    }
+
+    public List<AccidentMemo> getMemos(Long accidentId) {
+        ensureAccidentExists(accidentId);
+        return accidentMemoRepository.findByAccidentIdOrderByHandledAtDescIdDesc(accidentId);
+    }
+
+    @Transactional
+    public AccidentMemo addMemo(
+            Long accidentId,
+            LocalDateTime handledAt,
+            String content,
+            String createdBy,
+            boolean updateLastContactedAt) {
+        Accident accident = getAccidentForUpdate(accidentId);
+        validateMemo(handledAt, content);
+
+        AccidentMemo memo = AccidentMemo.builder()
+                .accidentId(accidentId)
+                .handledAt(handledAt.truncatedTo(ChronoUnit.MINUTES))
+                .content(content.trim())
+                .createdBy(normalizeCreatedBy(createdBy))
+                .updatesLastContacted(updateLastContactedAt)
+                .build();
+        AccidentMemo saved = accidentMemoRepository.save(memo);
+
+        if (updateLastContactedAt) {
+            if ("RESOLVED".equals(accident.getStatus())) {
+                throw new IllegalStateException("完了した事故は最終対応日時を更新できません");
+            }
+            recalculateLastContactedAt(accident);
+        }
+
+        return saved;
+    }
+
+    @Transactional
+    public AccidentMemo updateMemoEntry(
+            Long accidentId,
+            Long memoId,
+            LocalDateTime handledAt,
+            String content) {
+        ensureAccidentExists(accidentId);
+        validateMemo(handledAt, content);
+
+        AccidentMemo memo = accidentMemoRepository.findByIdAndAccidentId(memoId, accidentId)
+                .orElseThrow(() -> new NotFoundException(
+                        "対応履歴が見つかりません: id=" + memoId));
+        memo.setHandledAt(handledAt.truncatedTo(ChronoUnit.MINUTES));
+        memo.setContent(content.trim());
+        AccidentMemo saved = accidentMemoRepository.save(memo);
+        if (memo.isUpdatesLastContacted()) {
+            recalculateLastContactedAt(getAccidentForUpdate(accidentId));
+        }
+        return saved;
+    }
+
+    public String getMemoText(Long accidentId) {
+        List<AccidentMemo> memos =
+                accidentMemoRepository.findByAccidentIdOrderByHandledAtDescIdDesc(accidentId);
+        if (!memos.isEmpty()) {
+            return memos.stream()
+                    .map(memo -> memo.getHandledAt() + " " + memo.getContent())
+                    .reduce((left, right) -> left + System.lineSeparator() + right)
+                    .orElse("");
+        }
+
+        return getAccidentForUpdate(accidentId).getMemo();
+    }
+
+    private Accident getAccidentForUpdate(Long id) {
+        return accidentRepository.findByIdWithPolicy(id)
+                .orElseThrow(() -> new NotFoundException(
+                        "事故が見つかりません: id=" + id));
+    }
+
+    private void ensureAccidentExists(Long id) {
+        getAccidentForUpdate(id);
+    }
+
+    private void validateMemo(LocalDateTime handledAt, String content) {
+        if (handledAt == null) {
+            throw new IllegalArgumentException("対応日時を入力してください");
+        }
+        if (handledAt.isAfter(LocalDateTime.now().plusMinutes(1))) {
+            throw new IllegalArgumentException("対応日時に未来の日時は指定できません");
+        }
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException("対応内容を入力してください");
+        }
+        if (content.trim().length() > 2000) {
+            throw new IllegalArgumentException("対応内容は2000文字以内で入力してください");
+        }
+    }
+
+    private String normalizeCreatedBy(String createdBy) {
+        return createdBy == null || createdBy.isBlank() ? "担当者" : createdBy;
+    }
+
+    private void recalculateLastContactedAt(Accident accident) {
+        LocalDateTime latest = accidentMemoRepository
+                .findByAccidentIdOrderByHandledAtDescIdDesc(accident.getId()).stream()
+                .filter(AccidentMemo::isUpdatesLastContacted)
+                .map(AccidentMemo::getHandledAt)
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
+        accident.setLastContactedAt(latest);
+        accidentRepository.save(accident);
     }
 
     /**

@@ -38,7 +38,6 @@
         <tr><th scope="row">事故概要</th><td th:text="${accident.description}"></td></tr>
         <tr><th scope="row">状態</th><td th:text="${accident.status}"></td></tr>
         <tr><th scope="row">最終対応日時</th><td th:text="${accident.lastContactedAt}"></td></tr>
-        <tr><th scope="row">対応履歴メモ</th><td style="white-space: pre-wrap;" th:text="${accident.memo}"></td></tr>
         <tr>
             <th scope="row">滞留</th>
             <td>
@@ -67,23 +66,67 @@
     </div>
 
     <h2>対応履歴メモ</h2>
-    <p style="font-size: 0.9em; color: #555;">
-        ※対応履歴メモの保存だけでは、最終対応日時は更新されません。お客さまへの連絡などを行った場合は、「対応した」ボタンも押してください。
-    </p>
-    <form th:action="@{/accidents/{id}/memo(id=${accident.id})}" method="post">
-        <label for="memo">対応履歴メモの内容</label>
+    <div th:if="${#lists.isEmpty(memos)}">
+        <p>対応履歴はまだありません。</p>
+        <div th:if="${accident.memo != null and !#strings.isEmpty(accident.memo)}"
+             style="white-space: pre-wrap; border: 1px solid #ccc; padding: 8px;"
+             th:text="${accident.memo}"></div>
+    </div>
+    <ol th:unless="${#lists.isEmpty(memos)}" style="padding-left: 24px;">
+        <li th:each="memo : ${memos}" style="margin-bottom: 16px;">
+            <div>
+                <strong th:text="${memo.handledAt}"></strong>
+            </div>
+            <p style="white-space: pre-wrap;" th:text="${memo.content}"></p>
+            <details>
+                <summary>編集</summary>
+                <form th:action="@{/accidents/{id}/memos/{memoId}(id=${accident.id},memoId=${memo.id})}"
+                      method="post">
+                    <div>
+                        <label th:for="${'handledAt-' + memo.id}">対応日時</label>
+                        <input type="datetime-local"
+                               th:id="${'handledAt-' + memo.id}"
+                               name="handledAt"
+                               th:value="${memo.handledAtInput}"
+                               required>
+                    </div>
+                    <div>
+                        <label th:for="${'content-' + memo.id}">対応内容</label>
+                        <textarea th:id="${'content-' + memo.id}"
+                                  name="content" rows="3" cols="60" maxlength="2000"
+                                  required th:text="${memo.content}"></textarea>
+                    </div>
+                    <button type="submit">変更を保存</button>
+                </form>
+            </details>
+        </li>
+    </ol>
+
+    <h3>新しい対応履歴を追加</h3>
+    <form th:action="@{/accidents/{id}/memos(id=${accident.id})}" method="post">
         <div>
-            <textarea id="memo" name="memo" rows="4" cols="60" maxlength="2000"
-                  th:text="${accident.memo}"></textarea>
+            <label for="handledAt">対応日時</label>
+            <input id="handledAt" type="datetime-local" name="handledAt"
+                   th:value="${defaultHandledAt}" required>
         </div>
         <div>
-            <button type="submit">対応履歴メモを保存</button>
+            <label for="content">対応内容</label>
+            <textarea id="content" name="content" rows="3" cols="60" maxlength="2000"
+                      placeholder="今回対応した内容を入力してください" required></textarea>
         </div>
+        <label th:if="${accident.canContact}">
+            <input type="checkbox" name="updateLastContactedAt" value="true" checked>
+            最終対応日時をこの対応日時で更新する
+        </label>
+        <p style="font-size: 0.9em; color: #555;">
+            社内メモなど、実際の対応日時を更新しない記録ではチェックを外してください。
+        </p>
+        <button type="submit">対応履歴を追加</button>
     </form>
 
     <h2>AI提案</h2>
     <form th:action="@{/accidents/{id}/ai-suggest(id=${accident.id})}" method="post">
-        <button type="submit">AI次アクション候補</button>
+        <button type="submit">AI提案を表示</button>
     </form>
 
     <div th:if="${aiSuggestion}" style="margin-top: 12px; white-space: pre-wrap; border: 1px solid #ccc; padding: 8px;">

@@ -8,6 +8,7 @@ USE insuranceapp;
 
 -- 参照制約のため、事故 -> 契約の順に削除
 SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE accident_memos;
 TRUNCATE TABLE accidents;
 TRUNCATE TABLE policies;
 SET FOREIGN_KEY_CHECKS = 1;
@@ -104,21 +105,37 @@ INSERT INTO accidents (
   updated_at
 )
 SELECT p.id, '2026-06-03', '大阪市北区梅田1丁目', '追突事故', 'IN_PROGRESS',
-       '2026-06-03 13:00:00',
-       CONCAT('26.06.03 13:00 相手方へ連絡し、今後の補償の流れを説明。',
-                CHAR(10),
-                '26.06.03 17:00 修理工場へ車を渡し、見積依頼。'),
+       '2026-06-03 17:00:00', '',
        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM policies p WHERE p.policy_number = 'P-2026-0001';
 
+SET @accident_id = LAST_INSERT_ID();
+
+INSERT INTO accident_memos (
+  accident_id, handled_at, content, created_by, updates_last_contacted
+)
+VALUES
+  (@accident_id, '2026-06-03 13:00:00',
+   '相手方へ連絡し、今後の補償の流れを説明。', 'デモ担当者', TRUE),
+  (@accident_id, '2026-06-03 17:00:00',
+   '修理工場へ車を渡し、見積依頼。', 'デモ担当者', TRUE);
+
 INSERT INTO accidents (policy_id, occurred_at, place, description, status, last_contacted_at, memo, created_at, updated_at)
 SELECT p.id, '2026-05-15', '京都市中京区', '自損事故', 'IN_PROGRESS',
-       '2026-06-11 09:00:00',
-       CONCAT('26.05.15 16:00 修理工場へ車を渡し、見積依頼。',
-              CHAR(10),
-              '2026-06-11 09:00:00 修理工場に修理状況確認連絡。来週納車予定。'),
+       '2026-06-11 09:00:00', '',
        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM policies p WHERE p.policy_number = 'P-2026-0002';
+
+SET @accident_id = LAST_INSERT_ID();
+
+INSERT INTO accident_memos (
+  accident_id, handled_at, content, created_by, updates_last_contacted
+)
+VALUES
+  (@accident_id, '2026-05-15 16:00:00',
+   '修理工場へ車を渡し、見積依頼。', 'デモ担当者', TRUE),
+  (@accident_id, '2026-06-11 09:00:00',
+   '修理工場に修理状況確認連絡。来週納車予定。', 'デモ担当者', TRUE);
 
 INSERT INTO accidents (policy_id, occurred_at, place, description, status, last_contacted_at, memo, created_at, updated_at)
 SELECT p.id, '2026-01-20', '大阪市天王寺区', '車両破損', 'RESOLVED',
@@ -140,18 +157,43 @@ FROM policies p WHERE p.policy_number = 'P-2026-0102';
 
 INSERT INTO accidents (policy_id, occurred_at, place, description, status, last_contacted_at, memo, created_at, updated_at)
 SELECT p.id, '2026-05-17', '千葉市中央区', '車庫内接触', 'IN_PROGRESS',
-       '2026-06-01 13:00:00',
-       CONCAT('26.05.16 10:00 修理工場へ車を渡し、見積依頼。',
-              CHAR(10),
-              '26.06.01 13:00 修理見積もり待ち。送付依頼再度連絡済'),
+       '2026-06-01 13:00:00', '',
        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM policies p WHERE p.policy_number = 'P-2026-0104';
 
+SET @accident_id = LAST_INSERT_ID();
+
+INSERT INTO accident_memos (
+  accident_id, handled_at, content, created_by, updates_last_contacted
+)
+VALUES
+  (@accident_id, '2026-05-16 10:00:00',
+   '修理工場へ車を渡し、見積依頼。', 'デモ担当者', TRUE),
+  (@accident_id, '2026-06-01 13:00:00',
+   '修理見積もり待ち。送付依頼再度連絡済', 'デモ担当者', TRUE);
+
 INSERT INTO accidents (policy_id, occurred_at, place, description, status, last_contacted_at, memo, created_at, updated_at)
 SELECT p.id, '2026-04-01', '札幌市中央区', '人身事故', 'RESOLVED',
-       '2026-06-06 14:00:00',
-       CONCAT('26.04.01 11:00 相手方と病院へ連絡し、今後の補償の流れを説明。',
-              CHAR(10),
-              '26.06.06 14:00 保険金支払い完了。'),
+       '2026-06-06 14:00:00', '',
        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM policies p WHERE p.policy_number = 'P-2026-0107';
+
+SET @accident_id = LAST_INSERT_ID();
+
+INSERT INTO accident_memos (
+  accident_id, handled_at, content, created_by, updates_last_contacted
+)
+VALUES
+  (@accident_id, '2026-04-01 11:00:00',
+   '相手方と病院へ連絡し、今後の補償の流れを説明。', 'デモ担当者', TRUE),
+  (@accident_id, '2026-06-06 14:00:00',
+   '保険金支払い完了。', 'デモ担当者', TRUE);
+
+-- 既存デモメモを1件ずつの対応履歴へ移行
+INSERT INTO accident_memos (
+  accident_id, handled_at, content, created_by, updates_last_contacted
+)
+SELECT a.id, COALESCE(a.last_contacted_at, a.updated_at), a.memo, 'デモ担当者',
+       a.last_contacted_at IS NOT NULL
+FROM accidents a
+WHERE a.memo IS NOT NULL AND TRIM(a.memo) <> '';

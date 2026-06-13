@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1672" height="941" viewBox="0 0 1672 941">
+  <defs>
+    <linearGradient id="nav" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07306d"/>
+      <stop offset="1" stop-color="#001d49"/>
+    </linearGradient>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfdff"/>
+      <stop offset="1" stop-color="#f5f8fc"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="3" stdDeviation="8" flood-color="#173761" flood-opacity=".09"/>
+    </filter>
+    <style>
+      text{font-family:"Noto Sans JP","Yu Gothic UI","Yu Gothic",sans-serif;fill:#092754}
+      .muted{fill:#607593}.navtext{fill:#fff}.label{font-size:16px;font-weight:700}
+      .value{font-size:17px}.cardtitle{font-size:20px;font-weight:700}.line{stroke:#d9e2ee}
+      .icon{fill:none;stroke:#1757ad;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+      .button{font-size:17px;font-weight:700}.small{font-size:14px}.rowicon{fill:#4779ba}
+    </style>
+  </defs>
+
+  <rect width="1672" height="941" fill="url(#page)"/>
+  <rect width="236" height="941" fill="url(#nav)"/>
+
+  <!-- Sidebar -->
+  <path d="M31 49l18-8 18 8v14c0 17-8 27-18 34-10-7-18-17-18-34z" fill="none" stroke="#fff" stroke-width="4"/>
+  <path d="M49 43v49M32 61h35" stroke="#fff" stroke-width="3" opacity=".8"/>
+  <text x="77" y="71" class="navtext" font-size="19" font-weight="700">保険管理システム</text>
+  <g transform="translate(36 151)">
+    <path d="M0 14L12 3l12 11v15H16v-9H8v9H0z" class="icon" stroke="#fff"/>
+    <text x="43" y="23" class="navtext" font-size="18" font-weight="600">トップページ</text>
+  </g>
+  <rect x="16" y="202" width="202" height="58" rx="9" fill="#fff" opacity=".12"/>
+  <g transform="translate(36 219)">
+    <rect x="0" y="1" width="18" height="22" rx="2" class="icon" stroke="#fff"/>
+    <path d="M5 7h8M5 12h8M5 17h5" class="icon" stroke="#fff"/>
+    <text x="42" y="20" class="navtext" font-size="18" font-weight="700">契約一覧</text>
+  </g>
+  <path d="M27 820h182" stroke="#fff" opacity=".18"/>
+  <circle cx="49" cy="870" r="18" fill="#b8c8dd"/>
+  <circle cx="49" cy="864" r="6" fill="#16457f"/>
+  <path d="M38 880c2-9 20-9 22 0" fill="#16457f"/>
+  <text x="77" y="878" class="navtext" font-size="17" font-weight="600">管理者</text>
+  <path d="M193 867l6 6 6-6" fill="none" stroke="#fff" stroke-width="2"/>
+
+  <!-- Header -->
+  <g transform="translate(282 38)">
+    <path d="M0 7l8-7 8 7v10h-5v-6H5v6H0z" fill="#5279aa"/>
+    <text x="34" y="14" class="muted" font-size="15">トップページ</text>
+    <path d="M150 4l6 6-6 6M263 4l6 6-6 6" fill="none" stroke="#6e83a0" stroke-width="2"/>
+    <text x="176" y="14" class="muted" font-size="15">契約一覧</text>
+    <text x="291" y="14" font-size="15" font-weight="700">契約詳細</text>
+  </g>
+  <text x="282" y="124" font-size="39" font-weight="800">契約詳細</text>
+  <text x="282" y="184" class="muted" font-size="20" font-weight="700">契約番号</text>
+  <text x="388" y="190" font-size="43" font-weight="800" letter-spacing="1">P-2026-0107</text>
+  <rect x="676" y="159" width="107" height="38" rx="19" fill="#e8f8ed" stroke="#b8e5c7"/>
+  <circle cx="700" cy="178" r="10" fill="#13a05a"/>
+  <path d="M696 178l3 3 6-7" fill="none" stroke="#fff" stroke-width="2"/>
+  <text x="720" y="184" fill="#0d8b4d" font-size="16" font-weight="700">契約中</text>
+
+  <!-- Warning -->
+  <rect x="282" y="220" width="1340" height="63" rx="10" fill="#fffaf0" stroke="#f6b84d"/>
+  <path d="M319 237l15 29h-30z" fill="#ef8d00"/>
+  <rect x="317.5" y="245" width="3" height="10" rx="1" fill="#fff"/>
+  <circle cx="319" cy="260" r="1.8" fill="#fff"/>
+  <text x="352" y="259" fill="#e67e00" font-size="19" font-weight="800">要注意（満期20日前〜）</text>
+
+  <!-- Cards -->
+  <rect x="282" y="302" width="648" height="501" rx="11" fill="#fff" stroke="#dbe4ef" filter="url(#shadow)"/>
+  <rect x="950" y="302" width="672" height="501" rx="11" fill="#fff" stroke="#dbe4ef" filter="url(#shadow)"/>
+
+  <!-- Contract information -->
+  <g transform="translate(315 331)">
+    <rect x="0" y="0" width="18" height="25" rx="2" class="icon"/>
+    <path d="M5 6h8M5 11h8M5 16h6M13 0v6h5" class="icon"/>
+    <text x="43" y="21" class="cardtitle">契約情報</text>
+  </g>
+  <rect x="308" y="377" width="596" height="405" rx="9" fill="#fff" stroke="#d6e0eb"/>
+  <path d="M564 377v405" class="line"/>
+  <g class="line">
+    <path d="M308 430h596M308 482h596M308 534h596M308 586h596M308 638h596M308 690h596M308 737h596"/>
+  </g>
+  <g class="label">
+    <text x="373" y="411">契約番号</text><text x="373" y="463">契約者名</text>
+    <text x="373" y="515">契約期間</text><text x="373" y="567">開始日</text>
+    <text x="373" y="619">満期日</text><text x="373" y="671">状態（表示用）</text>
+    <text x="373" y="723">要注意</text><text x="373" y="769">カレンダー登録</text>
+  </g>
+  <g class="rowicon">
+    <text x="329" y="413" font-size="24" font-weight="700">#</text>
+    <circle cx="340" cy="454" r="6" fill="none" stroke="#4779ba" stroke-width="2"/>
+    <path d="M331 469c1-10 17-10 18 0" fill="none" stroke="#4779ba" stroke-width="2"/>
+    <text x="329" y="517" font-size="21">▣</text><text x="329" y="569" font-size="21">▷</text>
+    <text x="329" y="621" font-size="21">⚑</text><text x="329" y="673" font-size="21">✓</text>
+    <text x="329" y="725" font-size="21">△</text><text x="329" y="771" font-size="21">▣</text>
+  </g>
+  <g class="value">
+    <text x="582" y="411">P-2026-0107</text><text x="582" y="463">木村 大輔</text>
+    <text x="582" y="515">2024/06/22 ～ 2026/06/22</text><text x="582" y="567">2024/06/22</text>
+    <text x="582" y="619">2026/06/22</text>
+  </g>
+  <rect x="581" y="648" width="67" height="31" rx="8" fill="#ebfaf0" stroke="#28b66c"/>
+  <text x="594" y="669" fill="#139853" font-size="15" font-weight="700">契約中</text>
+  <text x="582" y="723" fill="#ef8100" font-size="16" font-weight="700">要注意（満期20日前〜）</text>
+  <text x="582" y="769" fill="#ed3838" font-size="16" font-weight="700">カレンダー未登録</text>
+
+  <!-- Summary -->
+  <g transform="translate(980 331)">
+    <rect x="0" y="3" width="23" height="22" rx="2" class="icon"/>
+    <path d="M5 0v7M18 0v7M0 10h23" class="icon"/>
+    <text x="43" y="21" class="cardtitle">契約期間サマリー</text>
+  </g>
+  <text x="988" y="411" class="muted" font-size="15">開始日</text>
+  <text x="988" y="439" fill="#0b9d55" font-size="18" font-weight="700">2024/06/22</text>
+  <text x="1584" y="411" class="muted" font-size="15" text-anchor="end">満期日</text>
+  <text x="1584" y="439" fill="#0752be" font-size="18" font-weight="700" text-anchor="end">2026/06/22</text>
+  <path d="M997 489H1574" stroke="#0b4bad" stroke-width="3"/>
+  <circle cx="997" cy="489" r="8" fill="#11a15d"/><circle cx="1574" cy="489" r="8" fill="#1256b2"/>
+  <path d="M997 449v28M1574 449v28" stroke="#4ba589" stroke-dasharray="5 4"/>
+  <text x="1285" y="532" class="muted" font-size="15" text-anchor="middle">満期まであと</text>
+  <text x="1285" y="582" fill="#0c9451" font-size="44" font-weight="800" text-anchor="middle">9<tspan font-size="25">日</tspan></text>
+  <rect x="980" y="633" width="610" height="127" rx="12" fill="#fbfcfe" stroke="#cbd8e8"/>
+  <circle cx="1035" cy="687" r="28" fill="#fff7df" stroke="#f8c44d"/>
+  <path d="M1026 694h18M1029 692v-10c0-10 12-10 12 0v10M1032 699h6" fill="none" stroke="#f09a00" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="1083" y="684" font-size="19" font-weight="800">更新のタイミングが近づいています</text>
+  <text x="1083" y="719" class="muted" font-size="14">満期20日前から要注意期間です。更新手続きをご検討ください。</text>
+
+  <!-- Action bar -->
+  <rect x="282" y="822" width="1340" height="94" rx="11" fill="#fff" stroke="#dbe4ef" filter="url(#shadow)"/>
+  <rect x="306" y="844" width="187" height="48" rx="8" fill="#fff" stroke="#0e4aa4" stroke-width="1.5"/>
+  <text x="352" y="875" fill="#0d4aa5" class="button">✣　AI要約</text>
+  <rect x="509" y="844" width="216" height="48" rx="8" fill="#fff" stroke="#0e4aa4" stroke-width="1.5"/>
+  <text x="549" y="875" fill="#0d4aa5" class="button">▣　カレンダー登録</text>
+  <rect x="949" y="844" width="319" height="48" rx="8" fill="#063c8c"/>
+  <text x="1043" y="875" class="navtext button">⟳　契約を更新</text>
+  <rect x="1286" y="844" width="304" height="48" rx="8" fill="#fff" stroke="#ef3030" stroke-width="1.5"/>
+  <text x="1373" y="875" fill="#ec2e2e" class="button">♙　契約を解約</text>
+</svg>

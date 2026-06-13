@@ -2,6 +2,7 @@ package jp.yoshiaki.insuranceapp.controller;
 
 import jp.yoshiaki.insuranceapp.dto.AccidentDetailResponse;
 import jp.yoshiaki.insuranceapp.dto.AccidentListResponse;
+import jp.yoshiaki.insuranceapp.dto.AccidentMemoResponse;
 import jp.yoshiaki.insuranceapp.entity.Accident;
 import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.service.AccidentService;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 事故画面Controller（Thymeleaf）
@@ -32,6 +35,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class AccidentPageController {
+
+    private static final DateTimeFormatter DATE_TIME_INPUT_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     private final AccidentService accidentService;
     private final AiService aiService;
@@ -71,6 +77,11 @@ public class AccidentPageController {
                 .orElseThrow(() -> new NotFoundException("事故が見つかりません: id=" + id));
 
         model.addAttribute("accident", AccidentDetailResponse.from(accident));
+        model.addAttribute("memos", accidentService.getMemos(id).stream()
+                .map(AccidentMemoResponse::from)
+                .toList());
+        model.addAttribute("defaultHandledAt",
+                LocalDateTime.now().format(DATE_TIME_INPUT_FORMATTER));
         return "accident/detail";
     }
 
@@ -105,6 +116,37 @@ public class AccidentPageController {
         return "redirect:/accidents/" + id;
     }
 
+    @PostMapping("/{id}/memos")
+    public String addMemo(
+            @PathVariable Long id,
+            @RequestParam("handledAt") String handledAt,
+            @RequestParam("content") String content,
+            @RequestParam(name = "updateLastContactedAt", defaultValue = "false")
+            boolean updateLastContactedAt,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes) {
+        accidentService.addMemo(
+                id,
+                parseHandledAt(handledAt),
+                content,
+                authentication != null ? authentication.getName() : null,
+                updateLastContactedAt);
+        redirectAttributes.addFlashAttribute("successMessage", "対応履歴を追加しました");
+        return "redirect:/accidents/" + id;
+    }
+
+    @PostMapping("/{id}/memos/{memoId}")
+    public String updateMemoEntry(
+            @PathVariable Long id,
+            @PathVariable Long memoId,
+            @RequestParam("handledAt") String handledAt,
+            @RequestParam("content") String content,
+            RedirectAttributes redirectAttributes) {
+        accidentService.updateMemoEntry(id, memoId, parseHandledAt(handledAt), content);
+        redirectAttributes.addFlashAttribute("successMessage", "対応履歴を更新しました");
+        return "redirect:/accidents/" + id;
+    }
+
     @PostMapping("/{id}/ai-suggest")
     public String aiSuggest(@PathVariable Long id, Authentication authentication,
                             RedirectAttributes redirectAttributes) {
@@ -114,11 +156,20 @@ public class AccidentPageController {
 
         Accident accident = accidentService.getAccidentById(id)
                 .orElseThrow(() -> new NotFoundException("事故が見つかりません: id=" + id));
+        accident.setMemo(accidentService.getMemoText(id));
 
         String suggestion = aiService.suggestNextActions(accident);
         redirectAttributes.addFlashAttribute("aiSuggestion", suggestion);
         redirectAttributes.addFlashAttribute("successMessage", "AI提案を生成しました");
 
         return "redirect:/accidents/" + id;
+    }
+
+    private LocalDateTime parseHandledAt(String handledAt) {
+        try {
+            return LocalDateTime.parse(handledAt, DATE_TIME_INPUT_FORMATTER);
+        } catch (RuntimeException e) {
+            throw new IllegalArgumentException("対応日時を正しく入力してください");
+        }
     }
 }
