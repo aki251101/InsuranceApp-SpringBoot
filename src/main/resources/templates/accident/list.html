@@ -14,11 +14,16 @@
     </section>
 
     <section class="panel">
-        <p class="back-link"><a href="/">トップページへ</a></p>
+        <p class="back-link">
+            <a href="/">トップページへ</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/policies}">契約一覧</a>
+        </p>
 
         <nav class="tabs">
-            <a th:href="@{/accidents(tab='OPEN_INPROGRESS',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'OPEN_INPROGRESS'} ? 'active' : ''">対応中</a>
+            <a th:href="@{/accidents(tab='OPEN_INPROGRESS',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'OPEN_INPROGRESS'} ? 'active' : ''">受付 / 対応中</a>
             <a th:href="@{/accidents(tab='RESOLVED',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'RESOLVED'} ? 'active' : ''">完了</a>
+            <a th:href="@{/accidents(tab='ALL',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'ALL'} ? 'active' : ''">全件</a>
         </nav>
     </section>
 

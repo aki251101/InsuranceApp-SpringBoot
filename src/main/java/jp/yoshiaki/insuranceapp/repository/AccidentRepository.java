@@ -85,7 +85,7 @@ public interface AccidentRepository extends JpaRepository<Accident, Long> {
      *
      * @return 全事故リスト（受付日が新しい順）
      */
-    @Query("SELECT a FROM Accident a ORDER BY a.occurredAt DESC")
+    @Query("SELECT a FROM Accident a JOIN FETCH a.policy p ORDER BY a.occurredAt DESC")
     List<Accident> findAllOrderByOccurredAtDesc();
 
     /**

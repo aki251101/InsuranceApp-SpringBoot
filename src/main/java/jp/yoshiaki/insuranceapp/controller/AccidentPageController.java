@@ -53,8 +53,14 @@ public class AccidentPageController {
 
         log.debug("事故一覧画面表示: tab={}, sort={}, direction={}", tab, sort, direction);
 
-        List<Accident> accidents = switch (tab) {
+        String currentTab = switch (tab) {
+            case "OPEN_INPROGRESS", "RESOLVED", "ALL" -> tab;
+            default -> "OPEN_INPROGRESS";
+        };
+
+        List<Accident> accidents = switch (currentTab) {
             case "RESOLVED" -> accidentService.getResolvedAccidents();
+            case "ALL" -> accidentService.getAllAccidents();
             default -> accidentService.getOpenAndInProgressAccidents();
         };
 
@@ -63,7 +69,7 @@ public class AccidentPageController {
         accidents = listSortService.sortAccidents(accidents, currentSort, currentDirection);
 
         model.addAttribute("response", AccidentListResponse.from(accidents));
-        model.addAttribute("currentTab", tab);
+        model.addAttribute("currentTab", currentTab);
         model.addAttribute("currentSort", currentSort);
         model.addAttribute("currentDirection", currentDirection);
         return "accident/list";
