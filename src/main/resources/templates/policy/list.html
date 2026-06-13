@@ -27,22 +27,24 @@
             <a th:href="@{/accidents}">事故一覧</a>
         </p>
 
-        <nav class="tabs">
-            <a th:href="@{/policies(tab='RENEWABLE',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'RENEWABLE'} ? 'active' : ''">更新可能</a>
-            <a th:href="@{/policies(tab='ACTIVE',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'ACTIVE'} ? 'active' : ''">契約中</a>
-            <a th:href="@{/policies(tab='CANCELLED',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'CANCELLED'} ? 'active' : ''">解約</a>
-            <a th:href="@{/policies(tab='LAPSED',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'LAPSED'} ? 'active' : ''">失効</a>
-            <a th:href="@{/policies(tab='ALL',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'ALL'} ? 'active' : ''">全件</a>
-        </nav>
-
         <div class="search-stats-row">
-            <form class="search-form" th:action="@{/policies}" method="get">
-                <input type="hidden" name="tab" th:value="${currentTab}">
-                <input type="hidden" name="sort" th:value="${currentSort}">
-                <input type="hidden" name="direction" th:value="${currentDirection}">
-                <input type="text" name="q" th:value="${searchQuery}" placeholder="契約番号/契約者名で検索">
-                <button type="submit">検索</button>
-            </form>
+            <div class="policy-controls">
+                <nav class="tabs">
+                    <a th:href="@{/policies(tab='RENEWABLE',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'RENEWABLE'} ? 'active' : ''">更新可能</a>
+                    <a th:href="@{/policies(tab='ACTIVE',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'ACTIVE'} ? 'active' : ''">契約中</a>
+                    <a th:href="@{/policies(tab='CANCELLED',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'CANCELLED'} ? 'active' : ''">解約</a>
+                    <a th:href="@{/policies(tab='LAPSED',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'LAPSED'} ? 'active' : ''">失効</a>
+                    <a th:href="@{/policies(tab='ALL',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'ALL'} ? 'active' : ''">全件</a>
+                </nav>
+
+                <form class="search-form" th:action="@{/policies}" method="get">
+                    <input type="hidden" name="tab" th:value="${currentTab}">
+                    <input type="hidden" name="sort" th:value="${currentSort}">
+                    <input type="hidden" name="direction" th:value="${currentDirection}">
+                    <input type="text" name="q" th:value="${searchQuery}" placeholder="契約番号/契約者名で検索">
+                    <button type="submit">検索</button>
+                </form>
+            </div>
 
             <div class="stats" th:if="${response != null and response.stats != null}">
                 <article class="stat-card">
