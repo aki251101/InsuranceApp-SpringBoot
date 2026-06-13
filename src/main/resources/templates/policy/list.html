@@ -21,7 +21,11 @@
     </div>
 
     <section class="panel">
-        <p class="back-link"><a href="/">トップページへ</a></p>
+        <p class="back-link">
+            <a href="/">トップページへ</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/accidents}">事故一覧</a>
+        </p>
 
         <nav class="tabs">
             <a th:href="@{/policies(tab='RENEWABLE',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'RENEWABLE'} ? 'active' : ''">更新可能</a>
@@ -31,17 +35,52 @@
             <a th:href="@{/policies(tab='ALL',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'ALL'} ? 'active' : ''">全件</a>
         </nav>
 
-        <form class="search-form" th:action="@{/policies}" method="get">
-            <input type="hidden" name="tab" th:value="${currentTab}">
-            <input type="hidden" name="sort" th:value="${currentSort}">
-            <input type="hidden" name="direction" th:value="${currentDirection}">
-            <input type="text" name="q" th:value="${searchQuery}" placeholder="契約番号/契約者名で検索">
-            <button type="submit">検索</button>
-        </form>
+        <div class="search-stats-row">
+            <form class="search-form" th:action="@{/policies}" method="get">
+                <input type="hidden" name="tab" th:value="${currentTab}">
+                <input type="hidden" name="sort" th:value="${currentSort}">
+                <input type="hidden" name="direction" th:value="${currentDirection}">
+                <input type="text" name="q" th:value="${searchQuery}" placeholder="契約番号/契約者名で検索">
+                <button type="submit">検索</button>
+            </form>
 
-        <div class="stats" th:if="${response != null and response.stats != null}">
-            <p>当年度早期更改率: <strong th:text="${response.stats.fiscalYearRate}">-</strong></p>
-            <p>当月早期更改率: <strong th:text="${response.stats.monthRate}">-</strong></p>
+            <div class="stats" th:if="${response != null and response.stats != null}">
+                <article class="stat-card">
+                    <p class="stat-label">当年度早期更改率</p>
+                    <div th:if="${response.stats.fiscalYearTotalCount > 0}">
+                        <p class="stat-value" th:text="${response.stats.fiscalYearRate}">75.0%</p>
+                        <p class="stat-count" th:text="|${response.stats.fiscalYearCount}件|">3/4件</p>
+                        <div class="progress-track"
+                             role="progressbar"
+                             aria-label="当年度早期更改率"
+                             aria-valuemin="0"
+                             aria-valuemax="100"
+                             th:attr="aria-valuenow=${response.stats.fiscalYearRateValue}">
+                            <span class="progress-fill"
+                                  th:style="|width: ${response.stats.fiscalYearRateValue}%;|"></span>
+                        </div>
+                    </div>
+                    <p class="stat-empty" th:unless="${response.stats.fiscalYearTotalCount > 0}">対象なし</p>
+                </article>
+
+                <article class="stat-card month">
+                    <p class="stat-label">当月早期更改率</p>
+                    <div th:if="${response.stats.monthTotalCount > 0}">
+                        <p class="stat-value" th:text="${response.stats.monthRate}">100.0%</p>
+                        <p class="stat-count" th:text="|${response.stats.monthCount}件|">1/1件</p>
+                        <div class="progress-track"
+                             role="progressbar"
+                             aria-label="当月早期更改率"
+                             aria-valuemin="0"
+                             aria-valuemax="100"
+                             th:attr="aria-valuenow=${response.stats.monthRateValue}">
+                            <span class="progress-fill"
+                                  th:style="|width: ${response.stats.monthRateValue}%;|"></span>
+                        </div>
+                    </div>
+                    <p class="stat-empty" th:unless="${response.stats.monthTotalCount > 0}">対象なし</p>
+                </article>
+            </div>
         </div>
     </section>
 

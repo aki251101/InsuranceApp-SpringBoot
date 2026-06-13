@@ -43,9 +43,13 @@ public class RenewalStatsService {
                 .fiscalYearStart(fiscalYear.startDate)
                 .fiscalYearRate(fiscalYear.rateText)
                 .fiscalYearCount(fiscalYear.countText)
+                .fiscalYearRateValue(fiscalYear.rateValue)
+                .fiscalYearTotalCount(fiscalYear.totalCount)
                 .monthStart(month.startDate)
                 .monthRate(month.rateText)
                 .monthCount(month.countText)
+                .monthRateValue(month.rateValue)
+                .monthTotalCount(month.totalCount)
                 .build();
     }
 
@@ -85,15 +89,17 @@ public class RenewalStatsService {
 
         FiscalYearStats stats = new FiscalYearStats();
         stats.startDate = startDateText;
+        stats.totalCount = renewedPolicies.size();
 
         if (renewedPolicies.isEmpty()) {
-            stats.rateText = "— (0/0)";
+            stats.rateText = "";
             stats.countText = "";
+            stats.rateValue = 0;
         } else {
             double rate = (double) earlyRenewalCount / renewedPolicies.size() * 100;
-            stats.rateText = String.format("%.1f%% (%d/%d)",
-                    rate, earlyRenewalCount, renewedPolicies.size());
+            stats.rateText = String.format("%.1f%%", rate);
             stats.countText = String.format("%d/%d", earlyRenewalCount, renewedPolicies.size());
+            stats.rateValue = rate;
         }
 
         return stats;
@@ -132,15 +138,17 @@ public class RenewalStatsService {
 
         MonthStats stats = new MonthStats();
         stats.startDate = startDateText;
+        stats.totalCount = renewedPolicies.size();
 
         if (renewedPolicies.isEmpty()) {
-            stats.rateText = "— (0/0)";
+            stats.rateText = "";
             stats.countText = "";
+            stats.rateValue = 0;
         } else {
             double rate = (double) earlyRenewalCount / renewedPolicies.size() * 100;
-            stats.rateText = String.format("%.1f%% (%d/%d)",
-                    rate, earlyRenewalCount, renewedPolicies.size());
+            stats.rateText = String.format("%.1f%%", rate);
             stats.countText = String.format("%d/%d", earlyRenewalCount, renewedPolicies.size());
+            stats.rateValue = rate;
         }
 
         return stats;
@@ -194,6 +202,8 @@ public class RenewalStatsService {
         String startDate;
         String rateText;
         String countText;
+        double rateValue;
+        int totalCount;
     }
 
     /**
@@ -203,5 +213,7 @@ public class RenewalStatsService {
         String startDate;
         String rateText;
         String countText;
+        double rateValue;
+        int totalCount;
     }
 }

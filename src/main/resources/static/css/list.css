@@ -71,6 +71,11 @@ a {
   margin: 0 0 12px;
 }
 
+.back-link span {
+  margin: 0 6px;
+  color: #94a3b8;
+}
+
 .tabs {
   display: flex;
   flex-wrap: wrap;
@@ -93,11 +98,19 @@ a {
   border-color: #0b3a6f;
 }
 
-.search-form {
+.search-stats-row {
   margin-top: 14px;
+  display: grid;
+  grid-template-columns: minmax(310px, 1fr) minmax(480px, 1.35fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.search-form {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  align-content: start;
 }
 
 .search-form input[type="text"] {
@@ -119,13 +132,80 @@ a {
 }
 
 .stats {
-  margin-top: 12px;
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
-.stats p {
+.stat-card {
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid #cbd9eb;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #ffffff 0%, #f5f9ff 100%);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.07);
+}
+
+.stat-card.month {
+  border-color: #b6dfe1;
+  background: linear-gradient(145deg, #ffffff 0%, #f0fbfb 100%);
+}
+
+.stat-card p {
   margin: 0;
+}
+
+.stat-label {
+  color: #365675;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.stat-value {
+  margin-top: 5px !important;
+  color: #0b3a6f;
+  font-size: clamp(1.8rem, 3vw, 2.35rem);
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.stat-card.month .stat-value {
+  color: #087c87;
+}
+
+.stat-count {
+  margin-top: 4px !important;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.stat-empty {
+  margin-top: 16px !important;
+  color: #64748b;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.progress-track {
+  height: 7px;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dce7f4;
+}
+
+.progress-fill {
+  display: block;
+  height: 100%;
+  max-width: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0b3a6f, #2879c7);
+}
+
+.stat-card.month .progress-fill {
+  background: linear-gradient(90deg, #0b8792, #20b8b2);
 }
 
 .table-wrap {
@@ -243,5 +323,20 @@ tbody tr:hover {
 
   .panel {
     padding: 14px;
+  }
+
+  .search-stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .search-form input[type="text"] {
+    min-width: 0;
+    width: 100%;
   }
 }
