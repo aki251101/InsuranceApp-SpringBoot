@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    width="1672"
-   height="941"
-   viewBox="0 0 1672 941"
+   height="1100"
+   viewBox="0 0 1672 1100"
    version="1.1"
    id="svg59"
-   sodipodi:docname="proposal-01-trust-dashboard.svg"
+   sodipodi:docname="proposal-01-trust-dashboard-timeline-v2.svg"
    inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -21,8 +21,8 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="0.60641357"
-     inkscape:cx="999.318"
-     inkscape:cy="436.17098"
+     inkscape:cx="938.30355"
+     inkscape:cy="614.26726"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
@@ -51,7 +51,9 @@
        x1="0"
        y1="0"
        x2="0"
-       y2="1">
+       y2="1356.1711"
+       gradientTransform="matrix(1.2328828,0,0,0.81110711,0,26)"
+       gradientUnits="userSpaceOnUse">
       <stop
          offset="0"
          stop-color="#fbfdff"
@@ -85,12 +87,15 @@
   </defs>
   <rect
      width="1672"
-     height="941"
+     height="1100"
      fill="url(#page)"
-     id="rect4" />
+     id="rect4"
+     style="fill:url(#page)"
+     x="0"
+     y="26" />
   <rect
      width="236"
-     height="941"
+     height="1100"
      fill="url(#nav)"
      id="rect5" />
   <!-- Sidebar -->
@@ -506,108 +511,220 @@
        class="cardtitle"
        id="text47">契約期間サマリー</text>
   </g>
+  <!-- Whole contract period -->
   <text
      x="988"
-     y="411"
-     class="muted"
-     font-size="15"
-     id="text48">開始日</text>
-  <text
-     x="988"
-     y="439"
-     fill="#0b9d55"
-     font-size="18"
-     font-weight="700"
-     id="text49">2024/06/22</text>
-  <text
-     x="1584"
-     y="411"
-     class="muted"
-     font-size="15"
-     text-anchor="end"
-     id="text50">満期日</text>
-  <text
-     x="1584"
-     y="439"
-     fill="#0752be"
-     font-size="18"
-     font-weight="700"
-     text-anchor="end"
-     id="text51">2026/06/22</text>
-  <path
-     d="M997 489H1574"
-     stroke="#0b4bad"
-     stroke-width="3"
-     id="path51" />
-  <circle
-     cx="997"
-     cy="489"
-     r="8"
-     fill="#11a15d"
-     id="circle51" />
-  <circle
-     cx="1574"
-     cy="489"
-     r="8"
-     fill="#1256b2"
-     id="circle52" />
-  <path
-     d="M997 449v28M1574 449v28"
-     stroke="#4ba589"
-     stroke-dasharray="5 4"
-     id="path52" />
-  <text
-     x="1285"
-     y="532"
-     class="muted"
-     font-size="15"
-     text-anchor="middle"
-     id="text52">満期まであと</text>
-  <text
-     x="1285"
-     y="582"
-     fill="#0c9451"
-     font-size="44"
-     font-weight="800"
-     text-anchor="middle"
-     id="text53">9<tspan
-   font-size="25"
-   id="tspan52">日</tspan></text>
-  <rect
-     x="980"
-     y="633"
-     width="610"
-     height="127"
-     rx="12"
-     fill="#fbfcfe"
-     stroke="#cbd8e8"
-     id="rect53" />
-  <circle
-     cx="1035"
-     cy="687"
-     r="28"
-     fill="#fff7df"
-     stroke="#f8c44d"
-     id="circle53" />
-  <path
-     d="M1026 694h18M1029 692v-10c0-10 12-10 12 0v10M1032 699h6"
-     fill="none"
-     stroke="#f09a00"
-     stroke-width="2.5"
-     stroke-linecap="round"
-     id="path53" />
-  <text
-     x="1083"
-     y="684"
-     font-size="19"
-     font-weight="800"
-     id="text54">更新のタイミングが近づいています</text>
-  <text
-     x="1083"
-     y="719"
+     y="402"
      class="muted"
      font-size="14"
-     id="text55">満期20日前から要注意期間です。更新手続きをご検討ください。</text>
+     id="text1">契約開始日</text>
+  <text
+     x="988"
+     y="428"
+     fill="#0b9d55"
+     font-size="17"
+     font-weight="700"
+     id="text2">2024/06/22</text>
+  <text
+     x="1584"
+     y="402"
+     class="muted"
+     font-size="14"
+     text-anchor="end"
+     id="text3">満期日</text>
+  <text
+     x="1584"
+     y="428"
+     fill="#0752be"
+     font-size="17"
+     font-weight="700"
+     text-anchor="end"
+     id="text4">2026/06/22</text>
+  <path
+     d="M997 457H1574"
+     stroke="#cbd8e8"
+     stroke-width="6"
+     stroke-linecap="round"
+     id="path4" />
+  <path
+     d="M997 457H1568"
+     stroke="#2f79c5"
+     stroke-width="6"
+     stroke-linecap="round"
+     id="path5" />
+  <circle
+     cx="997"
+     cy="457"
+     r="8"
+     fill="#11a15d"
+     id="circle5" />
+  <circle
+     cx="1574"
+     cy="457"
+     r="8"
+     fill="#1256b2"
+     id="circle6" />
+  <!-- Enlarged renewal decision period -->
+  <rect
+     x="980"
+     y="486"
+     width="610"
+     height="247"
+     rx="12"
+     fill="#f8fbff"
+     stroke="#cbd8e8"
+     id="rect6" />
+  <text
+     x="1004"
+     y="517"
+     font-size="17"
+     font-weight="800"
+     id="text9">更新判断期間（拡大）</text>
+  <text
+     x="1004"
+     y="542"
+     class="muted"
+     font-size="13"
+     id="text11">満期2か月前から満期日までを拡大表示</text>
+  <path
+     d="m 1012,627 h 558"
+     stroke="#d6e2ef"
+     stroke-width="8"
+     stroke-linecap="round"
+     id="path14" />
+  <path
+     d="m 1012,627 h 366"
+     stroke="#24a66a"
+     stroke-width="8"
+     stroke-linecap="round"
+     id="path15" />
+  <path
+     d="m 1378,627 h 128"
+     stroke="#f0a52b"
+     stroke-width="8"
+     id="path16" />
+  <path
+     d="m 1506,627 h 64"
+     stroke="#e34b4b"
+     stroke-width="8"
+     stroke-linecap="round"
+     id="path19" />
+  <circle
+     cx="1012"
+     cy="627"
+     r="8"
+     fill="#20a565"
+     id="circle20" />
+  <circle
+     cx="1378"
+     cy="627"
+     r="9"
+     fill="#1764bd"
+     id="circle21" />
+  <circle
+     cx="1506"
+     cy="627"
+     r="13"
+     fill="#e33434"
+     stroke="#ffffff"
+     stroke-width="4"
+     id="circle22" />
+  <circle
+     cx="1570"
+     cy="627"
+     r="9"
+     fill="#1764bd"
+     id="circle23" />
+  <text
+     x="1004"
+     y="657.01202"
+     class="muted"
+     font-size="12px"
+     text-anchor="start"
+     id="text32">更新可能開始日</text>
+  <text
+     x="1004"
+     y="675.138"
+     fill="#168b56"
+     font-size="13px"
+     font-weight="700"
+     id="text33">2026/04/22</text>
+  <text
+     x="1378"
+     y="657"
+     class="muted"
+     font-size="12px"
+     text-anchor="middle"
+     id="text34">早期更改期限日</text>
+  <text
+     x="1375.036"
+     y="676"
+     fill="#145ca9"
+     font-size="14px"
+     font-weight="800"
+     text-anchor="middle"
+     id="text35">2026/06/01</text>
+  <rect
+     x="1453"
+     y="558"
+     width="104"
+     height="48"
+     rx="10"
+     fill="#fff0f0"
+     stroke="#eb5a5a"
+     id="rect35" />
+  <text
+     x="1505"
+     y="576"
+     fill="#d92d2d"
+     font-size="12px"
+     font-weight="800"
+     text-anchor="middle"
+     id="text36">今日</text>
+  <text
+     x="1505"
+     y="597"
+     fill="#d92d2d"
+     font-size="14px"
+     font-weight="800"
+     text-anchor="middle"
+     id="text37">2026/06/15</text>
+  <text
+     x="1576"
+     y="657"
+     class="muted"
+     font-size="12px"
+     text-anchor="end"
+     id="text38">満期日</text>
+  <text
+     x="1576"
+     y="675.138"
+     fill="#145ca9"
+     font-size="13px"
+     font-weight="700"
+     text-anchor="end"
+     id="text48">2026/06/22</text>
+  <rect
+     x="1004"
+     y="692"
+     width="562"
+     height="27"
+     rx="7"
+     fill="#fff1f1"
+     id="rect48" />
+  <circle
+     cx="1021"
+     cy="705.5"
+     r="6"
+     fill="#df3636"
+     id="circle48" />
+  <text
+     x="1035"
+     y="711"
+     fill="#c82f2f"
+     font-size="14"
+     font-weight="800"
+     id="text49">早期更改期限を14日経過　満期まであと7日です</text>
   <!-- Action bar -->
   <rect
      x="282"
@@ -630,11 +747,11 @@
      stroke-width="1.5"
      id="rect56" />
   <text
-     x="374.70551"
+     x="349.19702"
      y="875"
      fill="#0d4aa5"
      class="button"
-     id="text56">AI要約</text>
+     id="text56">AI要約を表示</text>
   <rect
      x="509"
      y="844"
@@ -660,10 +777,10 @@
      fill="#063c8c"
      id="rect58" />
   <text
-     x="1074.517"
+     x="1089.5024"
      y="875"
      class="navtext button"
-     id="text58">契約更新</text>
+     id="text58">更  新</text>
   <rect
      x="1286"
      y="844"
@@ -675,9 +792,53 @@
      stroke-width="1.5"
      id="rect59" />
   <text
-     x="1404.1785"
+     x="1419.334"
      y="875"
      fill="#ec2e2e"
      class="button"
-     id="text59">契約解約</text>
+     id="text59">解 約</text>
+  <!-- AI summary shown after clicking the button -->
+  <rect
+     x="282"
+     y="932"
+     width="1340"
+     height="139"
+     rx="11"
+     fill="#ffffff"
+     stroke="#c9d8ea"
+     filter="url(#shadow)"
+     id="rect49" />
+  <rect
+     x="305"
+     y="953"
+     width="5"
+     height="91"
+     rx="2.5"
+     fill="#2166b1"
+     id="rect50" />
+  <text
+     x="330"
+     y="978"
+     font-size="18"
+     font-weight="800"
+     id="text50">AI要約</text>
+  <text
+     x="330"
+     y="1007"
+     class="muted"
+     font-size="15"
+     id="text51">満期まで7日です。早期更改期限は2026/06/01で、現在14日超過しています。</text>
+  <text
+     x="330"
+     y="1034"
+     class="muted"
+     font-size="15"
+     id="text52">契約者への更新意思確認と、必要書類の案内を優先してください。</text>
+  <text
+     x="1588"
+     y="978"
+     fill="#607593"
+     font-size="21"
+     text-anchor="end"
+     id="text53">×</text>
 </svg>

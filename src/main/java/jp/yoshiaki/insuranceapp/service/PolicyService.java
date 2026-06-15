@@ -348,10 +348,7 @@ public class PolicyService {
         Policy policy = policyRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("契約が見つかりません: id=" + id));
 
-        // effectiveStatus が「契約中」でなければ登録不可
-        if (!"契約中".equals(policy.getEffectiveStatus())) {
-            throw new IllegalStateException("契約中の契約のみカレンダー登録できます");
-        }
+        validateActivePolicyOperation(policy, "カレンダー登録");
 
         if (policy.getCalendarRegistered()) {
             // 登録済み → 未登録に変更（イベント削除）
@@ -369,6 +366,24 @@ public class PolicyService {
 
         return policyRepository.save(policy);
     }
-}
 
+    /**
+     * AI要約を利用可能な契約状態か確認する。
+     *
+     * @param policy 対象契約
+     */
+    public void validateAiSummaryAvailable(Policy policy) {
+        validateActivePolicyOperation(policy, "AI要約を表示");
+    }
+
+    private void validateActivePolicyOperation(Policy policy, String operation) {
+        String effectiveStatus = policy.getEffectiveStatus();
+        if ("解約".equals(effectiveStatus)) {
+            throw new IllegalStateException("解約した契約は" + operation + "できません");
+        }
+        if ("失効".equals(effectiveStatus)) {
+            throw new IllegalStateException("失効した契約は" + operation + "できません");
+        }
+    }
+}
 

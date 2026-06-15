@@ -1,92 +1,160 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>契約詳細</title>
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
 </head>
 <body>
-<h1>契約詳細</h1>
+<main class="detail-page" th:if="${policy}">
+    <p class="breadcrumbs">
+        <a href="/">トップページ</a><span>›</span>
+        <a th:href="@{/policies}">契約一覧</a><span>›</span>
+        <strong>契約詳細</strong>
+    </p>
 
-<!-- フラッシュメッセージ -->
-<div th:if="${successMessage}" style="color: green;">
-    <p th:text="${successMessage}"></p>
-</div>
-<div th:if="${errorMessage}" style="color: red;">
-    <p th:text="${errorMessage}"></p>
-</div>
-
-<p>
-    <a th:href="@{/policies}">一覧へ戻る</a> /
-    <a href="/">トップページへ</a>
-</p>
-
-<div th:if="${policy}">
-    <table border="1" cellpadding="6" cellspacing="0">
-        <tr><th>ID</th><td th:text="${policy.id}"></td></tr>
-        <tr><th>契約番号</th><td th:text="${policy.policyNumber}"></td></tr>
-        <tr><th>契約者名</th><td th:text="${policy.customerName}"></td></tr>
-        <tr><th>開始日</th><td th:text="${policy.startDate}"></td></tr>
-        <tr><th>満期日</th><td th:text="${policy.endDate}"></td></tr>
-        <tr><th>状態（表示用）</th><td th:text="${policy.status}"></td></tr>
-        <tr>
-            <th>要注意</th>
-            <td>
-                <span th:if="${policy.attentionRequired}" style="color: orange;">要注意（満期20日前〜）</span>
-                <span th:unless="${policy.attentionRequired}">-</span>
-            </td>
-        </tr>
-        <tr>
-            <th>カレンダー登録</th>
-            <td>
-                <span th:if="${policy.calendarRegistered}">登録済み</span>
-                <span th:unless="${policy.calendarRegistered}">未登録</span>
-            </td>
-        </tr>
-    </table>
-
-    <h2>操作</h2>
-
-    <!-- Day95: AI要約（保存しない） -->
-    <form th:action="@{/policies/{id}/ai-summarize(id=${policy.id})}" method="post">
-        <button type="submit">AI要約</button>
-    </form>
-
-    <div th:if="${aiSummary}" style="margin-top: 12px; white-space: pre-wrap; border: 1px solid #ccc; padding: 8px;">
-        <strong>AI要約（参考）</strong>
-        <p th:text="${aiSummary}"></p>
+    <h1 class="detail-title">契約詳細</h1>
+    <div class="policy-heading">
+        <span class="heading-label">契約番号</span>
+        <strong th:text="${policy.policyNumber}">P-2026-0107</strong>
+        <span class="status-badge"
+              th:classappend="${policy.status != '契約中'} ? ' inactive' : ''"
+              th:text="${policy.status}">契約中</span>
     </div>
 
-    <!-- カレンダー登録トグル -->
-    <form th:action="@{/policies/{id}/calendar-toggle(id=${policy.id})}" method="post">
-        <button type="submit" th:text="${policy.calendarRegistered} ? 'カレンダー登録解除' : 'カレンダー登録'">カレンダー登録</button>
-    </form>
+    <div th:if="${successMessage}" class="alert success">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="alert error">
+        <p th:text="${errorMessage}"></p>
+    </div>
 
-    <!-- 更新 -->
-    <form th:if="${policy.canRenew}" th:action="@{/policies/{id}/renew(id=${policy.id})}" method="post">
-        <button type="submit">更新</button>
-    </form>
+    <div class="notice" th:if="${policy.attentionRequired}">
+        要注意（満期20日前～）
+    </div>
 
-    <!-- 更新取消（当日限定） -->
-    <form th:if="${policy.canUnrenew}" th:action="@{/policies/{id}/unrenew(id=${policy.id})}" method="post">
-        <button type="submit">更新取消（当日限定）</button>
-    </form>
+    <div class="detail-grid">
+        <section class="detail-card">
+            <h2 class="card-title">契約情報</h2>
+            <table class="info-table">
+                <tbody>
+                <tr><th scope="row">契約番号</th><td th:text="${policy.policyNumber}"></td></tr>
+                <tr><th scope="row">契約者名</th><td th:text="${policy.customerName}"></td></tr>
+                <tr><th scope="row">契約期間</th><td th:text="${policy.contractPeriod}"></td></tr>
+                <tr><th scope="row">開始日</th><td th:text="${policy.startDate}"></td></tr>
+                <tr><th scope="row">満期日</th><td th:text="${policy.endDate}"></td></tr>
+                <tr><th scope="row">状態</th><td th:text="${policy.status}"></td></tr>
+                <tr>
+                    <th scope="row">要注意</th>
+                    <td>
+                        <span th:if="${policy.attentionRequired}" class="text-warn">要注意（満期20日前～）</span>
+                        <span th:unless="${policy.attentionRequired}">-</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">カレンダー登録</th>
+                    <td>
+                        <span th:if="${policy.calendarRegistered}">登録済み</span>
+                        <span th:unless="${policy.calendarRegistered}" class="text-danger">未登録</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
 
-    <!-- 解約 -->
-    <form th:if="${policy.canCancel}" th:action="@{/policies/{id}/cancel(id=${policy.id})}" method="post">
-        <button type="submit">解約</button>
-    </form>
+        <section class="detail-card">
+            <h2 class="card-title">契約期間サマリー</h2>
 
-    <!-- 解約取消（当日限定） -->
-    <form th:if="${policy.canUncancel}" th:action="@{/policies/{id}/uncancel(id=${policy.id})}" method="post">
-        <button type="submit">解約取消（当日限定）</button>
-    </form>
+            <div class="contract-period">
+                <div class="date-block">
+                    <span class="date-label">契約開始日</span>
+                    <span class="date-value" th:text="${policy.startDate}"></span>
+                </div>
+                <div class="date-block">
+                    <span class="date-label">満期日</span>
+                    <span class="date-value" th:text="${policy.endDate}"></span>
+                </div>
+            </div>
+            <div class="contract-track" aria-hidden="true"></div>
 
-    <!-- どの操作も不可のとき -->
-    <p th:if="${!policy.canRenew and !policy.canUnrenew and !policy.canCancel and !policy.canUncancel}">
-        現在、操作可能なボタンはありません。
-    </p>
-</div>
+            <div class="decision-panel"
+                 th:classappend="${policy.renewalTimingStatus}"
+                 th:style="|--today-position: ${policy.todayPositionPercent}%; --early-position: ${policy.earlyDeadlinePositionPercent}%;|">
+                <h3>更新判断期間（拡大）</h3>
+                <p class="decision-caption">満期2か月前から満期日までを拡大表示</p>
 
+                <div class="timeline">
+                    <div class="timeline-line"></div>
+
+                    <span class="timeline-marker start" aria-hidden="true"></span>
+                    <span class="timeline-marker"
+                          th:style="|--position: ${policy.earlyDeadlinePositionPercent}%;|"
+                          aria-hidden="true"></span>
+                    <span class="timeline-marker today"
+                          th:if="${policy.showTodayMarker}"
+                          th:style="|--position: ${policy.todayPositionPercent}%;|"
+                          aria-hidden="true"></span>
+                    <span class="timeline-marker end" aria-hidden="true"></span>
+
+                    <span class="marker-label start-label">
+                        更新可能開始
+                        <strong th:text="${policy.renewableStartDate}"></strong>
+                    </span>
+                    <span class="marker-label deadline-label">
+                        早期更改期限日
+                        <strong th:text="${policy.earlyRenewalDeadline}"></strong>
+                    </span>
+                    <span class="marker-label today-label"
+                          th:if="${policy.showTodayMarker}">
+                        今日
+                        <strong th:text="${policy.today}"></strong>
+                    </span>
+                    <span class="marker-label end-label">
+                        満期日
+                        <strong th:text="${policy.endDate}"></strong>
+                    </span>
+                </div>
+
+                <p class="timing-message"
+                   th:classappend="${policy.renewalTimingStatus}"
+                   th:text="${policy.renewalTimingMessage}"></p>
+            </div>
+        </section>
+    </div>
+
+    <section class="action-panel" aria-label="契約操作">
+        <form th:action="@{/policies/{id}/ai-summarize(id=${policy.id})}" method="post">
+            <button class="action-button" type="submit">AI要約を表示</button>
+        </form>
+
+        <form th:action="@{/policies/{id}/calendar-toggle(id=${policy.id})}" method="post">
+            <button class="action-button" type="submit"
+                    th:text="${policy.calendarRegistered} ? 'カレンダー登録解除' : 'カレンダー登録'">
+                カレンダー登録
+            </button>
+        </form>
+
+        <span class="spacer"></span>
+
+        <form th:if="${policy.canRenew}" th:action="@{/policies/{id}/renew(id=${policy.id})}" method="post">
+            <button class="action-button primary" type="submit">契約更新</button>
+        </form>
+        <form th:if="${policy.canUnrenew}" th:action="@{/policies/{id}/unrenew(id=${policy.id})}" method="post">
+            <button class="action-button primary" type="submit">更新取消（当日限定）</button>
+        </form>
+        <form th:if="${policy.canCancel}" th:action="@{/policies/{id}/cancel(id=${policy.id})}" method="post">
+            <button class="action-button danger" type="submit">契約解約</button>
+        </form>
+        <form th:if="${policy.canUncancel}" th:action="@{/policies/{id}/uncancel(id=${policy.id})}" method="post">
+            <button class="action-button danger" type="submit">解約取消（当日限定）</button>
+        </form>
+    </section>
+
+    <section class="ai-summary" th:if="${aiSummary}">
+        <h2>AI要約</h2>
+        <p th:text="${aiSummary}"></p>
+    </section>
+</main>
 </body>
 </html>
-

@@ -101,10 +101,11 @@ public class PolicyController {
                               RedirectAttributes redirectAttributes) {
         log.info("契約AI要約: id={}", id);
 
-        aiUsageLimitService.consume(authentication != null ? authentication.getName() : null);
-
         Policy policy = policyService.getPolicyById(id)
                 .orElseThrow(() -> new NotFoundException("契約が見つかりません: id=" + id));
+
+        policyService.validateAiSummaryAvailable(policy);
+        aiUsageLimitService.consume(authentication != null ? authentication.getName() : null);
 
         String summary = aiService.summarizePolicy(policy);
         redirectAttributes.addFlashAttribute("aiSummary", summary);
