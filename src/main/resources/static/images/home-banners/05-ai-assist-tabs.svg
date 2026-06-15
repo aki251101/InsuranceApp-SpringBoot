@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="600" viewBox="0 0 1800 600" role="img" aria-labelledby="title desc">
+  <title id="title">2つのAI機能で確認と対応を効率化</title>
+  <desc id="desc">契約詳細のAI要約と事故詳細のAI提案を紹介するバナー</desc>
+  <defs>
+    <linearGradient id="ai-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset=".62" stop-color="#f9fcff"/>
+      <stop offset="1" stop-color="#e6f2ff"/>
+    </linearGradient>
+    <linearGradient id="ai-mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#318bf2"/>
+      <stop offset="1" stop-color="#7654d7"/>
+    </linearGradient>
+    <filter id="ai-shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#16467d" flood-opacity=".14"/>
+    </filter>
+    <style>
+      text{font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif;fill:#082e6b}
+      .bold{font-weight:800}.item{font-size:18px;font-weight:800}.white{fill:#fff}
+    </style>
+  </defs>
+
+  <rect x="2" y="2" width="1796" height="596" rx="34" fill="url(#ai-bg)" stroke="#bfd5ee" stroke-width="4"/>
+  <path d="M0 486c225 5 338 90 488 68 247-37 352-72 580-36 275 43 433 44 732-45v127H0z" fill="#e2f0ff"/>
+
+  <text x="60" y="252" font-size="60" class="bold">2つのAI機能で</text>
+  <text x="60" y="326" font-size="60" class="bold">確認と対応を効率化</text>
+  <text x="62" y="402" font-size="29" class="bold">情報の把握から次のアクションまで支援</text>
+
+  <g filter="url(#ai-shadow)">
+    <rect x="790" y="54" width="930" height="490" rx="22" fill="#fff" stroke="#d7e7f7" stroke-width="2"/>
+  </g>
+  <rect x="818" y="80" width="44" height="44" rx="12" fill="url(#ai-mark)"/>
+  <text x="840" y="110" text-anchor="middle" font-size="22" font-weight="800" class="white">AI</text>
+  <text x="875" y="113" font-size="31" class="bold">業務AIアシスト</text>
+  <rect x="1500" y="81" width="190" height="43" rx="21" fill="#eaf4ff"/>
+  <text x="1595" y="109" text-anchor="middle" font-size="18" font-weight="800" fill="#176fcf">担当者の判断を支援</text>
+
+  <rect x="818" y="148" width="429" height="60" rx="12" fill="#edf5ff" stroke="#8bbcf2" stroke-width="2"/>
+  <text x="1032" y="187" text-anchor="middle" font-size="22" class="bold">契約詳細｜AI要約</text>
+  <rect x="1259" y="148" width="429" height="60" rx="12" fill="#edf9f4" stroke="#80d1aa" stroke-width="2"/>
+  <text x="1474" y="187" text-anchor="middle" font-size="22" class="bold">事故詳細｜AI提案</text>
+
+  <rect x="818" y="228" width="429" height="195" rx="15" fill="#fff" stroke="#dce9f7"/>
+  <text x="839" y="275" font-size="25" class="bold">契約内容を要約</text>
+  <circle cx="848" cy="314" r="8" fill="#082e6b"/>
+  <text x="864" y="321" class="item">契約期間と現在の状態</text>
+  <circle cx="848" cy="350" r="8" fill="#082e6b"/>
+  <text x="864" y="357" class="item">更新期限と注意事項</text>
+  <circle cx="848" cy="386" r="8" fill="#082e6b"/>
+  <text x="864" y="393" class="item">重要ポイントを短く整理</text>
+
+  <rect x="1259" y="228" width="429" height="195" rx="15" fill="#fff" stroke="#dce9f7"/>
+  <text x="1280" y="275" font-size="25" class="bold">次の対応を提案</text>
+  <circle cx="1289" cy="314" r="8" fill="#082e6b"/>
+  <text x="1305" y="321" class="item">次に確認する内容</text>
+  <circle cx="1289" cy="350" r="8" fill="#082e6b"/>
+  <text x="1305" y="357" class="item">連絡・対応の候補</text>
+  <circle cx="1289" cy="386" r="8" fill="#082e6b"/>
+  <text x="1305" y="393" class="item">滞留リスクと注意点</text>
+</svg>

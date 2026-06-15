@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="600" viewBox="0 0 1800 600" role="img" aria-labelledby="title desc">
+  <title id="title">更新予定をカレンダーへ</title>
+  <desc id="desc">契約一覧からGoogleカレンダーへ更新予定を登録する機能の紹介</desc>
+  <defs>
+    <linearGradient id="cal-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset=".62" stop-color="#f9fcff"/>
+      <stop offset="1" stop-color="#e6f2ff"/>
+    </linearGradient>
+    <linearGradient id="cal-blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#45a0ff"/>
+      <stop offset="1" stop-color="#0867e8"/>
+    </linearGradient>
+    <filter id="cal-shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#16467d" flood-opacity=".14"/>
+    </filter>
+    <style>
+      text{font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif;fill:#082e6b}
+      .bold{font-weight:800}.small{font-size:14px;font-weight:800;fill:#3970b4}
+      .row{font-size:16px;font-weight:800}.white{fill:#fff}
+    </style>
+  </defs>
+
+  <rect x="2" y="2" width="1796" height="596" rx="34" fill="url(#cal-bg)" stroke="#bfd5ee" stroke-width="4"/>
+  <path d="M0 486c225 5 338 90 488 68 247-37 352-72 580-36 275 43 433 44 732-45v127H0z" fill="#e2f0ff"/>
+
+  <text x="62" y="250" font-size="54" class="bold">更新予定をカレンダーへ</text>
+  <text x="64" y="322" font-size="27" class="bold">リマインダーを活用して、更新漏れを防止</text>
+
+  <g filter="url(#cal-shadow)">
+    <rect x="815" y="80" width="430" height="420" rx="22" fill="#fff" stroke="#d7e7f7" stroke-width="2"/>
+  </g>
+  <rect x="839" y="104" width="43" height="43" rx="11" fill="url(#cal-blue)"/>
+  <path d="m850 126 7 7 14-18" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="895" y="138" font-size="25" class="bold">契約一覧</text>
+  <text x="859" y="184" class="small">契約番号</text>
+  <text x="999" y="184" class="small">契約者名</text>
+  <text x="1108" y="184" class="small">満期日</text>
+
+  <g>
+    <rect x="839" y="201" width="382" height="75" rx="14" fill="#fff" stroke="#dce9f7" stroke-width="2"/>
+    <text x="855" y="247" class="row">P-2026-0107</text>
+    <text x="997" y="247" class="row">木村 大輔</text>
+    <text x="1106" y="247" class="row">2026/06/22</text>
+    <rect x="839" y="286" width="382" height="75" rx="14" fill="#fff" stroke="#dce9f7" stroke-width="2"/>
+    <text x="855" y="332" class="row">P-2026-0102</text>
+    <text x="997" y="332" class="row">石田 美咲</text>
+    <text x="1106" y="332" class="row">2026/06/30</text>
+    <rect x="839" y="371" width="382" height="75" rx="14" fill="#fff" stroke="#dce9f7" stroke-width="2"/>
+    <text x="855" y="417" class="row">P-2026-0002</text>
+    <text x="997" y="417" class="row">佐藤 花子</text>
+    <text x="1106" y="417" class="row">2026/07/15</text>
+  </g>
+
+  <rect x="1263" y="289" width="58" height="12" rx="6" fill="#2d82ec"/>
+  <path d="m1320 278 27 17-27 17z" fill="#2d82ec"/>
+
+  <g filter="url(#cal-shadow)">
+    <rect x="1360" y="80" width="370" height="420" rx="22" fill="#fff" stroke="#d7e7f7" stroke-width="2"/>
+  </g>
+  <g transform="translate(1383 103)">
+    <rect width="48" height="48" rx="11" fill="#f3f7fd"/>
+    <path d="M10 12h28v27H10z" fill="#4285f4"/>
+    <path d="M10 12h28v8H10z" fill="#6f9eff"/>
+    <text x="24" y="34" text-anchor="middle" font-size="19" font-weight="800" class="white">31</text>
+  </g>
+  <text x="1443" y="138" font-size="22" class="bold">Google カレンダー</text>
+
+  <rect x="1383" y="169" width="323" height="225" rx="15" fill="#fff" stroke="#dce9f7" stroke-width="2"/>
+  <path d="M1389 185v193" stroke="#277ee8" stroke-width="6" stroke-linecap="round"/>
+  <text x="1410" y="220" font-size="22" class="bold">保険契約の更新予定</text>
+  <rect x="1412" y="250" width="13" height="13" rx="2" fill="none" stroke="#176fcf" stroke-width="2"/>
+  <text x="1440" y="264" font-size="17" class="bold">2025年7月15日（火）</text>
+  <circle cx="1419" cy="305" r="7" fill="none" stroke="#176fcf" stroke-width="2"/>
+  <path d="M1419 301v5l4 2" fill="none" stroke="#176fcf" stroke-width="2" stroke-linecap="round"/>
+  <text x="1440" y="311" font-size="17" class="bold">9:00 - 9:30</text>
+  <path d="M1411 353c0-6 3-9 8-11v-3a3 3 0 0 1 6 0v3c5 2 8 5 8 11z" fill="#f2a62b"/>
+  <text x="1440" y="359" font-size="17" class="bold">リマインダー：1週間前</text>
+
+  <rect x="1383" y="410" width="323" height="52" rx="12" fill="url(#cal-blue)"/>
+  <text x="1544" y="444" text-anchor="middle" font-size="22" font-weight="800" class="white">カレンダー登録</text>
+</svg>
