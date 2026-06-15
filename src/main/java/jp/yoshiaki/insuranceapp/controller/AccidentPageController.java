@@ -21,9 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * 事故画面Controller（Thymeleaf）
@@ -84,6 +85,7 @@ public class AccidentPageController {
 
         model.addAttribute("accident", AccidentDetailResponse.from(accident));
         model.addAttribute("memos", accidentService.getMemos(id).stream()
+                .sorted(Comparator.comparing(memo -> memo.getHandledAt()))
                 .map(AccidentMemoResponse::from)
                 .toList());
         model.addAttribute("defaultHandledAt",
@@ -158,10 +160,13 @@ public class AccidentPageController {
                             RedirectAttributes redirectAttributes) {
         log.info("AI次アクション候補生成: accidentId={}", id);
 
-        aiUsageLimitService.consume(authentication != null ? authentication.getName() : null);
-
         Accident accident = accidentService.getAccidentById(id)
                 .orElseThrow(() -> new NotFoundException("事故が見つかりません: id=" + id));
+        if ("RESOLVED".equals(accident.getStatus())) {
+            throw new IllegalStateException("対応が完了した事故ではAI提案を利用できません。");
+        }
+
+        aiUsageLimitService.consume(authentication != null ? authentication.getName() : null);
         accident.setMemo(accidentService.getMemoText(id));
 
         String suggestion = aiService.suggestNextActions(accident);

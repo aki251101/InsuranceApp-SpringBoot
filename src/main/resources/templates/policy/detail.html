@@ -8,11 +8,19 @@
 </head>
 <body>
 <main class="detail-page" th:if="${policy}">
-    <p class="breadcrumbs">
-        <a href="/">トップページ</a><span>›</span>
-        <a th:href="@{/policies}">契約一覧</a><span>›</span>
-        <strong>契約詳細</strong>
-    </p>
+    <div class="detail-top-navigation">
+        <p class="breadcrumbs">
+            <a href="/">トップページ</a><span>›</span>
+            <a th:href="@{/policies}">契約一覧</a><span>›</span>
+            <strong>契約詳細</strong>
+        </p>
+        <a class="cross-navigation-link" th:href="@{/accidents}">
+            <svg class="cross-navigation-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 11 7 6h10l2 5M4 11h16v7H4zM7 18v2M17 18v2M7.5 14h.01M16.5 14h.01"/>
+            </svg>
+            <span>事故一覧へ</span>
+        </a>
+    </div>
 
     <h1 class="detail-title">契約詳細</h1>
     <div class="policy-heading">

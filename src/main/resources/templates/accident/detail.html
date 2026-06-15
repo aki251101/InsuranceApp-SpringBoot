@@ -2,138 +2,181 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>事故詳細</title>
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+    <script defer th:src="@{/js/accident-detail.js}"></script>
 </head>
 <body>
-<h1>事故詳細</h1>
-
-<div th:if="${successMessage}" style="color: green;">
-    <p th:text="${successMessage}"></p>
-</div>
-<div th:if="${errorMessage}" style="color: red;">
-    <p th:text="${errorMessage}"></p>
-</div>
-
-<p>
-    <a th:href="@{/accidents}">一覧へ戻る</a> /
-    <a href="/">トップページへ</a>
-</p>
-
-<div th:if="${accident}">
-    <table border="1" cellpadding="6" cellspacing="0">
-        <tr><th scope="row">ID</th><td th:text="${accident.id}"></td></tr>
-        <tr>
-            <th scope="row">契約番号</th>
-            <td>
-                <a th:if="${accident.policyId != null}"
-                   th:href="@{/policies/{id}(id=${accident.policyId})}"
-                   th:text="${accident.policyNumber}"></a>
-                <span th:unless="${accident.policyId != null}"
-                      th:text="${accident.policyNumber}"></span>
-            </td>
-        </tr>
-        <tr><th scope="row">契約者名</th><td th:text="${accident.customerName}"></td></tr>
-        <tr><th scope="row">受付日</th><td th:text="${accident.occurredAt}"></td></tr>
-        <tr><th scope="row">事故場所</th><td th:text="${accident.place}"></td></tr>
-        <tr><th scope="row">事故概要</th><td th:text="${accident.description}"></td></tr>
-        <tr><th scope="row">状態</th><td th:text="${accident.status}"></td></tr>
-        <tr><th scope="row">最終対応日時</th><td th:text="${accident.lastContactedAt}"></td></tr>
-        <tr>
-            <th scope="row">滞留</th>
-            <td>
-                <span th:if="${accident.stagnant}" style="color:red;">滞留</span>
-                <span th:unless="${accident.stagnant}">-</span>
-            </td>
-        </tr>
-    </table>
-
-    <h2>操作</h2>
-    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
-        <form th:if="${accident.canStartProgress}"
-              th:action="@{/accidents/{id}/start-progress(id=${accident.id})}" method="post">
-            <button type="submit">対応開始</button>
-        </form>
-
-        <form th:if="${accident.canContact}"
-              th:action="@{/accidents/{id}/contacted(id=${accident.id})}" method="post">
-            <button type="submit">対応した</button>
-        </form>
-
-        <form th:if="${accident.canResolve}"
-              th:action="@{/accidents/{id}/resolve(id=${accident.id})}" method="post">
-            <button type="submit">完了</button>
-        </form>
-    </div>
-
-    <h2>対応履歴メモ</h2>
-    <div th:if="${#lists.isEmpty(memos)}">
-        <p>対応履歴はまだありません。</p>
-        <div th:if="${accident.memo != null and !#strings.isEmpty(accident.memo)}"
-             style="white-space: pre-wrap; border: 1px solid #ccc; padding: 8px;"
-             th:text="${accident.memo}"></div>
-    </div>
-    <ol th:unless="${#lists.isEmpty(memos)}" style="padding-left: 24px;">
-        <li th:each="memo : ${memos}" style="margin-bottom: 16px;">
-            <div>
-                <strong th:text="${memo.handledAt}"></strong>
-            </div>
-            <p style="white-space: pre-wrap;" th:text="${memo.content}"></p>
-            <details>
-                <summary>編集</summary>
-                <form th:action="@{/accidents/{id}/memos/{memoId}(id=${accident.id},memoId=${memo.id})}"
-                      method="post">
-                    <div>
-                        <label th:for="${'handledAt-' + memo.id}">対応日時</label>
-                        <input type="datetime-local"
-                               th:id="${'handledAt-' + memo.id}"
-                               name="handledAt"
-                               th:value="${memo.handledAtInput}"
-                               required>
-                    </div>
-                    <div>
-                        <label th:for="${'content-' + memo.id}">対応内容</label>
-                        <textarea th:id="${'content-' + memo.id}"
-                                  name="content" rows="3" cols="60" maxlength="2000"
-                                  required th:text="${memo.content}"></textarea>
-                    </div>
-                    <button type="submit">変更を保存</button>
-                </form>
-            </details>
-        </li>
-    </ol>
-
-    <h3>新しい対応履歴を追加</h3>
-    <form th:action="@{/accidents/{id}/memos(id=${accident.id})}" method="post">
-        <div>
-            <label for="handledAt">対応日時</label>
-            <input id="handledAt" type="datetime-local" name="handledAt"
-                   th:value="${defaultHandledAt}" required>
-        </div>
-        <div>
-            <label for="content">対応内容</label>
-            <textarea id="content" name="content" rows="3" cols="60" maxlength="2000"
-                      placeholder="今回対応した内容を入力してください" required></textarea>
-        </div>
-        <label th:if="${accident.canContact}">
-            <input type="checkbox" name="updateLastContactedAt" value="true" checked>
-            最終対応日時をこの対応日時で更新する
-        </label>
-        <p style="font-size: 0.9em; color: #555;">
-            社内メモなど、実際の対応日時を更新しない記録ではチェックを外してください。
+<main class="detail-page accident-detail-page" th:if="${accident}">
+    <div class="detail-top-navigation">
+        <p class="breadcrumbs">
+            <a href="/">トップページ</a><span>›</span>
+            <a th:href="@{/accidents}">事故一覧</a><span>›</span>
+            <strong>事故詳細</strong>
         </p>
-        <button type="submit">対応履歴を追加</button>
-    </form>
-
-    <h2>AI提案</h2>
-    <form th:action="@{/accidents/{id}/ai-suggest(id=${accident.id})}" method="post">
-        <button type="submit">AI提案を表示</button>
-    </form>
-
-    <div th:if="${aiSuggestion}" style="margin-top: 12px; white-space: pre-wrap; border: 1px solid #ccc; padding: 8px;">
-        <strong>AI提案（参考）</strong>
-        <p th:text="${aiSuggestion}"></p>
+        <a class="cross-navigation-link" th:href="@{/policies}">
+            <svg class="cross-navigation-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 3h12v18H6zM9 8h6M9 12h6M9 16h4"/>
+            </svg>
+            <span>契約一覧へ</span>
+        </a>
     </div>
-</div>
 
+    <header class="accident-header">
+        <div>
+            <h1 class="detail-title">事故詳細</h1>
+            <div class="accident-heading">
+                <span class="heading-label">事故ID</span>
+                <strong th:text="${accident.id}">6</strong>
+                <span class="status-badge"
+                      th:classappend="${accident.statusCode == 'RESOLVED'} ? ' inactive' : ''"
+                      th:text="${accident.status}">対応中</span>
+            </div>
+        </div>
+
+        <div class="accident-header-actions" aria-label="事故対応操作">
+            <form th:if="${accident.canStartProgress}"
+                  th:action="@{/accidents/{id}/start-progress(id=${accident.id})}" method="post">
+                <button class="action-button primary" type="submit">対応開始</button>
+            </form>
+            <form th:if="${accident.canContact}"
+                  th:action="@{/accidents/{id}/contacted(id=${accident.id})}" method="post">
+                <button class="action-button primary" type="submit">対応した</button>
+            </form>
+            <form th:if="${accident.canResolve}"
+                  th:action="@{/accidents/{id}/resolve(id=${accident.id})}" method="post">
+                <button class="action-button" type="submit">完了</button>
+            </form>
+        </div>
+    </header>
+
+    <div th:if="${successMessage}" class="alert success">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="alert error">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <div class="accident-layout">
+        <section class="detail-card accident-info-card">
+            <h2 class="card-title">事故情報</h2>
+            <table class="info-table">
+                <tbody>
+                <tr>
+                    <th scope="row">契約番号</th>
+                    <td>
+                        <a th:if="${accident.policyId != null}"
+                           th:href="@{/policies/{id}(id=${accident.policyId})}"
+                           th:text="${accident.policyNumber}">P-2026-0104</a>
+                        <span th:unless="${accident.policyId != null}"
+                              th:text="${accident.policyNumber}"></span>
+                    </td>
+                </tr>
+                <tr><th scope="row">契約者名</th><td th:text="${accident.customerName}"></td></tr>
+                <tr><th scope="row">受付日</th><td th:text="${accident.occurredAt}"></td></tr>
+                <tr><th scope="row">事故場所</th><td th:text="${accident.place}"></td></tr>
+                <tr><th scope="row">事故概要</th><td th:text="${accident.description}"></td></tr>
+                <tr>
+                    <th scope="row">状態</th>
+                    <td>
+                        <span class="inline-status"
+                              th:classappend="${accident.statusCode == 'RESOLVED'} ? ' inactive' : ''"
+                              th:text="${accident.status}">対応中</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">最終対応日時</th>
+                    <td th:text="${#strings.isEmpty(accident.lastContactedAt)} ? '-' : ${accident.lastContactedAt}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">滞留</th>
+                    <td>
+                        <span th:if="${accident.stagnant}" class="text-danger">滞留</span>
+                        <span th:unless="${accident.stagnant}">-</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="detail-card accident-history-card">
+            <h2 class="card-title">対応履歴</h2>
+
+            <div class="history-empty" th:if="${#lists.isEmpty(memos)}">
+                <p>対応履歴はまだありません。</p>
+                <p th:if="${accident.memo != null and !#strings.isEmpty(accident.memo)}"
+                   th:text="${accident.memo}"></p>
+            </div>
+
+            <ol class="history-list" th:unless="${#lists.isEmpty(memos)}">
+                <li class="history-item" th:each="memo : ${memos}">
+                    <span class="history-dot" aria-hidden="true"></span>
+                    <div class="history-entry">
+                        <time th:text="${memo.handledAt}">2026/05/16 10:00</time>
+                        <p th:text="${memo.content}">修理工場へ車を渡し、見積依頼。</p>
+                        <button class="history-edit-toggle"
+                                type="button"
+                                aria-expanded="false"
+                                th:attr="aria-controls=${'history-edit-form-' + memo.id}"
+                                th:data-edit-target="${'history-edit-form-' + memo.id}">編集</button>
+                        <form class="history-edit-form"
+                              th:id="${'history-edit-form-' + memo.id}"
+                              th:action="@{/accidents/{id}/memos/{memoId}(id=${accident.id},memoId=${memo.id})}"
+                              method="post"
+                              hidden>
+                            <label th:for="${'handledAt-' + memo.id}">対応日時</label>
+                            <input type="datetime-local"
+                                   th:id="${'handledAt-' + memo.id}"
+                                   name="handledAt"
+                                   th:value="${memo.handledAtInput}"
+                                   data-confirm-datetime
+                                   required>
+                            <label th:for="${'content-' + memo.id}">対応内容</label>
+                            <textarea th:id="${'content-' + memo.id}"
+                                      name="content" rows="3" maxlength="2000"
+                                      required th:text="${memo.content}"></textarea>
+                            <button class="action-button primary compact" type="submit">変更を保存</button>
+                        </form>
+                    </div>
+                </li>
+            </ol>
+
+            <div class="history-add">
+                <h3>新しい対応履歴を追加</h3>
+                <form class="history-add-form"
+                      th:action="@{/accidents/{id}/memos(id=${accident.id})}" method="post">
+                    <label for="handledAt">対応日時</label>
+                    <input id="handledAt" type="datetime-local" name="handledAt"
+                           th:value="${defaultHandledAt}" required>
+
+                    <label for="content">対応内容</label>
+                    <textarea id="content" name="content" rows="3" maxlength="2000"
+                              placeholder="今回対応した内容を入力してください" required></textarea>
+
+                    <label class="history-checkbox" th:if="${accident.canContact}">
+                        <input type="checkbox" name="updateLastContactedAt" value="true" checked>
+                        <span>最終対応日時をこの対応日時で更新する</span>
+                    </label>
+                    <p class="history-note">
+                        社内メモなど、実際の対応日時を更新しない記録ではチェックを外してください。
+                    </p>
+                    <button class="action-button primary history-submit" type="submit">対応履歴を追加</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <section class="accident-ai-area">
+        <form th:action="@{/accidents/{id}/ai-suggest(id=${accident.id})}" method="post">
+            <button class="action-button ai-trigger" type="submit">AI提案を表示</button>
+        </form>
+
+        <div class="ai-summary accident-ai-summary" th:if="${aiSuggestion}">
+            <h2>AI提案 <span>（参考）</span></h2>
+            <p th:text="${aiSuggestion}"></p>
+        </div>
+    </section>
+</main>
 </body>
 </html>
