@@ -36,14 +36,6 @@
         </div>
 
         <div class="accident-header-actions" aria-label="事故対応操作">
-            <form th:if="${accident.canStartProgress}"
-                  th:action="@{/accidents/{id}/start-progress(id=${accident.id})}" method="post">
-                <button class="action-button primary" type="submit">対応開始</button>
-            </form>
-            <form th:if="${accident.canContact}"
-                  th:action="@{/accidents/{id}/contacted(id=${accident.id})}" method="post">
-                <button class="action-button primary" type="submit">対応した</button>
-            </form>
             <form th:if="${accident.canResolve}"
                   th:action="@{/accidents/{id}/resolve(id=${accident.id})}" method="post">
                 <button class="action-button" type="submit">完了</button>
@@ -159,7 +151,7 @@
                         <span>最終対応日時をこの対応日時で更新する</span>
                     </label>
                     <p class="history-note">
-                        社内メモなど、実際の対応日時を更新しない記録ではチェックを外してください。
+                        実際に対応した記録ではチェックを入れてください。受付状態の場合は対応中に変わります。社内メモではチェックを外してください。
                     </p>
                     <button class="action-button primary history-submit" type="submit">対応履歴を追加</button>
                 </form>

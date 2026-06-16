@@ -90,6 +90,41 @@ class AccidentServiceTest {
                 .hasMessage("対応内容を入力してください");
     }
 
+    @Test
+    void addMemoWithLastContactedMovesOpenAccidentToInProgress() {
+        Accident accident = accident(6L, "OPEN");
+        LocalDateTime handledAt = LocalDateTime.of(2026, 6, 12, 12, 51);
+
+        when(accidentRepository.findByIdWithPolicy(6L)).thenReturn(Optional.of(accident));
+        when(accidentMemoRepository.save(any(AccidentMemo.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(accidentMemoRepository.findByAccidentIdOrderByHandledAtDescIdDesc(6L))
+                .thenReturn(List.of(memo(2L, handledAt, true)));
+
+        AccidentService service = new AccidentService(accidentRepository, accidentMemoRepository);
+        service.addMemo(6L, handledAt, "お客様へ初回連絡", "tester", true);
+
+        assertThat(accident.getStatus()).isEqualTo("IN_PROGRESS");
+        assertThat(accident.getLastContactedAt()).isEqualTo(handledAt);
+        verify(accidentRepository).save(accident);
+    }
+
+    @Test
+    void addInternalMemoKeepsOpenAccidentOpen() {
+        Accident accident = accident(6L, "OPEN");
+        LocalDateTime handledAt = LocalDateTime.of(2026, 6, 12, 12, 51);
+
+        when(accidentRepository.findByIdWithPolicy(6L)).thenReturn(Optional.of(accident));
+        when(accidentMemoRepository.save(any(AccidentMemo.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        AccidentService service = new AccidentService(accidentRepository, accidentMemoRepository);
+        service.addMemo(6L, handledAt, "担当者へ引き継ぎ予定", "tester", false);
+
+        assertThat(accident.getStatus()).isEqualTo("OPEN");
+        assertThat(accident.getLastContactedAt()).isNull();
+    }
+
     private Accident accident(Long id, String status) {
         return Accident.builder()
                 .id(id)

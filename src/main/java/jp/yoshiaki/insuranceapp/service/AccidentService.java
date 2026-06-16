@@ -265,6 +265,9 @@ public class AccidentService {
             if ("RESOLVED".equals(accident.getStatus())) {
                 throw new IllegalStateException("完了した事故は最終対応日時を更新できません");
             }
+            if ("OPEN".equals(accident.getStatus())) {
+                accident.setStatus("IN_PROGRESS");
+            }
             recalculateLastContactedAt(accident);
         }
 
