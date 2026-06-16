@@ -68,7 +68,7 @@ a {
 }
 
 .back-link {
-  margin: 0 0 12px;
+  margin: 0;
 }
 
 .back-link span {
@@ -76,10 +76,19 @@ a {
   color: #94a3b8;
 }
 
+.panel-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
 .list-action-row {
   display: flex;
   justify-content: flex-end;
-  margin: -4px 0 14px;
+  margin: 0;
+  flex: 0 0 auto;
 }
 
 .new-entry-button {
@@ -189,7 +198,7 @@ a {
 
 .stat-label {
   color: #365675;
-  font-size: 0.92rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 
@@ -355,6 +364,19 @@ tbody tr:hover {
 
   .panel {
     padding: 14px;
+  }
+
+  .panel-header-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .list-action-row {
+    width: 100%;
+  }
+
+  .new-entry-button {
+    width: 100%;
   }
 
   .search-stats-row {

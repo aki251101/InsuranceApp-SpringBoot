@@ -21,14 +21,16 @@
     </div>
 
     <section class="panel">
-        <p class="back-link">
-            <a href="/">トップページへ</a>
-            <span aria-hidden="true">/</span>
-            <a th:href="@{/accidents}">事故一覧</a>
-        </p>
+        <div class="panel-header-row">
+            <p class="back-link">
+                <a href="/">トップページへ</a>
+                <span aria-hidden="true">/</span>
+                <a th:href="@{/accidents}">事故一覧</a>
+            </p>
 
-        <div class="list-action-row">
-            <a class="new-entry-button" th:href="@{/policies/new}">契約新規登録</a>
+            <div class="list-action-row">
+                <a class="new-entry-button" th:href="@{/policies/new}">契約新規登録</a>
+            </div>
         </div>
 
         <div class="search-stats-row">

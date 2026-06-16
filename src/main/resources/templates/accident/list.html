@@ -14,14 +14,16 @@
     </section>
 
     <section class="panel">
-        <p class="back-link">
-            <a href="/">トップページへ</a>
-            <span aria-hidden="true">/</span>
-            <a th:href="@{/policies}">契約一覧</a>
-        </p>
+        <div class="panel-header-row">
+            <p class="back-link">
+                <a href="/">トップページへ</a>
+                <span aria-hidden="true">/</span>
+                <a th:href="@{/policies}">契約一覧</a>
+            </p>
 
-        <div class="list-action-row">
-            <a class="new-entry-button" th:href="@{/accidents/new}">事故新規登録</a>
+            <div class="list-action-row">
+                <a class="new-entry-button" th:href="@{/accidents/new}">事故新規登録</a>
+            </div>
         </div>
 
         <nav class="tabs">
