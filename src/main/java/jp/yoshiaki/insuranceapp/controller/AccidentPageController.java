@@ -1,19 +1,25 @@
 package jp.yoshiaki.insuranceapp.controller;
 
+import jp.yoshiaki.insuranceapp.dto.AccidentCreateRequest;
 import jp.yoshiaki.insuranceapp.dto.AccidentDetailResponse;
 import jp.yoshiaki.insuranceapp.dto.AccidentListResponse;
 import jp.yoshiaki.insuranceapp.dto.AccidentMemoResponse;
 import jp.yoshiaki.insuranceapp.entity.Accident;
+import jp.yoshiaki.insuranceapp.entity.Policy;
 import jp.yoshiaki.insuranceapp.exception.NotFoundException;
 import jp.yoshiaki.insuranceapp.service.AccidentService;
 import jp.yoshiaki.insuranceapp.service.AiService;
 import jp.yoshiaki.insuranceapp.service.AiUsageLimitService;
 import jp.yoshiaki.insuranceapp.service.ListSortService;
+import jp.yoshiaki.insuranceapp.service.PolicyService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +50,7 @@ public class AccidentPageController {
     private final AiService aiService;
     private final AiUsageLimitService aiUsageLimitService;
     private final ListSortService listSortService;
+    private final PolicyService policyService;
 
     @GetMapping
     public String list(
@@ -74,6 +81,57 @@ public class AccidentPageController {
         model.addAttribute("currentSort", currentSort);
         model.addAttribute("currentDirection", currentDirection);
         return "accident/list";
+    }
+
+    @GetMapping("/new")
+    public String newForm(
+            @RequestParam(name = "q", required = false) String q,
+            @RequestParam(name = "policyId", required = false) Long policyId,
+            Model model) {
+        if (!model.containsAttribute("accidentCreateRequest")) {
+            AccidentCreateRequest request = new AccidentCreateRequest();
+            request.setPolicyId(policyId);
+            model.addAttribute("accidentCreateRequest", request);
+        }
+        populateNewFormModel(model, q, policyId);
+        return "accident/new";
+    }
+
+    @PostMapping
+    public String create(
+            @Valid @ModelAttribute("accidentCreateRequest") AccidentCreateRequest request,
+            BindingResult bindingResult,
+            @RequestParam(name = "q", required = false) String q,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        log.info("事故新規登録: policyId={}", request.getPolicyId());
+
+        Policy selectedPolicy = null;
+        if (request.getPolicyId() != null) {
+            try {
+                selectedPolicy =
+                        policyService.getActivePolicyForAccidentRegistration(request.getPolicyId());
+            } catch (RuntimeException e) {
+                bindingResult.rejectValue("policyId", "invalidPolicy", e.getMessage());
+            }
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errorMessage", "入力漏れまたは入力内容の誤りがあります。");
+            populateNewFormModel(model, q, request.getPolicyId(), selectedPolicy);
+            return "accident/new";
+        }
+
+        Accident accident = Accident.builder()
+                .policyId(request.getPolicyId())
+                .occurredAt(request.getOccurredAt())
+                .place(request.getPlace())
+                .description(request.getDescription())
+                .build();
+        Accident saved = accidentService.createAccident(accident);
+        redirectAttributes.addFlashAttribute("successMessage", "事故を登録しました");
+
+        return "redirect:/accidents/" + saved.getId();
     }
 
     @GetMapping("/{id}")
@@ -182,5 +240,23 @@ public class AccidentPageController {
         } catch (RuntimeException e) {
             throw new IllegalArgumentException("対応日時を正しく入力してください");
         }
+    }
+
+    private void populateNewFormModel(Model model, String q, Long policyId) {
+        populateNewFormModel(model, q, policyId, null);
+    }
+
+    private void populateNewFormModel(Model model, String q, Long policyId, Policy selectedPolicy) {
+        String query = q != null ? q : "";
+        List<Policy> searchResults = policyService.searchActivePolicies(query);
+        Policy policy = selectedPolicy;
+        if (policy == null && policyId != null) {
+            policy = policyService.getActivePolicyForAccidentRegistration(policyId);
+        }
+
+        model.addAttribute("policyQuery", query);
+        model.addAttribute("policySearchResults", searchResults);
+        model.addAttribute("selectedPolicy", policy);
+        model.addAttribute("hasPolicySearch", q != null && !q.isBlank());
     }
 }

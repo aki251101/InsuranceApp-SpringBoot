@@ -10,10 +10,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -66,6 +69,32 @@ class PolicyServiceTest {
                 policy("ACTIVE", LocalDate.now().minusDays(1))))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("失効した契約はAI要約を表示できません");
+    }
+
+    @Test
+    void searchActivePoliciesReturnsEmptyForBlankQuery() {
+        assertThat(policyService.searchActivePolicies(" ")).isEmpty();
+        verifyNoInteractions(policyRepository);
+    }
+
+    @Test
+    void searchActivePoliciesNormalizesQueryAndLimitsToActivePolicies() {
+        Policy policy = policy("ACTIVE", LocalDate.now().plusMonths(3));
+        when(policyRepository.searchActivePolicies("P-2026", LocalDate.now()))
+                .thenReturn(List.of(policy));
+
+        assertThat(policyService.searchActivePolicies(" Ｐ－２０２６ ")).containsExactly(policy);
+        verify(policyRepository).searchActivePolicies("P-2026", LocalDate.now());
+    }
+
+    @Test
+    void rejectsAccidentRegistrationForInactivePolicy() {
+        when(policyRepository.findById(9L))
+                .thenReturn(Optional.of(policy("CANCELLED", LocalDate.now().plusMonths(3))));
+
+        assertThatThrownBy(() -> policyService.getActivePolicyForAccidentRegistration(9L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("事故登録できる契約は、現在契約中の契約のみです。");
     }
 
     private Policy policy(String status, LocalDate endDate) {

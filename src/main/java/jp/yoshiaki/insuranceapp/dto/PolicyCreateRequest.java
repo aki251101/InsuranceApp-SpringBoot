@@ -1,9 +1,12 @@
 // 配置：src/main/java/jp/yoshiaki/insuranceapp/dto/policy/PolicyCreateRequest.java
 package jp.yoshiaki.insuranceapp.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -24,8 +27,11 @@ import java.time.LocalDate;
 public class PolicyCreateRequest {
 
     /** 契約者名（必須） */
+    @NotBlank(message = "契約者名を入力してください")
     private String customerName;
 
     /** 契約開始日（必須。例："2026-04-01"） */
+    @NotNull(message = "契約開始日を入力してください")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate startDate;
 }

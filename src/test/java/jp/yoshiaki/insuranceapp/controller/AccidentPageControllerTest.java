@@ -5,6 +5,7 @@ import jp.yoshiaki.insuranceapp.service.AccidentService;
 import jp.yoshiaki.insuranceapp.service.AiService;
 import jp.yoshiaki.insuranceapp.service.AiUsageLimitService;
 import jp.yoshiaki.insuranceapp.service.ListSortService;
+import jp.yoshiaki.insuranceapp.service.PolicyService;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -23,12 +24,13 @@ class AccidentPageControllerTest {
         AiService aiService = mock(AiService.class);
         AiUsageLimitService aiUsageLimitService = mock(AiUsageLimitService.class);
         ListSortService listSortService = mock(ListSortService.class);
+        PolicyService policyService = mock(PolicyService.class);
         Accident accident = mock(Accident.class);
         given(accident.getStatus()).willReturn("RESOLVED");
         given(accidentService.getAccidentById(3L)).willReturn(Optional.of(accident));
 
         AccidentPageController controller = new AccidentPageController(
-                accidentService, aiService, aiUsageLimitService, listSortService);
+                accidentService, aiService, aiUsageLimitService, listSortService, policyService);
 
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,

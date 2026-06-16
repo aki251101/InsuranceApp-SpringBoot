@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>契約新規登録</title>
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+</head>
+<body>
+<main class="detail-page registration-page">
+    <div class="detail-top-navigation">
+        <p class="breadcrumbs">
+            <a href="/">トップページ</a><span>›</span>
+            <a th:href="@{/policies}">契約一覧</a><span>›</span>
+            <strong>契約新規登録</strong>
+        </p>
+        <a class="cross-navigation-link" th:href="@{/policies}">
+            <svg class="cross-navigation-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 3h12v18H6zM9 8h6M9 12h6M9 16h4"/>
+            </svg>
+            <span>契約一覧へ戻る</span>
+        </a>
+    </div>
+
+    <h1 class="detail-title">契約新規登録</h1>
+    <div class="policy-heading">
+        <span class="heading-label">登録状態</span>
+        <strong>新しい契約</strong>
+        <span class="status-badge">未登録</span>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert error">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <div class="notice info">
+        契約番号と満期日は登録時に自動で作成されます。
+    </div>
+
+    <form th:action="@{/policies}" th:object="${policyCreateRequest}" method="post" novalidate>
+        <div class="detail-grid">
+            <section class="detail-card">
+                <h2 class="card-title">契約情報</h2>
+                <div class="registration-form">
+                    <div class="form-field">
+                        <label for="customerName">契約者名</label>
+                        <input id="customerName" type="text" th:field="*{customerName}"
+                               placeholder="例：田中 太郎" required>
+                        <p class="field-error" th:if="${#fields.hasErrors('customerName')}"
+                           th:errors="*{customerName}"></p>
+                        <p class="field-hint">全角・半角スペースは登録時に整えます。</p>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="startDate">契約開始日</label>
+                        <input id="startDate" type="date" th:field="*{startDate}" required>
+                        <p class="field-error" th:if="${#fields.hasErrors('startDate')}"
+                           th:errors="*{startDate}"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="detail-card">
+                <h2 class="card-title">登録後の自動設定</h2>
+                <table class="info-table">
+                    <tbody>
+                    <tr><th scope="row">契約番号</th><td>年度別連番で自動附番</td></tr>
+                    <tr><th scope="row">満期日</th><td>開始日の1年後を自動計算</td></tr>
+                    <tr><th scope="row">状態</th><td>契約中</td></tr>
+                    <tr><th scope="row">カレンダー登録</th><td>未登録で開始</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="registration-preview">
+                    <div class="contract-period">
+                        <div class="date-block">
+                            <span class="date-label">契約開始日</span>
+                            <span class="date-value">入力した開始日</span>
+                        </div>
+                        <div class="date-block">
+                            <span class="date-label">満期日</span>
+                            <span class="date-value">開始日の1年後</span>
+                        </div>
+                    </div>
+                    <div class="contract-track" aria-hidden="true"></div>
+                </div>
+            </section>
+        </div>
+
+        <section class="action-panel" aria-label="契約登録操作">
+            <a class="action-button" th:href="@{/policies}">キャンセル</a>
+            <span class="spacer"></span>
+            <button class="action-button primary" type="submit">契約を登録</button>
+        </section>
+    </form>
+</main>
+</body>
+</html>

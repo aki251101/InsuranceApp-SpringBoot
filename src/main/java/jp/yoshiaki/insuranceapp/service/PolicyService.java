@@ -127,6 +127,25 @@ public class PolicyService {
                 normalized, normalized);
     }
 
+    public List<Policy> searchActivePolicies(String query) {
+        log.debug("契約中の契約を検索: query={}", query);
+        if (query == null || query.isBlank()) {
+            return List.of();
+        }
+
+        String normalized = NormalizationUtil.normalizeSearchKeyword(query);
+        return policyRepository.searchActivePolicies(normalized, LocalDate.now());
+    }
+
+    public Policy getActivePolicyForAccidentRegistration(Long id) {
+        Policy policy = policyRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("契約が見つかりません: id=" + id));
+        if (!"契約中".equals(policy.getEffectiveStatus())) {
+            throw new IllegalStateException("事故登録できる契約は、現在契約中の契約のみです。");
+        }
+        return policy;
+    }
+
     /**
      * 【修正2・3】契約を新規作成（契約番号自動附番＋満期日自動計算）
      *
@@ -386,4 +405,3 @@ public class PolicyService {
         }
     }
 }
-

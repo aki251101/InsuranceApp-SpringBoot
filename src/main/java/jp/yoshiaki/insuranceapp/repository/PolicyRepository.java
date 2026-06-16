@@ -35,6 +35,15 @@ public interface PolicyRepository extends JpaRepository<Policy, Long> {
     List<Policy> findByPolicyNumberContainingOrCustomerNameContaining(
             String policyNumber, String customerName);
 
+    @Query("SELECT p FROM Policy p WHERE p.status = 'ACTIVE' " +
+            "AND p.endDate >= :today " +
+            "AND (LOWER(p.policyNumber) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.customerName) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "ORDER BY p.endDate ASC, p.policyNumber ASC")
+    List<Policy> searchActivePolicies(
+            @Param("keyword") String keyword,
+            @Param("today") LocalDate today);
+
     /**
      * ステータスで検索（満期日が近い順にソート）
      *

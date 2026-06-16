@@ -20,6 +20,10 @@
             <a th:href="@{/policies}">契約一覧</a>
         </p>
 
+        <div class="list-action-row">
+            <a class="new-entry-button" th:href="@{/accidents/new}">事故新規登録</a>
+        </div>
+
         <nav class="tabs">
             <a th:href="@{/accidents(tab='OPEN_INPROGRESS',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'OPEN_INPROGRESS'} ? 'active' : ''">受付 / 対応中</a>
             <a th:href="@{/accidents(tab='RESOLVED',sort=${currentSort},direction=${currentDirection})}" th:classappend="${currentTab == 'RESOLVED'} ? 'active' : ''">完了</a>

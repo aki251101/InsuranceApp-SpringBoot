@@ -1,6 +1,7 @@
 package jp.yoshiaki.insuranceapp.controller;
 
 import jp.yoshiaki.insuranceapp.dto.PolicyDetailResponse;
+import jp.yoshiaki.insuranceapp.dto.PolicyCreateRequest;
 import jp.yoshiaki.insuranceapp.dto.PolicyListResponse;
 import jp.yoshiaki.insuranceapp.dto.RenewalStatsDto;
 import jp.yoshiaki.insuranceapp.entity.Policy;
@@ -12,9 +13,12 @@ import jp.yoshiaki.insuranceapp.service.PolicyService;
 import jp.yoshiaki.insuranceapp.service.RenewalStatsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -78,6 +82,37 @@ public class PolicyController {
         model.addAttribute("currentDirection", currentDirection);
 
         return "policy/list";
+    }
+
+    @GetMapping("/new")
+    public String newForm(Model model) {
+        if (!model.containsAttribute("policyCreateRequest")) {
+            model.addAttribute("policyCreateRequest", new PolicyCreateRequest());
+        }
+        return "policy/new";
+    }
+
+    @PostMapping
+    public String create(
+            @Valid @ModelAttribute("policyCreateRequest") PolicyCreateRequest request,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        log.info("契約新規登録");
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errorMessage", "入力漏れまたは入力内容の誤りがあります。");
+            return "policy/new";
+        }
+
+        Policy policy = Policy.builder()
+                .customerName(request.getCustomerName())
+                .startDate(request.getStartDate())
+                .build();
+        Policy saved = policyService.createPolicy(policy);
+        redirectAttributes.addFlashAttribute("successMessage", "契約を登録しました");
+
+        return "redirect:/policies/" + saved.getId();
     }
 
     @GetMapping("/{id}")

@@ -76,6 +76,33 @@ a {
   color: #94a3b8;
 }
 
+.list-action-row {
+  display: flex;
+  justify-content: flex-end;
+  margin: -4px 0 14px;
+}
+
+.new-entry-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 9px 16px;
+  border: 1px solid #0b3a6f;
+  border-radius: 8px;
+  color: #fff;
+  background: #0b3a6f;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 8px 16px rgba(11, 58, 111, 0.16);
+}
+
+.new-entry-button:hover,
+.new-entry-button:focus-visible {
+  background: #124b86;
+  text-decoration: none;
+}
+
 .tabs {
   display: flex;
   flex-wrap: wrap;

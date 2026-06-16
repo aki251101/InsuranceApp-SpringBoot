@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>事故新規登録</title>
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+</head>
+<body>
+<main class="detail-page accident-detail-page registration-page">
+    <div class="detail-top-navigation">
+        <p class="breadcrumbs">
+            <a href="/">トップページ</a><span>›</span>
+            <a th:href="@{/accidents}">事故一覧</a><span>›</span>
+            <strong>事故新規登録</strong>
+        </p>
+        <a class="cross-navigation-link" th:href="@{/accidents}">
+            <svg class="cross-navigation-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 11 7 6h10l2 5M4 11h16v7H4zM7 18v2M17 18v2M7.5 14h.01M16.5 14h.01"/>
+            </svg>
+            <span>事故一覧へ戻る</span>
+        </a>
+    </div>
+
+    <h1 class="detail-title">事故新規登録</h1>
+    <div class="accident-heading">
+        <span class="heading-label">事故ID</span>
+        <strong>登録後に自動採番</strong>
+        <span class="status-badge">受付予定</span>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert error">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <div class="detail-grid registration-accident-grid">
+        <section class="detail-card">
+            <h2 class="card-title">契約を検索</h2>
+            <p class="field-hint search-policy-note">
+                事故登録できる契約は、現在契約中の契約のみです。
+            </p>
+
+            <form class="policy-search-form" th:action="@{/accidents/new}" method="get">
+                <div class="form-field">
+                    <label for="policyQuery">契約番号 / 契約者名</label>
+                    <input id="policyQuery" type="text" name="q" th:value="${policyQuery}"
+                           placeholder="例：P-2026 または 田中">
+                </div>
+                <button class="action-button primary compact-search" type="submit">検索</button>
+            </form>
+
+            <div class="policy-result-list"
+                 th:if="${hasPolicySearch and !#lists.isEmpty(policySearchResults)}">
+                <article class="policy-result"
+                         th:each="policy : ${policySearchResults}"
+                         th:classappend="${selectedPolicy != null and selectedPolicy.id == policy.id} ? 'selected' : ''">
+                    <div class="policy-result-main">
+                        <a class="policy-result-number"
+                           th:href="@{/policies/{id}(id=${policy.id})}"
+                           target="_blank"
+                           rel="noopener"
+                           th:text="${policy.policyNumber}">P-2026-0003</a>
+                        <strong th:text="${policy.customerName}">田中 太郎</strong>
+                        <p>
+                            <span th:text="${policy.effectiveStatus}">契約中</span>
+                            <span th:text="|満期日 ${#temporals.format(policy.endDate, 'yyyy/MM/dd')}|">
+                                満期日 2027/03/31
+                            </span>
+                        </p>
+                    </div>
+                    <a class="select-policy-button"
+                       th:classappend="${selectedPolicy != null and selectedPolicy.id == policy.id} ? 'selected' : ''"
+                       th:href="@{/accidents/new(q=${policyQuery},policyId=${policy.id})}"
+                       th:text="${selectedPolicy != null and selectedPolicy.id == policy.id} ? '選択中' : '選択'">
+                        選択
+                    </a>
+                </article>
+            </div>
+
+            <div class="history-empty"
+                 th:if="${hasPolicySearch and #lists.isEmpty(policySearchResults)}">
+                <p>対象の契約が見つかりません。</p>
+                <p>契約番号または契約者名を確認してください。</p>
+            </div>
+        </section>
+
+        <section class="detail-card">
+            <h2 class="card-title">事故情報</h2>
+
+            <form id="accidentCreateForm"
+                  th:action="@{/accidents}"
+                  th:object="${accidentCreateRequest}"
+                  method="post"
+                  novalidate>
+                <input type="hidden" name="q" th:value="${policyQuery}">
+                <input type="hidden" th:field="*{policyId}">
+
+                <div class="selected-policy-card" th:if="${selectedPolicy != null}">
+                    <span class="selected-policy-label">選択済み契約</span>
+                    <strong>
+                        <a th:href="@{/policies/{id}(id=${selectedPolicy.id})}"
+                           target="_blank"
+                           rel="noopener"
+                           th:text="${selectedPolicy.policyNumber}">P-2026-0003</a>
+                        <span th:text="${selectedPolicy.customerName}">田中 太郎</span>
+                    </strong>
+                    <p>この契約に紐づく事故として登録します。</p>
+                </div>
+
+                <div class="selected-policy-card empty-selection" th:unless="${selectedPolicy != null}">
+                    <span class="selected-policy-label">契約未選択</span>
+                    <strong>左側で契約を検索して選択してください</strong>
+                    <p>契約を選択すると事故情報を登録できます。</p>
+                </div>
+                <p class="field-error" th:if="${#fields.hasErrors('policyId')}"
+                   th:errors="*{policyId}"></p>
+
+                <div class="registration-form accident-registration-form">
+                    <div class="form-field">
+                        <label for="occurredAt">受付日</label>
+                        <input id="occurredAt" type="date" th:field="*{occurredAt}" required>
+                        <p class="field-error" th:if="${#fields.hasErrors('occurredAt')}"
+                           th:errors="*{occurredAt}"></p>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="place">事故場所</label>
+                        <input id="place" type="text" th:field="*{place}"
+                               maxlength="200" placeholder="例：東京都中央区 日本橋付近">
+                        <p class="field-error" th:if="${#fields.hasErrors('place')}"
+                           th:errors="*{place}"></p>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="description">事故概要</label>
+                        <textarea id="description" th:field="*{description}"
+                                  maxlength="2000"
+                                  placeholder="事故内容を入力してください"></textarea>
+                        <p class="field-error" th:if="${#fields.hasErrors('description')}"
+                           th:errors="*{description}"></p>
+                    </div>
+                </div>
+
+            </form>
+        </section>
+    </div>
+
+    <section class="action-panel" aria-label="事故登録操作">
+        <a class="action-button" th:href="@{/accidents}">キャンセル</a>
+        <span class="spacer"></span>
+        <button class="action-button primary" type="submit" form="accidentCreateForm">事故を登録</button>
+    </section>
+</main>
+</body>
+</html>
