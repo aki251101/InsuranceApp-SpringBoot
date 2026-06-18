@@ -161,7 +161,16 @@
 
     <section class="ai-summary" th:if="${aiSummary}">
         <h2>AI要約</h2>
-        <p th:text="${aiSummary}"></p>
+        <div class="policy-ai-summary-grid">
+            <section class="policy-ai-summary-item">
+                <span class="policy-ai-label">現状</span>
+                <p th:text="${aiSummary.current}"></p>
+            </section>
+            <section class="policy-ai-summary-item policy-ai-caution">
+                <span class="policy-ai-label">注意点</span>
+                <p th:text="${aiSummary.caution}"></p>
+            </section>
+        </div>
     </section>
 </main>
 </body>

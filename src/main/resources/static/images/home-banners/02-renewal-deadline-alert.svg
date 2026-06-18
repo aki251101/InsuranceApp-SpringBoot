@@ -24,14 +24,14 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="0.49166667"
-     inkscape:cx="749.49152"
+     inkscape:cx="748.47457"
      inkscape:cy="118.98305"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg41" />
+     inkscape:current-layer="g22" />
   <title
      id="title">更新期限を見逃さない</title>
   <desc
@@ -198,13 +198,15 @@
      id="g22">
     <text
        class="navy heading"
-       font-size="70"
-       id="text21">更新期限を見逃さない</text>
+       font-size="70px"
+       id="text21"
+       x="-16">早期更改期限を見逃さない</text>
     <text
        class="navy body"
        y="82"
-       font-size="34"
-       id="text22">期限を過ぎた契約を「要注意」でお知らせ</text>
+       font-size="34px"
+       id="text22"
+       x="-16">期限を過ぎた契約を「要注意」でお知らせ</text>
   </g>
   <g
      filter="url(#shadow)"

@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/policies/*/ai-summarize", "/accidents/*/ai-suggest").authenticated()
                 .anyRequest().permitAll()
             )
-            .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/", true))
+            .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/", false))
             .csrf(csrf -> csrf.disable());
 
         return http.build();

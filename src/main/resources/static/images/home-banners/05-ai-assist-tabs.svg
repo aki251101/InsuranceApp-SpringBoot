@@ -22,9 +22,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="0.69532167"
-     inkscape:cx="799.62991"
-     inkscape:cy="225.07568"
+     inkscape:zoom="0.49166667"
+     inkscape:cx="886.77966"
+     inkscape:cy="-137.28814"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
@@ -105,11 +105,13 @@
      fill="url(#ai-bg)"
      stroke="#bfd5ee"
      stroke-width="4"
-     id="rect5" />
+     id="rect5"
+     sodipodi:insensitive="true" />
   <path
-     d="M0 486c225 5 338 90 488 68 247-37 352-72 580-36 275 43 433 44 732-45v127H0z"
+     d="m 0,486 c 225,5 338,90 488,68 247,-37 352,-72 580,-36 275,43 433,44 732,-45 V 600 H 0 Z"
      fill="#e2f0ff"
-     id="path5" />
+     id="path5"
+     sodipodi:insensitive="true" />
   <text
      x="60"
      y="252"
@@ -130,14 +132,16 @@
      id="text7">情報の把握から次のアクションまで支援</text>
   <g
      filter="url(#ai-shadow)"
-     id="g7">
+     id="g7"
+     transform="matrix(1.0002542,0,0,0.77740364,-0.3189573,11.905346)"
+     sodipodi:insensitive="true">
     <rect
        x="790"
        y="54"
        width="930"
        height="490"
        rx="22"
-       fill="#fff"
+       fill="#ffffff"
        stroke="#d7e7f7"
        stroke-width="2"
        id="rect7" />
@@ -165,13 +169,14 @@
      class="bold"
      id="text9">業務AIアシスト</text>
   <rect
-     x="1500"
-     y="81"
-     width="190"
+     x="1486.3566"
+     y="79.414688"
+     width="217.45763"
      height="43"
-     rx="21"
+     rx="24.03479"
      fill="#eaf4ff"
-     id="rect9" />
+     id="rect9"
+     style="stroke-width:1.06982" />
   <text
      x="1595"
      y="109"
@@ -179,7 +184,8 @@
      font-size="18"
      font-weight="800"
      fill="#176fcf"
-     id="text10">担当者の判断を支援</text>
+     id="text10"
+     style="font-size:21.3333px">担当者の判断を支援</text>
   <rect
      x="818"
      y="148"
@@ -197,7 +203,7 @@
      font-size="22"
      class="bold"
      id="text11"
-     style="font-size:26.6667px">契約詳細｜AI要約</text>
+     style="font-size:28px">契約詳細｜AI要約</text>
   <rect
      x="1259"
      y="148"
@@ -217,14 +223,16 @@
      id="text12"
      style="font-size:26.6667px">事故詳細｜AI提案</text>
   <rect
-     x="818"
-     y="228"
-     width="429"
-     height="195"
-     rx="15"
-     fill="#fff"
+     x="817.96179"
+     y="227.96178"
+     width="429.03769"
+     height="166.31277"
+     rx="15.001318"
+     fill="#ffffff"
      stroke="#dce9f7"
-     id="rect12" />
+     id="rect12"
+     style="stroke-width:0.923559"
+     sodipodi:insensitive="true" />
   <text
      x="839.33331"
      y="273"
@@ -233,53 +241,42 @@
      id="text13"
      style="font-size:26.6667px">契約内容を要約</text>
   <circle
-     cx="849.88702"
-     cy="312.58307"
-     r="9.8870306"
+     cx="851.93689"
+     cy="313.3075"
+     r="11.93691"
      fill="#082e6b"
      id="circle13"
-     style="stroke-width:1.23588" />
+     style="stroke-width:1.49212" />
   <text
-     x="868"
-     y="321.10669"
+     x="876"
+     y="322.4155"
      class="item"
      id="text14"
-     style="font-size:21.3333px">契約期間と現在の状態</text>
+     style="font-size:24px">契約期間と現在の状態</text>
   <circle
-     cx="849.88702"
-     cy="353.54041"
-     r="9.8870306"
+     cx="851.93689"
+     cy="362.96527"
+     r="11.93691"
      fill="#082e6b"
      id="circle14"
-     style="stroke-width:1.23588" />
+     style="stroke-width:1.49212" />
   <text
-     x="868"
-     y="361.87198"
+     x="875.73602"
+     y="372.07324"
      class="item"
      id="text15"
-     style="font-size:21.3333px">更新期限と注意事項</text>
-  <circle
-     cx="849.88702"
-     cy="394.32709"
-     r="9.8870306"
-     fill="#082e6b"
-     id="circle15"
-     style="stroke-width:1.23588" />
-  <text
-     x="868"
-     y="403"
-     class="item"
-     id="text16"
-     style="font-size:21.3333px">重要ポイントを短く整理</text>
+     style="font-size:24px">更新期限と注意事項</text>
   <rect
-     x="1259"
-     y="228"
-     width="429"
-     height="195"
-     rx="15"
-     fill="#fff"
+     x="1259.0005"
+     y="227.96178"
+     width="429.03769"
+     height="166.31277"
+     rx="15.001318"
+     fill="#ffffff"
      stroke="#dce9f7"
-     id="rect16" />
+     id="rect16"
+     style="stroke-width:0.923559"
+     sodipodi:insensitive="true" />
   <text
      x="1280.627"
      y="273"
@@ -288,44 +285,31 @@
      id="text17"
      style="font-size:26.6667px">次の対応を提案</text>
   <circle
-     cx="1291.1807"
-     cy="312.68976"
-     r="9.8870306"
-     fill="#082e6b"
-     id="circle17"
-     style="stroke-width:1.23588" />
-  <text
-     x="1309"
-     y="321"
-     class="item"
-     id="text18"
-     style="font-size:21.3333px">次に確認する内容</text>
-  <circle
-     cx="1291.1807"
-     cy="353.64706"
-     r="9.8870306"
+     cx="1293.2305"
+     cy="313.3075"
+     r="11.93691"
      fill="#082e6b"
      id="circle18"
-     style="stroke-width:1.23588" />
+     style="stroke-width:1.49212" />
   <text
-     x="1309"
-     y="361.936"
+     x="1317"
+     y="322.39148"
      class="item"
      id="text19"
-     style="font-size:21.3333px">連絡・対応の候補</text>
+     style="font-size:24px">連絡・対応の候補</text>
   <circle
-     cx="1291.1807"
-     cy="394.60443"
-     r="9.8870306"
+     cx="1293.2305"
+     cy="362.96527"
+     r="11.93691"
      fill="#082e6b"
      id="circle19"
-     style="stroke-width:1.23588" />
+     style="stroke-width:1.49212" />
   <text
-     x="1309"
-     y="403"
+     x="1316.976"
+     y="372.12125"
      class="item"
      id="text20"
-     style="font-size:21.3333px">滞留リスクと注意点</text>
+     style="font-size:24px">滞留リスクと注意点</text>
   <text
      xml:space="preserve"
      id="text21"

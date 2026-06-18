@@ -496,6 +496,132 @@ textarea {
   line-height: 1.7;
 }
 
+.ai-suggestion-summary {
+  color: #314d73;
+  font-weight: 700;
+}
+
+.ai-suggestion-section {
+  margin-top: 18px;
+}
+
+.ai-suggestion-section h3 {
+  margin: 0 0 10px;
+  color: #183963;
+  font-size: 0.98rem;
+}
+
+.ai-action-list,
+.ai-caution-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ai-action-list li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 11px;
+  align-items: start;
+  padding: 13px 15px;
+  border: 1px solid #d7e4f5;
+  border-radius: 9px;
+  background: #f8fbff;
+}
+
+.ai-action-number {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--detail-brand);
+  font-weight: 900;
+}
+
+.ai-action-list p {
+  margin: 0;
+  color: #27466f;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.ai-caution-section {
+  padding: 13px 15px;
+  border: 1px solid #f0c879;
+  border-radius: 9px;
+  background: #fffaf0;
+}
+
+.ai-caution-list {
+  gap: 8px;
+}
+
+.ai-caution-list li {
+  position: relative;
+  padding-left: 19px;
+  color: #8a5a00;
+  line-height: 1.65;
+}
+
+.ai-caution-list li::before {
+  content: "・";
+  position: absolute;
+  left: 0;
+  font-weight: 900;
+}
+
+.policy-ai-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.policy-ai-summary-item {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-width: 0;
+  padding: 15px 17px;
+  border: 1px solid #d7e4f5;
+  border-radius: 9px;
+  background: #f8fbff;
+}
+
+.policy-ai-caution {
+  border-color: #f0c879;
+  background: #fffaf0;
+}
+
+.policy-ai-label {
+  width: fit-content;
+  padding: 4px 11px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--detail-brand);
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.policy-ai-caution .policy-ai-label {
+  background: #d97900;
+}
+
+.policy-ai-summary-item p {
+  margin: 0;
+  color: #27466f;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
+
+.policy-ai-caution p {
+  color: #8a5a00;
+}
+
 .alert {
   margin: 14px 0;
   padding: 11px 14px;
@@ -1081,6 +1207,10 @@ textarea {
   }
 
   .policy-result {
+    grid-template-columns: 1fr;
+  }
+
+  .policy-ai-summary-grid {
     grid-template-columns: 1fr;
   }
 }

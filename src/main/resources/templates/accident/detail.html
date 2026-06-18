@@ -166,7 +166,25 @@
 
         <div class="ai-summary accident-ai-summary" th:if="${aiSuggestion}">
             <h2>AI提案 <span>（参考）</span></h2>
-            <p th:text="${aiSuggestion}"></p>
+            <p class="ai-suggestion-summary" th:text="${aiSuggestion.summary}"></p>
+
+            <section class="ai-suggestion-section" th:if="${!#lists.isEmpty(aiSuggestion.actions)}">
+                <h3>対応項目</h3>
+                <ol class="ai-action-list">
+                    <li th:each="action, stat : ${aiSuggestion.actions}">
+                        <span class="ai-action-number" th:text="${stat.count}">1</span>
+                        <p th:text="${action}"></p>
+                    </li>
+                </ol>
+            </section>
+
+            <section class="ai-suggestion-section ai-caution-section"
+                     th:if="${!#lists.isEmpty(aiSuggestion.cautions)}">
+                <h3>注意点</h3>
+                <ul class="ai-caution-list">
+                    <li th:each="caution : ${aiSuggestion.cautions}" th:text="${caution}"></li>
+                </ul>
+            </section>
         </div>
     </section>
 </main>

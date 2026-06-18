@@ -1,6 +1,7 @@
 package jp.yoshiaki.insuranceapp.controller;
 
 import jp.yoshiaki.insuranceapp.dto.AccidentCreateRequest;
+import jp.yoshiaki.insuranceapp.dto.AccidentAiSuggestionResponse;
 import jp.yoshiaki.insuranceapp.dto.AccidentDetailResponse;
 import jp.yoshiaki.insuranceapp.dto.AccidentListResponse;
 import jp.yoshiaki.insuranceapp.dto.AccidentMemoResponse;
@@ -228,7 +229,7 @@ public class AccidentPageController {
         accident.setMemo(accidentService.getMemoText(id));
 
         String suggestion = aiService.suggestNextActions(accident);
-        redirectAttributes.addFlashAttribute("aiSuggestion", suggestion);
+        redirectAttributes.addFlashAttribute("aiSuggestion", AccidentAiSuggestionResponse.from(suggestion));
         redirectAttributes.addFlashAttribute("successMessage", "AI提案を生成しました");
 
         return "redirect:/accidents/" + id;

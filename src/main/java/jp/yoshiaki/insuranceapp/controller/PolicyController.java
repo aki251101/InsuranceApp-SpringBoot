@@ -2,6 +2,7 @@ package jp.yoshiaki.insuranceapp.controller;
 
 import jp.yoshiaki.insuranceapp.dto.PolicyDetailResponse;
 import jp.yoshiaki.insuranceapp.dto.PolicyCreateRequest;
+import jp.yoshiaki.insuranceapp.dto.PolicyAiSummaryResponse;
 import jp.yoshiaki.insuranceapp.dto.PolicyListResponse;
 import jp.yoshiaki.insuranceapp.dto.RenewalStatsDto;
 import jp.yoshiaki.insuranceapp.entity.Policy;
@@ -143,7 +144,7 @@ public class PolicyController {
         aiUsageLimitService.consume(authentication != null ? authentication.getName() : null);
 
         String summary = aiService.summarizePolicy(policy);
-        redirectAttributes.addFlashAttribute("aiSummary", summary);
+        redirectAttributes.addFlashAttribute("aiSummary", PolicyAiSummaryResponse.from(summary));
         redirectAttributes.addFlashAttribute("successMessage", "AI要約を生成しました");
 
         return "redirect:/policies/" + id;
