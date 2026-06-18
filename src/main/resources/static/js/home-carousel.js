@@ -81,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePresentation(announce);
 
     if (!animate) {
+      void track.offsetHeight;
       requestAnimationFrame(() => {
         track.classList.remove("is-resetting");
       });

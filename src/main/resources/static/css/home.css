@@ -78,6 +78,10 @@ body {
   transition: none;
 }
 
+.carousel-track.is-resetting .carousel-slide {
+  transition: none;
+}
+
 .carousel-slide {
   flex: 0 0 100%;
   padding: 0 8px;

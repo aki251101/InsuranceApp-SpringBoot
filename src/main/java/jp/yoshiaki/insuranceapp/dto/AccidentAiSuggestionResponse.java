@@ -12,6 +12,8 @@ public record AccidentAiSuggestionResponse(
         List<String> actions,
         List<String> cautions) implements Serializable {
 
+    private static final int MAX_ACTIONS = 3;
+    private static final int MAX_CAUTIONS = 3;
     private static final String SUMMARY_HEADING = "概要:";
     private static final String ACTIONS_HEADING = "対応項目:";
     private static final String CAUTIONS_HEADING = "注意点:";
@@ -28,7 +30,7 @@ public record AccidentAiSuggestionResponse(
 
         for (String rawLine : raw.lines().toList()) {
             String line = clean(rawLine);
-            if (line.isBlank()) {
+            if (line.isBlank() || isIgnoredHeading(line)) {
                 continue;
             }
 
@@ -52,14 +54,24 @@ public record AccidentAiSuggestionResponse(
 
             switch (currentSection) {
                 case SUMMARY -> summary = appendSentence(summary, line);
-                case ACTIONS -> actions.add(stripListMarker(line));
-                case CAUTIONS -> cautions.add(stripListMarker(line));
-                default -> actions.add(stripListMarker(line));
+                case ACTIONS -> addLimited(actions, stripListMarker(line), MAX_ACTIONS);
+                case CAUTIONS -> addLimited(cautions, stripListMarker(line), MAX_CAUTIONS);
+                default -> {
+                    // 見出しの揺れなどでセクション判定できない行は、画面に混ぜず破棄する。
+                }
             }
         }
 
-        actions = actions.stream().map(AccidentAiSuggestionResponse::clean).filter(s -> !s.isBlank()).toList();
-        cautions = cautions.stream().map(AccidentAiSuggestionResponse::clean).filter(s -> !s.isBlank()).toList();
+        actions = actions.stream()
+                .map(AccidentAiSuggestionResponse::clean)
+                .filter(s -> !s.isBlank())
+                .limit(MAX_ACTIONS)
+                .toList();
+        cautions = cautions.stream()
+                .map(AccidentAiSuggestionResponse::clean)
+                .filter(s -> !s.isBlank())
+                .limit(MAX_CAUTIONS)
+                .toList();
 
         if (summary.isBlank()) {
             summary = "事故情報に基づく次アクション候補です。";
@@ -83,6 +95,19 @@ public record AccidentAiSuggestionResponse(
             return additional;
         }
         return current + " " + additional;
+    }
+
+    private static void addLimited(List<String> values, String value, int limit) {
+        if (!value.isBlank() && values.size() < limit) {
+            values.add(value);
+        }
+    }
+
+    private static boolean isIgnoredHeading(String line) {
+        return line.equals("AI提案:")
+                || line.equals("AI提案")
+                || line.equals("次のアクション候補:")
+                || line.equals("次のアクション候補");
     }
 
     private static String clean(String value) {
