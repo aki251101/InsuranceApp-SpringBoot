@@ -82,6 +82,7 @@ htmlcov/
 # Logs / temp
 # ========================================
 logs/
+tmp_video_review/
 *.bak
 *.swp
 *.swo
