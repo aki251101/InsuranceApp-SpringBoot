@@ -9,8 +9,8 @@
 👉 [PNGを開く](./doc/overview/insurance-app-overview.png)
 
 🎬 **デモ動画（Google Drive）**  
-👉 [機能解説デモ動画を見る](https://drive.google.com/file/d/1Nwgt1wLsowFGeyCPCYbUBShwHX8QqPLc/view?usp=sharing)  
-👉 [基本操作デモ動画を見る](https://drive.google.com/file/d/1JMccNK1aQLPiDcGwTPKM_cMLpmEjCy0B/view?usp=sharing)
+👉 [機能解説デモ動画を見る (2:40)](https://drive.google.com/file/d/1Nwgt1wLsowFGeyCPCYbUBShwHX8QqPLc/view?usp=sharing)  
+👉 [基本操作デモ動画を見る (2:00)](https://drive.google.com/file/d/1JMccNK1aQLPiDcGwTPKM_cMLpmEjCy0B/view?usp=sharing)
 
 ---
 
